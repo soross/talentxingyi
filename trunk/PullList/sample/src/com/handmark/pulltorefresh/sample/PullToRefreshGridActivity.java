@@ -20,7 +20,7 @@ import java.util.LinkedList;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
-
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,23 +51,23 @@ public class PullToRefreshGridActivity extends Activity {
 		mGridView = mPullRefreshGridView.getRefreshableView();
 
 		// Set a listener to be invoked when the list should be refreshed.
-		// mPullRefreshGridView.setOnRefreshListener(new OnRefreshListener2() {
-		//
-		// @Override
-		// public void onPullDownToRefresh() {
-		// Toast.makeText(PullToRefreshGridActivity.this, "Pull Down!",
-		// Toast.LENGTH_SHORT).show();
-		// new GetDataTask().execute();
-		// }
-		//
-		// @Override
-		// public void onPullUpToRefresh() {
-		// Toast.makeText(PullToRefreshGridActivity.this, "Pull Up!",
-		// Toast.LENGTH_SHORT).show();
-		// new GetDataTask().execute();
-		// }
-		//
-		// });
+		mPullRefreshGridView.setOnRefreshListener(new OnRefreshListener2() {
+
+			@Override
+			public void onPullDownToRefresh() {
+				Toast.makeText(PullToRefreshGridActivity.this, "Pull Down!",
+						Toast.LENGTH_SHORT).show();
+				new GetDataTask().execute();
+			}
+
+			@Override
+			public void onPullUpToRefresh() {
+				Toast.makeText(PullToRefreshGridActivity.this, "Pull Up!",
+						Toast.LENGTH_SHORT).show();
+				new GetDataTask().execute();
+			}
+
+		});
 
 		mListItems = new LinkedList<String>();
 
