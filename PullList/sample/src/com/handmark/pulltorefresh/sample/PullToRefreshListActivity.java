@@ -17,6 +17,7 @@ package com.handmark.pulltorefresh.sample;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -26,6 +27,7 @@ import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -33,9 +35,14 @@ import android.widget.ListView;
 
 public class PullToRefreshListActivity extends ListActivity {
 
-	static final int MENU_MANUAL_REFRESH = 0;
-	static final int MENU_DISABLE_SCROLL = 1;
-	static final int MENU_SET_MODE = 2;
+	private static final String TAG = "PullToRefreshListActivity";
+
+	/** 手动刷新 */
+	private static final int MENU_MANUAL_REFRESH = 0;
+	/** 使能滚动功能 */
+	private static final int MENU_DISABLE_SCROLL = 1;
+	/** 设置是否开启上拉刷新模式 */
+	private static final int MENU_SET_MODE = 2;
 
 	private LinkedList<String> mListItems;
 	private PullToRefreshListView mPullRefreshListView;
@@ -103,17 +110,18 @@ public class PullToRefreshListActivity extends ListActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		Log.v(TAG, "onCreateOptionsMenu");
 		menu.add(0, MENU_MANUAL_REFRESH, 0, "Manual Refresh");
 		menu.add(
 				0,
 				MENU_DISABLE_SCROLL,
-				1,
+				0,
 				mPullRefreshListView.isDisableScrollingWhileRefreshing() ? "Enable Scrolling while Refreshing"
 						: "Disable Scrolling while Refreshing");
 		menu.add(
 				0,
 				MENU_SET_MODE,
-				0,
+				1,
 				mPullRefreshListView.getMode() == Mode.BOTH ? "Change to MODE_PULL_DOWN"
 						: "Change to MODE_PULL_BOTH");
 		return super.onCreateOptionsMenu(menu);
@@ -121,6 +129,7 @@ public class PullToRefreshListActivity extends ListActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
+		Log.v(TAG, "onPrepareOptionsMenu");
 		MenuItem disableItem = menu.findItem(MENU_DISABLE_SCROLL);
 		disableItem
 				.setTitle(mPullRefreshListView

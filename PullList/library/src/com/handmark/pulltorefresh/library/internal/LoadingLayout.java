@@ -22,6 +22,7 @@ import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +38,12 @@ import android.widget.TextView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.R;
 
+/** 刷新头部布局 */
 public class LoadingLayout extends FrameLayout {
 
+	private static final String TAG = "LoadingLayout";
+
+	/** 动画时间 */
 	static final int DEFAULT_ROTATION_ANIMATION_DURATION = 600;
 
 	private final ImageView mHeaderImage;
@@ -47,8 +52,11 @@ public class LoadingLayout extends FrameLayout {
 	private final TextView mHeaderText;
 	private final TextView mSubHeaderText;
 
+	/** "下拉刷新"文字 */
 	private String mPullLabel;
+	/** "载入中"文字 */
 	private String mRefreshingLabel;
+	/** "松手刷新"文字 */
 	private String mReleaseLabel;
 
 	private float mRotationPivotX, mRotationPivotY;
@@ -99,7 +107,7 @@ public class LoadingLayout extends FrameLayout {
 					.getString(R.string.pull_to_refresh_release_label);
 			break;
 		}
-
+		
 		if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderTextColor)) {
 			ColorStateList colors = attrs
 					.getColorStateList(R.styleable.PullToRefresh_ptrHeaderTextColor);

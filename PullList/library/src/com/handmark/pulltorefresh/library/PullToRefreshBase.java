@@ -41,7 +41,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 	static final boolean DEBUG = false;
 
-	static final String LOG_TAG = "PullToRefresh";
+	static final String TAG = "PullToRefreshBase";
 
 	static final float FRICTION = 2.0f;
 
@@ -63,6 +63,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	// Fields
 	// ===========================================================
 
+	/** 表示滑动的时候，手的移动要大于这个返回的距离值才开始移动控件 */
 	private int mTouchSlop;
 	private float mLastMotionX;
 	private float mLastMotionY;
@@ -101,11 +102,14 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 	public PullToRefreshBase(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		Log.v(TAG,
+				"构造函数：PullToRefreshBase(Context context, AttributeSet attrs)");
 		init(context, attrs);
 	}
 
 	public PullToRefreshBase(Context context, Mode mode) {
 		super(context);
+		Log.v(TAG, "构造函数：PullToRefreshBase(Context context, Mode mode)");
 		mMode = mode;
 		init(context, null);
 	}
@@ -437,7 +441,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	public final void setMode(Mode mode) {
 		if (mode != mMode) {
 			if (DEBUG) {
-				Log.d(LOG_TAG, "Setting mode to: " + mode);
+				Log.d(TAG, "Setting mode to: " + mode);
 			}
 			mMode = mode;
 			updateUIForMode();
