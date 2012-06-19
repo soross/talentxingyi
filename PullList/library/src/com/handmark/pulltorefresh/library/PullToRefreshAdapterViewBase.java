@@ -35,6 +35,8 @@ import com.handmark.pulltorefresh.library.internal.IndicatorLayout;
 public abstract class PullToRefreshAdapterViewBase<T extends AbsListView>
 		extends PullToRefreshBase<T> implements OnScrollListener {
 
+	private static final String TAG = "PullToRefreshAdapterViewBase";
+
 	static final boolean DEFAULT_SHOW_INDICATOR = true;
 
 	private int mSavedLastVisibleIndex = -1;
@@ -83,7 +85,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView>
 			final int totalItemCount) {
 
 		if (DEBUG) {
-			Log.d(LOG_TAG, "First Visible: " + firstVisibleItem
+			Log.d(TAG, "First Visible: " + firstVisibleItem
 					+ ". Visible Count: " + visibleItemCount
 					+ ". Total Items: " + totalItemCount);
 		}
@@ -375,7 +377,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView>
 				.getLastVisiblePosition();
 
 		if (DEBUG) {
-			Log.d(LOG_TAG, "isLastItemVisible. Count: " + count
+			Log.d(TAG, "isLastItemVisible. Count: " + count
 					+ " Last Visible Pos: " + lastVisiblePosition);
 		}
 
