@@ -45,26 +45,31 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 	static final float FRICTION = 2.0f;
 
-	static final int PULL_TO_REFRESH = 0x0;
-	static final int RELEASE_TO_REFRESH = 0x1;
-	static final int REFRESHING = 0x2;
-	static final int MANUAL_REFRESHING = 0x3;
+	/** 拉动刷新 */
+	protected static final int PULL_TO_REFRESH = 0x0;
+	/** 放开刷新 */
+	protected static final int RELEASE_TO_REFRESH = 0x1;
+	/** 刷新中 */
+	protected static final int REFRESHING = 0x2;
+	/** 手动刷新 */
+	protected static final int MANUAL_REFRESHING = 0x3;
 
-	static final Mode DEFAULT_MODE = Mode.PULL_DOWN_TO_REFRESH;
+	/** 默认加载模式：拉下刷新模式 */
+	private static final Mode DEFAULT_MODE = Mode.PULL_DOWN_TO_REFRESH;
 
-	static final String STATE_STATE = "ptr_state";
-	static final String STATE_MODE = "ptr_mode";
-	static final String STATE_CURRENT_MODE = "ptr_current_mode";
-	static final String STATE_DISABLE_SCROLLING_REFRESHING = "ptr_disable_scrolling";
-	static final String STATE_SHOW_REFRESHING_VIEW = "ptr_show_refreshing_view";
-	static final String STATE_SUPER = "ptr_super";
+	private static final String STATE_STATE = "ptr_state";
+	private static final String STATE_MODE = "ptr_mode";
+	private static final String STATE_CURRENT_MODE = "ptr_current_mode";
+	private static final String STATE_DISABLE_SCROLLING_REFRESHING = "ptr_disable_scrolling";
+	private static final String STATE_SHOW_REFRESHING_VIEW = "ptr_show_refreshing_view";
+	private static final String STATE_SUPER = "ptr_super";
 
 	// ===========================================================
 	// Fields
 	// ===========================================================
 
 	/** 表示滑动的时候，手的移动要大于这个返回的距离值才开始移动控件 */
-	private int mTouchSlop;
+	private int mTouchSlop;// 24
 	private float mLastMotionX;
 	private float mLastMotionY;
 	private float mInitialMotionY;
@@ -796,9 +801,11 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	protected void updateUIForMode() {
 		// Remove Header, and then add Header Loading View again if needed
 		if (this == mHeaderLayout.getParent()) {
+			Log.v(TAG, "this == mHeaderLayout.getParent()");
 			removeView(mHeaderLayout);
 		}
 		if (mMode.canPullDown()) {
+			Log.v(TAG, "mMode.canPullDown()");
 			addView(mHeaderLayout, 0, new LinearLayout.LayoutParams(
 					ViewGroup.LayoutParams.FILL_PARENT,
 					ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -806,9 +813,11 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 		// Remove Footer, and then add Footer Loading View again if needed
 		if (this == mFooterLayout.getParent()) {
+			Log.v(TAG, "this == mFooterLayout.getParent()");
 			removeView(mFooterLayout);
 		}
 		if (mMode.canPullUp()) {
+			Log.v(TAG, "mMode.canPullUp()");
 			addView(mFooterLayout, new LinearLayout.LayoutParams(
 					ViewGroup.LayoutParams.FILL_PARENT,
 					ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -828,11 +837,13 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 		ViewConfiguration config = ViewConfiguration.get(context);
 		mTouchSlop = config.getScaledTouchSlop();
+		Log.v(TAG, "mTouchSlop:" + mTouchSlop);
 
 		// Styleables from XML
 		TypedArray a = context.obtainStyledAttributes(attrs,
 				R.styleable.PullToRefresh);
 		handleStyledAttributes(a);
+		Log.v(TAG, "a is null ? " + (null == a));
 
 		if (a.hasValue(R.styleable.PullToRefresh_ptrMode)) {
 			mMode = Mode.mapIntToMode(a.getInteger(
@@ -890,6 +901,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		}
 
 		int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0, p.width);
+		Log.v(TAG, "p.width:" + p.width + ",childWidthSpec:" + childWidthSpec);
 		int lpHeight = p.height;
 		int childHeightSpec;
 		if (lpHeight > 0) {
@@ -899,6 +911,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 			childHeightSpec = MeasureSpec.makeMeasureSpec(0,
 					MeasureSpec.UNSPECIFIED);
 		}
+		Log.v(TAG, "lpHeight:" + lpHeight + ",childHeightSpec:"
+				+ childHeightSpec);
 		child.measure(childWidthSpec, childHeightSpec);
 	}
 
