@@ -167,12 +167,7 @@ public class PullToRefreshListActivity extends ListActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private String[] mStrings = { "Abbaye de Belloc",
-			"Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
-			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu",
-			"Airag", "Airedale", "Aisy Cendre", "Allgauer Emmentaler",
-			"Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam",
-			"Abondance", "Ackawi", "Acorn", "Adelost", "Affidelice au Chablis",
-			"Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
-			"Allgauer Emmentaler" };
+	private String[] mStrings = { "1", "2", "3", "4", "5", "6", "7", "8", "9",
+			"10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+			"21", "22", "23", "24", "25", "26" };
 }
