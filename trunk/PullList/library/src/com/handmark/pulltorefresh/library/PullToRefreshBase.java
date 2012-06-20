@@ -15,6 +15,8 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library;
 
+import java.util.logging.Logger;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -211,24 +213,28 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 	@Override
 	public final boolean onInterceptTouchEvent(MotionEvent event) {
-
+		// Log.v("TouchEvent", "onInterceptTouchEvent");
 		if (!mPullToRefreshEnabled) {
+			// Log.v("TouchEvent", "return 1");
 			return false;
 		}
 
 		if (isRefreshing() && mDisableScrollingWhileRefreshing) {
+			// Log.v("TouchEvent", "return 2");
 			return true;
 		}
 
 		final int action = event.getAction();
-
+		// Log.v("TouchEvent", "action:" + action);
 		if (action == MotionEvent.ACTION_CANCEL
 				|| action == MotionEvent.ACTION_UP) {
+			// Log.v("TouchEvent", "return 3");
 			mIsBeingDragged = false;
 			return false;
 		}
 
 		if (action != MotionEvent.ACTION_DOWN && mIsBeingDragged) {
+			// Log.v("TouchEvent", "return 4");
 			return true;
 		}
 
@@ -270,7 +276,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 			break;
 		}
 		}
-
+		// Log.v("TouchEvent", "return 5 && mIsBeingDragged:" +
+		// mIsBeingDragged);
 		return mIsBeingDragged;
 	}
 
@@ -286,16 +293,20 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 	@Override
 	public final boolean onTouchEvent(MotionEvent event) {
+		Log.v("TouchEvent", "onTouchEvent");
 		if (!mPullToRefreshEnabled) {
+			Log.v("TouchEvent", "return 1");
 			return false;
 		}
 
 		if (isRefreshing() && mDisableScrollingWhileRefreshing) {
+			Log.v("TouchEvent", "return 2");
 			return true;
 		}
 
 		if (event.getAction() == MotionEvent.ACTION_DOWN
 				&& event.getEdgeFlags() != 0) {
+			Log.v("TouchEvent", "return 3");
 			return false;
 		}
 
@@ -305,6 +316,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 			if (mIsBeingDragged) {
 				mLastMotionY = event.getY();
 				pullEvent();
+				Log.v("TouchEvent", "return 4");
 				return true;
 			}
 			break;
@@ -313,6 +325,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		case MotionEvent.ACTION_DOWN: {
 			if (isReadyForPull()) {
 				mLastMotionY = mInitialMotionY = event.getY();
+				Log.v("TouchEvent", "return 5");
 				return true;
 			}
 			break;
@@ -322,12 +335,13 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		case MotionEvent.ACTION_UP: {
 			if (mIsBeingDragged) {
 				mIsBeingDragged = false;
-
+				Log.v(TAG, "mState:" + mState);
 				if (mState == RELEASE_TO_REFRESH) {
 
 					if (null != mOnRefreshListener) {
 						setRefreshingInternal(true);
 						mOnRefreshListener.onRefresh();
+						Log.v("TouchEvent", "return 6");
 						return true;
 
 					} else if (null != mOnRefreshListener2) {
@@ -337,19 +351,20 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 						} else if (mCurrentMode == Mode.PULL_UP_TO_REFRESH) {
 							mOnRefreshListener2.onPullUpToRefresh();
 						}
+						Log.v("TouchEvent", "return 7");
 						return true;
 					}
-
+					Log.v("TouchEvent", "return 8");
 					return true;
 				}
-
+				Log.v("TouchEvent", "return 9");
 				smoothScrollTo(0);
 				return true;
 			}
 			break;
 		}
 		}
-
+		Log.v("TouchEvent", "return 10");
 		return false;
 	}
 
@@ -882,6 +897,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	}
 
 	private boolean isReadyForPull() {
+		Log.v("TouchEvent", "isReadyForPull's Mode:" + mMode);
 		switch (mMode) {
 		case PULL_DOWN_TO_REFRESH:
 			return isReadyForPullDown();
@@ -926,7 +942,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 		final int newHeight;
 		final int oldHeight = getScrollY();
-
+		Log.v("PullEvent", "oldHeight:" + oldHeight);
 		switch (mCurrentMode) {
 		case PULL_UP_TO_REFRESH:
 			newHeight = Math.round(Math.max(mInitialMotionY - mLastMotionY, 0)
@@ -936,6 +952,10 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		default:
 			newHeight = Math.round(Math.min(mInitialMotionY - mLastMotionY, 0)
 					/ FRICTION);
+			Log.v("PullEvent", "mInitialMotionY:" + mInitialMotionY);
+			Log.v("PullEvent", "mLastMotionY:" + mLastMotionY);
+			Log.v("PullEvent", "FRICTION:" + FRICTION);
+			Log.v("PullEvent", "newHeight:" + newHeight);
 			break;
 		}
 
