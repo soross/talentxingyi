@@ -22,7 +22,6 @@ import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
@@ -45,6 +45,8 @@ public class LoadingLayout extends FrameLayout {
 
 	/** ¶¯»­Ê±¼ä */
 	static final int DEFAULT_ROTATION_ANIMATION_DURATION = 600;
+
+	private final ProgressBar mProgressBar;
 
 	private final ImageView mHeaderImage;
 	private final Matrix mHeaderImageMatrix;
@@ -69,10 +71,11 @@ public class LoadingLayout extends FrameLayout {
 				R.layout.pull_to_refresh_header, this);
 		mHeaderText = (TextView) header.findViewById(R.id.pull_to_refresh_text);
 		mSubHeaderText = (TextView) header
-				.findViewById(R.id.pull_to_refresh_sub_text);
+				.findViewById(R.id.pull_to_refresh_updated_at);
 		mHeaderImage = (ImageView) header
 				.findViewById(R.id.pull_to_refresh_image);
-
+		mProgressBar = (ProgressBar) header
+				.findViewById(R.id.pull_to_refresh_progress);
 		mHeaderImage.setScaleType(ScaleType.MATRIX);
 		mHeaderImageMatrix = new Matrix();
 		mHeaderImage.setImageMatrix(mHeaderImageMatrix);
@@ -107,7 +110,7 @@ public class LoadingLayout extends FrameLayout {
 					.getString(R.string.pull_to_refresh_release_label);
 			break;
 		}
-		
+
 		if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderTextColor)) {
 			ColorStateList colors = attrs
 					.getColorStateList(R.styleable.PullToRefresh_ptrHeaderTextColor);
@@ -138,7 +141,7 @@ public class LoadingLayout extends FrameLayout {
 		// If we don't have a user defined drawable, load the default
 		if (null == imageDrawable) {
 			imageDrawable = context.getResources().getDrawable(
-					R.drawable.default_ptr_drawable);
+					R.drawable.ic_pulltorefresh_arrow);
 		}
 
 		// Set Drawable, and save width/height

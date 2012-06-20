@@ -83,20 +83,15 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView>
 	public final void onScroll(final AbsListView view,
 			final int firstVisibleItem, final int visibleItemCount,
 			final int totalItemCount) {
-
-		if (DEBUG) {
-			Log.d(TAG, "First Visible: " + firstVisibleItem
-					+ ". Visible Count: " + visibleItemCount
-					+ ". Total Items: " + totalItemCount);
-		}
+		// Log.v("TouchEvent", "onScroll");
+		// Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: "
+		// + visibleItemCount + ". Total Items: " + totalItemCount);
 
 		// If we have a OnItemVisibleListener, do check...
-		if (null != mOnLastItemVisibleListener) {
-
+		if (null != mOnLastItemVisibleListener) {// 经测试始终为null
 			// Detect whether the last visible item has changed
 			final int lastVisibleItemIndex = firstVisibleItem
 					+ visibleItemCount;
-
 			/**
 			 * Check that the last item has changed, we have any items, and that
 			 * the last item is visible. lastVisibleItemIndex is a zero-based
@@ -113,11 +108,12 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView>
 
 		// If we're showing the indicator, check positions...
 		if (getShowIndicatorInternal()) {
+			// Log.v(TAG, "getShowIndicatorInternal");
 			updateIndicatorViewsVisibility();
 		}
 
 		// Finally call OnScrollListener if we have one
-		if (null != mOnScrollListener) {
+		if (null != mOnScrollListener) {// 经测试始终为空
 			mOnScrollListener.onScroll(view, firstVisibleItem,
 					visibleItemCount, totalItemCount);
 		}
@@ -125,6 +121,8 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView>
 
 	public final void onScrollStateChanged(final AbsListView view,
 			final int scrollState) {
+		// Log.v("TouchEvent", "onScrollStateChanged");
+		// Log.v(TAG, "onScrollStateChanged:" + scrollState);
 		if (null != mOnScrollListener) {
 			mOnScrollListener.onScrollStateChanged(view, scrollState);
 		}
