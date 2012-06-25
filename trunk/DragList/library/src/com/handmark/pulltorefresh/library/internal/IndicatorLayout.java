@@ -16,6 +16,7 @@
 package com.handmark.pulltorefresh.library.internal;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -31,6 +32,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.R;
 
 public class IndicatorLayout extends FrameLayout implements AnimationListener {
+
+	private static final String TAG = "IndicatorLayout";
 
 	static final int DEFAULT_ROTATION_ANIMATION_DURATION = 150;
 
@@ -79,14 +82,14 @@ public class IndicatorLayout extends FrameLayout implements AnimationListener {
 				0.5f);
 		mRotateAnimation.setInterpolator(interpolator);
 		mRotateAnimation.setDuration(DEFAULT_ROTATION_ANIMATION_DURATION);
-		mRotateAnimation.setFillAfter(true);
+		mRotateAnimation.setFillAfter(true);// 动画结束后保持最后一帧
 
 		mResetRotateAnimation = new RotateAnimation(-180, 0,
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
 				0.5f);
 		mResetRotateAnimation.setInterpolator(interpolator);
 		mResetRotateAnimation.setDuration(DEFAULT_ROTATION_ANIMATION_DURATION);
-		mResetRotateAnimation.setFillAfter(true);
+		mResetRotateAnimation.setFillAfter(true);// 动画结束后保持最后一帧
 
 	}
 
@@ -109,6 +112,10 @@ public class IndicatorLayout extends FrameLayout implements AnimationListener {
 
 	@Override
 	public void onAnimationEnd(Animation animation) {
+		Log.v(TAG, "OnAnimationEnd and (animation==mOutAnim:"
+				+ (animation == mOutAnim) + "),(animation == mInAnim:"
+				+ (animation == mInAnim) + ")");
+
 		if (animation == mOutAnim) {
 			mArrowImageView.clearAnimation();
 			setVisibility(View.GONE);
@@ -126,6 +133,7 @@ public class IndicatorLayout extends FrameLayout implements AnimationListener {
 
 	@Override
 	public void onAnimationStart(Animation animation) {
+		Log.v(TAG, "OnAnimationStart");
 		setVisibility(View.VISIBLE);
 	}
 
