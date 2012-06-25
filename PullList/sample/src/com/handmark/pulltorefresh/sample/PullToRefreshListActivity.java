@@ -17,11 +17,6 @@ package com.handmark.pulltorefresh.sample;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.logging.Logger;
-
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import android.app.ListActivity;
 import android.os.AsyncTask;
@@ -32,6 +27,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshListView.OnMoreDetailListener;
 
 public class PullToRefreshListActivity extends ListActivity {
 
@@ -71,6 +72,15 @@ public class PullToRefreshListActivity extends ListActivity {
 				new GetDataTask().execute();
 			}
 		});
+		mPullRefreshListView
+				.setOnMoreDetailListener(new OnMoreDetailListener() {
+
+					@Override
+					public void onRefresh() {
+						// TODO Auto-generated method stub
+						new GetDataTask().execute();
+					}
+				});
 
 		ListView actualListView = mPullRefreshListView.getRefreshableView();
 
@@ -98,12 +108,11 @@ public class PullToRefreshListActivity extends ListActivity {
 
 		@Override
 		protected void onPostExecute(String[] result) {
-			mListItems.addFirst("Added after refresh...");
+			mListItems.addLast("Added Last");
 			mAdapter.notifyDataSetChanged();
 
 			// Call onRefreshComplete when the list has been refreshed.
 			mPullRefreshListView.onRefreshComplete();
-
 			super.onPostExecute(result);
 		}
 	}
