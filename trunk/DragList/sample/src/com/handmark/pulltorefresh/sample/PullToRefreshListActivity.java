@@ -53,9 +53,12 @@ public class PullToRefreshListActivity extends ListActivity {
 		mPullRefreshListView.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				mPullRefreshListView.setLastUpdatedLabel(DateUtils.formatDateTime(getApplicationContext(),
-						System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
-								| DateUtils.FORMAT_ABBREV_ALL));
+				mPullRefreshListView.setLastUpdatedLabel(DateUtils
+						.formatDateTime(getApplicationContext(),
+								System.currentTimeMillis(),
+								DateUtils.FORMAT_SHOW_TIME
+										| DateUtils.FORMAT_SHOW_DATE
+										| DateUtils.FORMAT_ABBREV_ALL));
 
 				// Do work to refresh the list here.
 				new GetDataTask().execute();
@@ -67,7 +70,8 @@ public class PullToRefreshListActivity extends ListActivity {
 		mListItems = new LinkedList<String>();
 		mListItems.addAll(Arrays.asList(mStrings));
 
-		mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mListItems);
+		mAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, mListItems);
 
 		// You can also just use setListAdapter(mAdapter)
 		actualListView.setAdapter(mAdapter);
@@ -100,10 +104,16 @@ public class PullToRefreshListActivity extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, MENU_MANUAL_REFRESH, 0, "Manual Refresh");
-		menu.add(0, MENU_DISABLE_SCROLL, 1,
+		menu.add(
+				0,
+				MENU_DISABLE_SCROLL,
+				1,
 				mPullRefreshListView.isDisableScrollingWhileRefreshing() ? "Enable Scrolling while Refreshing"
 						: "Disable Scrolling while Refreshing");
-		menu.add(0, MENU_SET_MODE, 0,
+		menu.add(
+				0,
+				MENU_SET_MODE,
+				0,
 				mPullRefreshListView.getMode() == Mode.BOTH ? "Change to MODE_PULL_DOWN"
 						: "Change to MODE_PULL_BOTH");
 		return super.onCreateOptionsMenu(menu);
@@ -113,12 +123,14 @@ public class PullToRefreshListActivity extends ListActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem disableItem = menu.findItem(MENU_DISABLE_SCROLL);
 		disableItem
-				.setTitle(mPullRefreshListView.isDisableScrollingWhileRefreshing() ? "Enable Scrolling while Refreshing"
+				.setTitle(mPullRefreshListView
+						.isDisableScrollingWhileRefreshing() ? "Enable Scrolling while Refreshing"
 						: "Disable Scrolling while Refreshing");
 
 		MenuItem setModeItem = menu.findItem(MENU_SET_MODE);
-		setModeItem.setTitle(mPullRefreshListView.getMode() == Mode.BOTH ? "Change to MODE_PULL_DOWN"
-				: "Change to MODE_PULL_BOTH");
+		setModeItem
+				.setTitle(mPullRefreshListView.getMode() == Mode.BOTH ? "Change to MODE_PULL_DOWN"
+						: "Change to MODE_PULL_BOTH");
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -127,27 +139,31 @@ public class PullToRefreshListActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-			case MENU_MANUAL_REFRESH:
-				new GetDataTask().execute();
-				mPullRefreshListView.setRefreshing(false);
-				break;
-			case MENU_DISABLE_SCROLL:
-				mPullRefreshListView.setDisableScrollingWhileRefreshing(!mPullRefreshListView
-						.isDisableScrollingWhileRefreshing());
-				break;
-			case MENU_SET_MODE:
-				mPullRefreshListView
-						.setMode(mPullRefreshListView.getMode() == Mode.BOTH ? Mode.PULL_DOWN_TO_REFRESH
-								: Mode.BOTH);
-				break;
+		case MENU_MANUAL_REFRESH:
+			new GetDataTask().execute();
+			mPullRefreshListView.setRefreshing(false);
+			break;
+		case MENU_DISABLE_SCROLL:
+			mPullRefreshListView
+					.setDisableScrollingWhileRefreshing(!mPullRefreshListView
+							.isDisableScrollingWhileRefreshing());
+			break;
+		case MENU_SET_MODE:
+			mPullRefreshListView
+					.setMode(mPullRefreshListView.getMode() == Mode.BOTH ? Mode.PULL_DOWN_TO_REFRESH
+							: Mode.BOTH);
+			break;
 		}
 
 		return super.onOptionsItemSelected(item);
 	}
 
-	private String[] mStrings = { "Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
-			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
-			"Allgauer Emmentaler", "Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
-			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
+	private String[] mStrings = { "Abbaye de Belloc",
+			"Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
+			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu",
+			"Airag", "Airedale", "Aisy Cendre", "Allgauer Emmentaler",
+			"Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam",
+			"Abondance", "Ackawi", "Acorn", "Adelost", "Affidelice au Chablis",
+			"Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
 			"Allgauer Emmentaler" };
 }

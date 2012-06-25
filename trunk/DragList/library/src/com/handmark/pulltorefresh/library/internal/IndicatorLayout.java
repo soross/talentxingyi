@@ -43,27 +43,28 @@ public class IndicatorLayout extends FrameLayout implements AnimationListener {
 		super(context);
 
 		mArrowImageView = new ImageView(context);
-		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+				FrameLayout.LayoutParams.WRAP_CONTENT,
 				FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
-		lp.topMargin = lp.bottomMargin = lp.leftMargin = lp.rightMargin = getResources().getDimensionPixelSize(
-				R.dimen.indicator_internal_padding);
+		lp.topMargin = lp.bottomMargin = lp.leftMargin = lp.rightMargin = getResources()
+				.getDimensionPixelSize(R.dimen.indicator_internal_padding);
 		addView(mArrowImageView, lp);
 
 		int inAnimResId, outAnimResId;
 		switch (mode) {
-			case PULL_UP_TO_REFRESH:
-				inAnimResId = R.anim.slide_in_from_bottom;
-				outAnimResId = R.anim.slide_out_to_bottom;
-				setBackgroundResource(R.drawable.indicator_bg_bottom);
-				mArrowImageView.setImageResource(R.drawable.arrow_up);
-				break;
-			default:
-			case PULL_DOWN_TO_REFRESH:
-				inAnimResId = R.anim.slide_in_from_top;
-				outAnimResId = R.anim.slide_out_to_top;
-				setBackgroundResource(R.drawable.indicator_bg_top);
-				mArrowImageView.setImageResource(R.drawable.arrow_down);
-				break;
+		case PULL_UP_TO_REFRESH:
+			inAnimResId = R.anim.slide_in_from_bottom;
+			outAnimResId = R.anim.slide_out_to_bottom;
+			setBackgroundResource(R.drawable.indicator_bg_bottom);
+			mArrowImageView.setImageResource(R.drawable.arrow_up);
+			break;
+		default:
+		case PULL_DOWN_TO_REFRESH:
+			inAnimResId = R.anim.slide_in_from_top;
+			outAnimResId = R.anim.slide_out_to_top;
+			setBackgroundResource(R.drawable.indicator_bg_top);
+			mArrowImageView.setImageResource(R.drawable.arrow_down);
+			break;
 		}
 
 		mInAnim = AnimationUtils.loadAnimation(context, inAnimResId);
@@ -73,14 +74,16 @@ public class IndicatorLayout extends FrameLayout implements AnimationListener {
 		mOutAnim.setAnimationListener(this);
 
 		final Interpolator interpolator = new LinearInterpolator();
-		mRotateAnimation = new RotateAnimation(0, -180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+		mRotateAnimation = new RotateAnimation(0, -180,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
 				0.5f);
 		mRotateAnimation.setInterpolator(interpolator);
 		mRotateAnimation.setDuration(DEFAULT_ROTATION_ANIMATION_DURATION);
 		mRotateAnimation.setFillAfter(true);
 
-		mResetRotateAnimation = new RotateAnimation(-180, 0, Animation.RELATIVE_TO_SELF, 0.5f,
-				Animation.RELATIVE_TO_SELF, 0.5f);
+		mResetRotateAnimation = new RotateAnimation(-180, 0,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
 		mResetRotateAnimation.setInterpolator(interpolator);
 		mResetRotateAnimation.setDuration(DEFAULT_ROTATION_ANIMATION_DURATION);
 		mResetRotateAnimation.setFillAfter(true);
