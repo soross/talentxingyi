@@ -49,7 +49,7 @@ public class LoadingLayout extends FrameLayout {
 	private final ProgressBar mProgressBar;
 
 	private final ImageView mHeaderImage;
-	private final Matrix mHeaderImageMatrix;
+	// private final Matrix mHeaderImageMatrix;
 
 	private final TextView mHeaderText;
 	private final TextView mSubHeaderText;
@@ -64,6 +64,8 @@ public class LoadingLayout extends FrameLayout {
 	private float mRotationPivotX, mRotationPivotY;
 
 	private final Animation mRotateAnimation;
+	private RotateAnimation mFlipAnimation;
+	private RotateAnimation mReverseFlipAnimation;
 
 	public LoadingLayout(Context context, final Mode mode, TypedArray attrs) {
 		super(context);
@@ -76,9 +78,9 @@ public class LoadingLayout extends FrameLayout {
 				.findViewById(R.id.pull_to_refresh_image);
 		mProgressBar = (ProgressBar) header
 				.findViewById(R.id.pull_to_refresh_progress);
-		mHeaderImage.setScaleType(ScaleType.MATRIX);
-		mHeaderImageMatrix = new Matrix();
-		mHeaderImage.setImageMatrix(mHeaderImageMatrix);
+		// mHeaderImage.setScaleType(ScaleType.MATRIX);
+		// mHeaderImageMatrix = new Matrix();
+		// mHeaderImage.setImageMatrix(mHeaderImageMatrix);
 
 		final Interpolator interpolator = new LinearInterpolator();
 		mRotateAnimation = new RotateAnimation(0, 360,
@@ -88,6 +90,19 @@ public class LoadingLayout extends FrameLayout {
 		mRotateAnimation.setDuration(DEFAULT_ROTATION_ANIMATION_DURATION);
 		mRotateAnimation.setRepeatCount(Animation.INFINITE);
 		mRotateAnimation.setRepeatMode(Animation.RESTART);
+
+		mFlipAnimation = new RotateAnimation(0, 180,
+				RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+				RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+		mFlipAnimation.setInterpolator(new LinearInterpolator());
+		mFlipAnimation.setDuration(250);
+		mFlipAnimation.setFillAfter(true);
+		mReverseFlipAnimation = new RotateAnimation(180, 0,
+				RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+				RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+		mReverseFlipAnimation.setInterpolator(new LinearInterpolator());
+		mReverseFlipAnimation.setDuration(250);
+		mReverseFlipAnimation.setFillAfter(true);
 
 		switch (mode) {
 		case PULL_UP_TO_REFRESH:
@@ -152,6 +167,7 @@ public class LoadingLayout extends FrameLayout {
 
 	public void reset() {
 		mHeaderText.setText(Html.fromHtml(mPullLabel));
+		mProgressBar.setVisibility(View.GONE);
 		mHeaderImage.setVisibility(View.VISIBLE);
 		mHeaderImage.clearAnimation();
 
@@ -165,6 +181,8 @@ public class LoadingLayout extends FrameLayout {
 	}
 
 	public void releaseToRefresh() {
+		mHeaderImage.clearAnimation();
+		mHeaderImage.startAnimation(mFlipAnimation);
 		mHeaderText.setText(Html.fromHtml(mReleaseLabel));
 	}
 
@@ -175,7 +193,8 @@ public class LoadingLayout extends FrameLayout {
 	public void refreshing() {
 		mHeaderText.setText(Html.fromHtml(mRefreshingLabel));
 		mHeaderImage.startAnimation(mRotateAnimation);
-
+		mProgressBar.setVisibility(View.VISIBLE);
+		mHeaderImage.setVisibility(View.GONE);
 		mSubHeaderText.setVisibility(View.GONE);
 	}
 
@@ -188,6 +207,8 @@ public class LoadingLayout extends FrameLayout {
 	}
 
 	public void pullToRefresh() {
+		mHeaderImage.clearAnimation();
+		mHeaderImage.startAnimation(mReverseFlipAnimation);
 		mHeaderText.setText(Html.fromHtml(mPullLabel));
 	}
 
@@ -225,13 +246,13 @@ public class LoadingLayout extends FrameLayout {
 	}
 
 	public void onPullY(float scaleOfHeight) {
-		mHeaderImageMatrix.setRotate(scaleOfHeight * 90, mRotationPivotX,
-				mRotationPivotY);
-		mHeaderImage.setImageMatrix(mHeaderImageMatrix);
+		// mHeaderImageMatrix.setRotate(scaleOfHeight * 90, mRotationPivotX,
+		// mRotationPivotY);
+		// mHeaderImage.setImageMatrix(mHeaderImageMatrix);
 	}
 
 	private void resetImageRotation() {
-		mHeaderImageMatrix.reset();
-		mHeaderImage.setImageMatrix(mHeaderImageMatrix);
+		// mHeaderImageMatrix.reset();
+		// mHeaderImage.setImageMatrix(mHeaderImageMatrix);
 	}
 }

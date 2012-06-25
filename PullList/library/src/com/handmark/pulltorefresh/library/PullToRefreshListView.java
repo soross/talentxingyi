@@ -19,22 +19,27 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
+import com.handmark.pulltorefresh.library.internal.MoreLayout;
 
 public class PullToRefreshListView extends
 		PullToRefreshAdapterViewBase<ListView> {
 
 	private LoadingLayout mHeaderLoadingView;
-	private LoadingLayout mFooterLoadingView;
+	private MoreLayout mFooterLoadingView;
 
 	private FrameLayout mLvFooterLoadingFrame;
+
+	OnMoreDetailListener mOnMoreDetailListener;
 
 	public PullToRefreshListView(Context context) {
 		super(context);
@@ -62,9 +67,9 @@ public class PullToRefreshListView extends
 		if (null != mHeaderLoadingView && mode.canPullDown()) {
 			mHeaderLoadingView.setPullLabel(pullLabel);
 		}
-		if (null != mFooterLoadingView && mode.canPullUp()) {
-			mFooterLoadingView.setPullLabel(pullLabel);
-		}
+		// if (null != mFooterLoadingView && mode.canPullUp()) {
+		// mFooterLoadingView.setPullLabel(pullLabel);
+		// }
 	}
 
 	public void setRefreshingLabel(String refreshingLabel, Mode mode) {
@@ -73,9 +78,9 @@ public class PullToRefreshListView extends
 		if (null != mHeaderLoadingView && mode.canPullDown()) {
 			mHeaderLoadingView.setRefreshingLabel(refreshingLabel);
 		}
-		if (null != mFooterLoadingView && mode.canPullUp()) {
-			mFooterLoadingView.setRefreshingLabel(refreshingLabel);
-		}
+		// if (null != mFooterLoadingView && mode.canPullUp()) {
+		// mFooterLoadingView.setRefreshingLabel(refreshingLabel);
+		// }
 	}
 
 	public void setReleaseLabel(String releaseLabel, Mode mode) {
@@ -84,9 +89,9 @@ public class PullToRefreshListView extends
 		if (null != mHeaderLoadingView && mode.canPullDown()) {
 			mHeaderLoadingView.setReleaseLabel(releaseLabel);
 		}
-		if (null != mFooterLoadingView && mode.canPullUp()) {
-			mFooterLoadingView.setReleaseLabel(releaseLabel);
-		}
+		// if (null != mFooterLoadingView && mode.canPullUp()) {
+		// mFooterLoadingView.setReleaseLabel(releaseLabel);
+		// }
 	}
 
 	@Override
@@ -108,12 +113,21 @@ public class PullToRefreshListView extends
 		lv.addHeaderView(frame, null, false);
 
 		mLvFooterLoadingFrame = new FrameLayout(context);
-		mFooterLoadingView = new LoadingLayout(context,
-				Mode.PULL_UP_TO_REFRESH, a);
+		mFooterLoadingView = new MoreLayout(context, Mode.PULL_UP_TO_REFRESH, a);
 		mLvFooterLoadingFrame.addView(mFooterLoadingView,
 				FrameLayout.LayoutParams.FILL_PARENT,
 				FrameLayout.LayoutParams.WRAP_CONTENT);
-		mFooterLoadingView.setVisibility(View.GONE);
+		mFooterLoadingView.setVisibility(View.VISIBLE);
+
+		mFooterLoadingView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				setCurrentStatus(PullToRefreshBase.TAP_TO_REFRESH);
+				mFooterLoadingView.refreshing();
+				mOnMoreDetailListener.onRefresh();
+			}
+		});
 
 		a.recycle();
 
@@ -123,22 +137,26 @@ public class PullToRefreshListView extends
 	}
 
 	protected int getNumberInternalFooterViews() {
+		// return 0;
 		return null != mFooterLoadingView ? 1 : 0;
 	}
 
 	protected int getNumberInternalHeaderViews() {
+		// return 0;
 		return null != mHeaderLoadingView ? 1 : 0;
 	}
 
 	@Override
 	protected void resetHeader() {
-
 		// If we're not showing the Refreshing view, or the list is empty, then
 		// the header/footer views won't show so we use the
 		// normal method
+		Log.v("ResetHeader", "child resetHeader");
+
 		ListAdapter adapter = mRefreshableView.getAdapter();
 		if (!getShowViewWhileRefreshing() || null == adapter
 				|| adapter.isEmpty()) {
+			Log.v("Refresh", "return 1");
 			super.resetHeader();
 			return;
 		}
@@ -151,12 +169,12 @@ public class PullToRefreshListView extends
 		boolean scroll;
 
 		switch (getCurrentMode()) {
-		case PULL_UP_TO_REFRESH:
-			originalLoadingLayout = getFooterLayout();
-			listViewLoadingLayout = mFooterLoadingView;
-			selection = mRefreshableView.getCount() - 1;
-			scroll = mRefreshableView.getLastVisiblePosition() == selection;
-			break;
+		// case PULL_UP_TO_REFRESH:
+		// originalLoadingLayout = getFooterLayout();
+		// listViewLoadingLayout = mFooterLoadingView;
+		// selection = mRefreshableView.getCount() - 1;
+		// scroll = mRefreshableView.getLastVisiblePosition() == selection;
+		// break;
 		case PULL_DOWN_TO_REFRESH:
 		default:
 			originalLoadingLayout = getHeaderLayout();
@@ -169,6 +187,7 @@ public class PullToRefreshListView extends
 
 		// Set our Original View to Visible
 		originalLoadingLayout.setVisibility(View.VISIBLE);
+		mFooterLoadingView.reset();
 
 		/**
 		 * Scroll so the View is at the same Y as the ListView header/footer,
@@ -182,7 +201,7 @@ public class PullToRefreshListView extends
 
 		// Hide the ListView Header/Footer
 		listViewLoadingLayout.setVisibility(View.GONE);
-
+		Log.v("Refresh", "return 2");
 		super.resetHeader();
 	}
 
@@ -205,12 +224,12 @@ public class PullToRefreshListView extends
 		final int selection, scrollToY;
 
 		switch (getCurrentMode()) {
-		case PULL_UP_TO_REFRESH:
-			originalLoadingLayout = getFooterLayout();
-			listViewLoadingLayout = mFooterLoadingView;
-			selection = mRefreshableView.getCount() - 1;
-			scrollToY = getScrollY() - getHeaderHeight();
-			break;
+		// case PULL_UP_TO_REFRESH:
+		// originalLoadingLayout = getFooterLayout();
+		// listViewLoadingLayout = mFooterLoadingView;
+		// selection = mRefreshableView.getCount() - 1;
+		// scrollToY = getScrollY() - getHeaderHeight();
+		// break;
 		case PULL_DOWN_TO_REFRESH:
 		default:
 			originalLoadingLayout = getHeaderLayout();
@@ -241,6 +260,14 @@ public class PullToRefreshListView extends
 			// Smooth scroll as normal
 			smoothScrollTo(0);
 		}
+	}
+
+	public final void setOnMoreDetailListener(OnMoreDetailListener listener) {
+		mOnMoreDetailListener = listener;
+	}
+
+	public static interface OnMoreDetailListener {
+		public void onRefresh();
 	}
 
 	class InternalListView extends ListView implements EmptyViewMethodAccessor {
