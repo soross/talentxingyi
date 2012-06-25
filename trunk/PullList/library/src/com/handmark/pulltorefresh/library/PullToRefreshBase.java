@@ -48,13 +48,15 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	static final float FRICTION = 2.0f;
 
 	/** 拉动刷新 */
-	protected static final int PULL_TO_REFRESH = 0x0;
+	public static final int PULL_TO_REFRESH = 0x0;
 	/** 放开刷新 */
-	protected static final int RELEASE_TO_REFRESH = 0x1;
+	public static final int RELEASE_TO_REFRESH = 0x1;
 	/** 刷新中 */
-	protected static final int REFRESHING = 0x2;
+	public static final int REFRESHING = 0x2;
 	/** 手动刷新 */
-	protected static final int MANUAL_REFRESHING = 0x3;
+	public static final int MANUAL_REFRESHING = 0x3;
+
+	public static final int TAP_TO_REFRESH = 0x4;
 
 	/** 默认加载模式：拉下刷新模式 */
 	private static final Mode DEFAULT_MODE = Mode.PULL_DOWN_TO_REFRESH;
@@ -87,8 +89,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	private boolean mShowViewWhileRefreshing = true;
 	private boolean mDisableScrollingWhileRefreshing = true;
 	private boolean mFilterTouchEvents = true;
-	private LoadingLayout mHeaderLayout;
-	private LoadingLayout mFooterLayout;
+	protected LoadingLayout mHeaderLayout;
+	protected LoadingLayout mFooterLayout;
 
 	private int mHeaderHeight;
 	private final Handler mHandler = new Handler();
@@ -119,6 +121,10 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		Log.v(TAG, "构造函数：PullToRefreshBase(Context context, Mode mode)");
 		mMode = mode;
 		init(context, null);
+	}
+
+	protected void setCurrentStatus(int mStatus) {
+		mState = mStatus;
 	}
 
 	/**
@@ -760,6 +766,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	// ===========================================================
 
 	protected void resetHeader() {
+
 		mState = PULL_TO_REFRESH;
 		mIsBeingDragged = false;
 

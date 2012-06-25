@@ -121,8 +121,15 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView>
 
 	public final void onScrollStateChanged(final AbsListView view,
 			final int scrollState) {
+		Log.v(TAG, "view : " + (view.getClass().toString()));
 		// Log.v("TouchEvent", "onScrollStateChanged");
 		// Log.v(TAG, "onScrollStateChanged:" + scrollState);
+		if (view.getClass()
+				.toString()
+				.equals("class com.handmark.pulltorefresh.library.PullToRefreshListView$InternalListView")) {
+			Log.v(TAG, "1");
+		}
+
 		if (null != mOnScrollListener) {
 			mOnScrollListener.onScrollStateChanged(view, scrollState);
 		}
