@@ -38,10 +38,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	// ===========================================================
 	// Constants
 	// ===========================================================
-
+	private static final String TAG = "PullToRefreshBase";
 	static final boolean DEBUG = false;
-
-	static final String LOG_TAG = "PullToRefresh";
 
 	static final float FRICTION = 2.0f;
 
@@ -89,26 +87,6 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	private OnRefreshListener2 mOnRefreshListener2;
 
 	private SmoothScrollRunnable mCurrentSmoothScrollRunnable;
-
-	// ===========================================================
-	// Constructors
-	// ===========================================================
-
-	public PullToRefreshBase(Context context) {
-		super(context);
-		init(context, null);
-	}
-
-	public PullToRefreshBase(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init(context, attrs);
-	}
-
-	public PullToRefreshBase(Context context, Mode mode) {
-		super(context);
-		mMode = mode;
-		init(context, null);
-	}
 
 	/**
 	 * Get the mode that this view is currently in. This is only really useful
@@ -192,6 +170,52 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	}
 
 	/**
+	 * By default the Widget disabled scrolling on the Refreshable View while
+	 * refreshing. This method can change this behaviour.
+	 * 
+	 * @param disableScrollingWhileRefreshing
+	 *            - true if you want to disable scrolling while refreshing
+	 */
+	public final void setDisableScrollingWhileRefreshing(
+			boolean disableScrollingWhileRefreshing) {
+		mDisableScrollingWhileRefreshing = disableScrollingWhileRefreshing;
+	}
+
+	/**
+	 * Set the Touch Events to be filtered or not. If set to true, then the View
+	 * will only use touch events where the difference in the Y-axis is greater
+	 * than the difference in the X-axis. This means that the View will not
+	 * interfere when it is used in a horizontal scrolling View (such as a
+	 * ViewPager), but will restrict which types of finger scrolls will trigger
+	 * the View.
+	 * 
+	 * @param filterEvents
+	 *            - true if you want to filter Touch Events. Default is true.
+	 */
+	public final void setFilterTouchEvents(boolean filterEvents) {
+		mFilterTouchEvents = filterEvents;
+	}
+
+	// ===========================================================
+	// Constructors
+	// ===========================================================
+	public PullToRefreshBase(Context context) {
+		super(context);
+		init(context, null);
+	}
+
+	public PullToRefreshBase(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		init(context, attrs);
+	}
+
+	public PullToRefreshBase(Context context, Mode mode) {
+		super(context);
+		mMode = mode;
+		init(context, null);
+	}
+
+	/**
 	 * Returns whether the Widget is currently in the Refreshing mState
 	 * 
 	 * @return true if the Widget is currently refreshing
@@ -203,11 +227,15 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	@Override
 	public final boolean onInterceptTouchEvent(MotionEvent event) {
 
+		// 下拉上拉刷新功能是否开启
 		if (!mPullToRefreshEnabled) {
+			Log.v(TAG, "OnInterceptTouchEvent return 1");
 			return false;
 		}
 
+		// 在刷新中以及在刷新过程中可以滚动
 		if (isRefreshing() && mDisableScrollingWhileRefreshing) {
+			Log.v(TAG, "OnInterceptTouchEvent return 2");
 			return true;
 		}
 
@@ -215,11 +243,13 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 		if (action == MotionEvent.ACTION_CANCEL
 				|| action == MotionEvent.ACTION_UP) {
+			Log.v(TAG, "OnInterceptTouchEvent return 3");
 			mIsBeingDragged = false;
 			return false;
 		}
 
 		if (action != MotionEvent.ACTION_DOWN && mIsBeingDragged) {
+			Log.v(TAG, "OnInterceptTouchEvent return 4");
 			return true;
 		}
 
@@ -261,7 +291,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 			break;
 		}
 		}
-
+		Log.v(TAG, "OnInterceptTouchEvent return 5");
+		Log.v(TAG, "OnInterceptTouchEvent mIsBeingDragged:" + mIsBeingDragged);
 		return mIsBeingDragged;
 	}
 
@@ -278,15 +309,18 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	@Override
 	public final boolean onTouchEvent(MotionEvent event) {
 		if (!mPullToRefreshEnabled) {
+			Log.v(TAG, "OnTouchEvent return 1");
 			return false;
 		}
 
 		if (isRefreshing() && mDisableScrollingWhileRefreshing) {
+			Log.v(TAG, "OnTouchEvent return 2");
 			return true;
 		}
 
 		if (event.getAction() == MotionEvent.ACTION_DOWN
 				&& event.getEdgeFlags() != 0) {
+			Log.v(TAG, "OnTouchEvent return 3");
 			return false;
 		}
 
@@ -294,6 +328,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 		case MotionEvent.ACTION_MOVE: {
 			if (mIsBeingDragged) {
+				Log.v(TAG, "OnTouchEvent return 4");
 				mLastMotionY = event.getY();
 				pullEvent();
 				return true;
@@ -303,6 +338,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 		case MotionEvent.ACTION_DOWN: {
 			if (isReadyForPull()) {
+				Log.v(TAG, "OnTouchEvent return 5");
 				mLastMotionY = mInitialMotionY = event.getY();
 				return true;
 			}
@@ -317,11 +353,13 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 				if (mState == RELEASE_TO_REFRESH) {
 
 					if (null != mOnRefreshListener) {
+						Log.v(TAG, "OnTouchEvent return 6");
 						setRefreshingInternal(true);
 						mOnRefreshListener.onRefresh();
 						return true;
 
 					} else if (null != mOnRefreshListener2) {
+						Log.v(TAG, "OnTouchEvent return 7");
 						setRefreshingInternal(true);
 						if (mCurrentMode == Mode.PULL_DOWN_TO_REFRESH) {
 							mOnRefreshListener2.onPullDownToRefresh();
@@ -330,45 +368,18 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 						}
 						return true;
 					}
-
+					Log.v(TAG, "OnTouchEvent return 8");
 					return true;
 				}
-
+				Log.v(TAG, "OnTouchEvent return 9");
 				smoothScrollTo(0);
 				return true;
 			}
 			break;
 		}
 		}
-
+		Log.v(TAG, "OnTouchEvent return 10");
 		return false;
-	}
-
-	/**
-	 * By default the Widget disabled scrolling on the Refreshable View while
-	 * refreshing. This method can change this behaviour.
-	 * 
-	 * @param disableScrollingWhileRefreshing
-	 *            - true if you want to disable scrolling while refreshing
-	 */
-	public final void setDisableScrollingWhileRefreshing(
-			boolean disableScrollingWhileRefreshing) {
-		mDisableScrollingWhileRefreshing = disableScrollingWhileRefreshing;
-	}
-
-	/**
-	 * Set the Touch Events to be filtered or not. If set to true, then the View
-	 * will only use touch events where the difference in the Y-axis is greater
-	 * than the difference in the X-axis. This means that the View will not
-	 * interfere when it is used in a horizontal scrolling View (such as a
-	 * ViewPager), but will restrict which types of finger scrolls will trigger
-	 * the View.
-	 * 
-	 * @param filterEvents
-	 *            - true if you want to filter Touch Events. Default is true.
-	 */
-	public final void setFilterTouchEvents(boolean filterEvents) {
-		mFilterTouchEvents = filterEvents;
 	}
 
 	/**
@@ -437,7 +448,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	public final void setMode(Mode mode) {
 		if (mode != mMode) {
 			if (DEBUG) {
-				Log.d(LOG_TAG, "Setting mode to: " + mode);
+				Log.d(TAG, "Setting mode to: " + mode);
 			}
 			mMode = mode;
 			updateUIForMode();
@@ -762,7 +773,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		if (mMode.canPullUp()) {
 			mFooterLayout.refreshing();
 		}
-
+		// Log.v(TAG, "mCurrentMode:" + mCurrentMode);
 		if (doScroll) {
 			if (mShowViewWhileRefreshing) {
 				smoothScrollTo(mCurrentMode == Mode.PULL_DOWN_TO_REFRESH ? -mHeaderHeight

@@ -39,6 +39,8 @@ import com.handmark.pulltorefresh.library.R;
 
 public class LoadingLayout extends FrameLayout {
 
+	private static final String TAG = "LoadingLayout";
+
 	static final int DEFAULT_ROTATION_ANIMATION_DURATION = 600;
 
 	private final ImageView mHeaderImage;
