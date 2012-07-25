@@ -15,92 +15,84 @@ public class AsyncRequest {
 	private byte[] requestBody;
 	private boolean isUDP;
 	private NIOThread nioThreadArg;
-	
-	public AsyncRequest()
-	{
+
+	public AsyncRequest() {
 		nioThreadArg = new NIOThread();
 	}
-	
-	public void setBody(byte[] body)
-	{
+
+	public void setBody(byte[] body) {
 		this.requestBody = body;
 	}
-	
-	public void setUDP(boolean aIsUDP)
-	{
+
+	public void setUDP(boolean aIsUDP) {
 		this.isUDP = aIsUDP;
 	}
-	
-	public AsyncRequest(InetSocketAddress sockAddress)
-	{
+
+	public AsyncRequest(InetSocketAddress sockAddress) {
 		nioThreadArg = new NIOThread();
 		this.sockAddress = sockAddress;
 	}
-	
-	public static synchronized ThreadPoolExecutor setThreadPoolNum(int aThreadPoolMinNum,int aThreadPoolMaxNum,long keepAliveTime)
-	{
-		if(threadPool == null)
-		{
-			threadPool = 
-				new ThreadPoolExecutor(aThreadPoolMinNum,aThreadPoolMaxNum,keepAliveTime,TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(3),new ThreadPoolExecutor.DiscardOldestPolicy()); 
+
+	public static synchronized ThreadPoolExecutor setThreadPoolNum(
+			int aThreadPoolMinNum, int aThreadPoolMaxNum, long keepAliveTime) {
+		if (threadPool == null) {
+			threadPool = new ThreadPoolExecutor(aThreadPoolMinNum,
+					aThreadPoolMaxNum, keepAliveTime, TimeUnit.SECONDS,
+					new ArrayBlockingQueue<Runnable>(3),
+					new ThreadPoolExecutor.DiscardOldestPolicy());
 		}
-		
+
 		return threadPool;
 	}
-	
-	public void setConNumPerNIOThread(int aConNumPerNIOThread)
-	{
+
+	public void setConNumPerNIOThread(int aConNumPerNIOThread) {
 		this.ConNumPerNIOThread = aConNumPerNIOThread;
 	}
-	
-	public boolean isCurrRequestFull()
-	{
+
+	public boolean isCurrRequestFull() {
 		return ConNumPerNIOThread == nioThreadArg.getConnectionNum();
 	}
-	
-	public InPacket getResponse(int connectionID)
-	{
+
+	public InPacket getResponse(int connectionID) {
 		IConnection connection;
-		if(isUDP)
-		{
-			connection = nioThreadArg.getConnection("UDPConnection"+connectionID);
-			
-			return ((UDPConnection)connection).getInQueue().remove();
-		}else
-		{
-			connection = nioThreadArg.getConnection("TCPConnection"+connectionID);
-			return ((TCPConnection)connection).getInQueue().remove();
+		if (isUDP) {
+			connection = nioThreadArg.getConnection("UDPConnection"
+					+ connectionID);
+
+			return ((UDPConnection) connection).getInQueue().remove();
+		} else {
+			connection = nioThreadArg.getConnection("TCPConnection"
+					+ connectionID);
+			return ((TCPConnection) connection).getInQueue().remove();
 		}
 	}
-	
-	public void startAsyn(int connectionID) throws Exception
-	{
+
+	public void startAsyn(int connectionID) throws Exception {
 		ByteBuffer buffer = null;
 		OutPacket out = null;
-		
-		if(requestBody != null)
-		{
-				buffer = ByteBuffer.wrap(requestBody);
-				out = new OutPacket(buffer);
-				if(isUDP)
-				{
-					String id = "UDPConnection"+(connectionID);
-					Log.e("startAsyn TCPConnection id", " = "+id);
-					IConnection connection = nioThreadArg.newUDPConnection(id, sockAddress, false);
-					AsyncRequest.threadPool.execute(nioThreadArg);
-					connection.start();
-					
-					nioThreadArg.send(id,out,false);
-				}else
-				{
-					String id = "TCPConnection"+(connectionID);
-					Log.e("startAsyn TCPConnection id", " = "+id);
-					IConnection connection = nioThreadArg.newTCPConnection(id, sockAddress, false);
-					AsyncRequest.threadPool.execute(nioThreadArg);
-					connection.start();
-					
-					nioThreadArg.send(id,out,false);
-				}
+
+		if (requestBody != null) {
+			buffer = ByteBuffer.wrap(requestBody);
+			out = new OutPacket(buffer);
+			if (isUDP) {
+				String id = "UDPConnection" + (connectionID);
+				Log.e("startAsyn TCPConnection id", " = " + id);
+				IConnection connection = nioThreadArg.newUDPConnection(id,
+						sockAddress, false);
+				AsyncRequest.threadPool.execute(nioThreadArg);
+				connection.start();
+
+				nioThreadArg.send(id, out, false);
+			} else {
+				String id = "TCPConnection" + (connectionID);
+				Log.e("startAsyn TCPConnection id", " = " + id);
+				IConnection connection = nioThreadArg.newTCPConnection(id,
+						sockAddress, false);
+				AsyncRequest.threadPool.execute(nioThreadArg);
+				connection.start();
+
+				nioThreadArg.send(id, out, false);
+			}
 		}
 	}
 }
