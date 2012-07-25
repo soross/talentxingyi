@@ -11,72 +11,73 @@ public class OutPacket extends Packet {
 	protected int resendCountDown;
 
 	protected long timeout;
-	
+
 	protected int sendCount;
-   
-    public OutPacket(byte header, char command, boolean ack) {
+
+	public OutPacket(byte header, char command, boolean ack) {
 		super(header, EnginConst.QQ_CLIENT_VERSION_0F5F, command, getNextSeq());
 		this.ack = ack;
 		this.resendCountDown = EnginConst.QQ_SEND_TIME_NOACK_PACKET;
 		this.sendCount = 1;
-    }    
-    
-	public OutPacket(ByteBuffer buf){
-	    super(buf);
 	}
 
-	protected OutPacket(ByteBuffer buf, int length){
-	    super(buf, length);
-	}		
-	
+	public OutPacket(ByteBuffer buf) {
+		super(buf);
+	}
 
-    protected void parseBody(ByteBuffer buf) throws PacketParseException {
-    }
-	
+	protected OutPacket(ByteBuffer buf, int length) {
+		super(buf, length);
+	}
+
+	protected void parseBody(ByteBuffer buf) throws PacketParseException {
+	}
+
 	protected static char getNextSeq() {
-	    seq++;
-	    seq &= 0x7FFF;
-	    if(seq == 0)
-	        seq++;
-	    return seq;
-	}	
-	
-    public String getPacketName() {
-        return "Unknown Outcoming Packet";
-    }
-	
+		seq++;
+		seq &= 0x7FFF;
+		if (seq == 0)
+			seq++;
+		return seq;
+	}
+
+	public String getPacketName() {
+		return "Unknown Outcoming Packet";
+	}
+
 	public final boolean needResend() {
 		return (resendCountDown--) > 0;
 	}
-	
+
 	public final boolean needAck() {
-	    return ack;
+		return ack;
 	}
-	
-    public final long getTimeout() {
-        return timeout;
-    }
-    
-    /**
-     * @param timeout The timeout to set.
-     */
-    public final void setTimeout(long timeout) {
-        this.timeout = timeout;
-    }
-    
-    /**
-     * @param sendCount The sendCount to set.
-     */
-    public final void setSendCount(int sendCount) {
-        this.sendCount = sendCount;
-    }
-    
-    /**
-     * @return Returns the sendCount.
-     */
-    public final int getSendCount() {
-        return sendCount;
-    }
+
+	public final long getTimeout() {
+		return timeout;
+	}
+
+	/**
+	 * @param timeout
+	 *            The timeout to set.
+	 */
+	public final void setTimeout(long timeout) {
+		this.timeout = timeout;
+	}
+
+	/**
+	 * @param sendCount
+	 *            The sendCount to set.
+	 */
+	public final void setSendCount(int sendCount) {
+		this.sendCount = sendCount;
+	}
+
+	/**
+	 * @return Returns the sendCount.
+	 */
+	public final int getSendCount() {
+		return sendCount;
+	}
 
 	@Override
 	protected byte[] getBodyBytes(ByteBuffer buf, int length) {
@@ -111,31 +112,31 @@ public class OutPacket extends Packet {
 	@Override
 	protected void parseHeader(ByteBuffer buf) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void parseTail(ByteBuffer buf) throws PacketParseException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void putBody(ByteBuffer buf) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void putHead(ByteBuffer buf) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void putTail(ByteBuffer buf) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

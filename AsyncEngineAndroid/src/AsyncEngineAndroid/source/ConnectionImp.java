@@ -1,14 +1,9 @@
 package AsyncEngineAndroid.source;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectableChannel;
-import java.nio.channels.SelectionKey;
 import java.util.LinkedList;
 import java.util.Queue;
-
-import android.util.Log;
 
 public abstract class ConnectionImp implements IConnection, INIOHandler {
 
@@ -43,7 +38,7 @@ public abstract class ConnectionImp implements IConnection, INIOHandler {
 	public synchronized void clearSendQueue() {
 		sendQueue.clear();
 	}
-	
+
 	public synchronized Queue<InPacket> getInQueue() {
 		return inQueue;
 	}
@@ -51,7 +46,7 @@ public abstract class ConnectionImp implements IConnection, INIOHandler {
 	public synchronized void add(OutPacket packet) {
 		sendQueue.offer(packet);
 	}
-	
+
 	public synchronized boolean isEmpty() {
 		return sendQueue.isEmpty();
 	}
@@ -65,7 +60,7 @@ public abstract class ConnectionImp implements IConnection, INIOHandler {
 	}
 
 	public void processError(Exception e) {
-		//Log.d("debug","网络出错，关闭连接, id: " + getId());;
+		// Log.d("debug","网络出错，关闭连接, id: " + getId());;
 	}
 
 	public InetSocketAddress getRemoteAddress() {

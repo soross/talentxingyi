@@ -6,7 +6,8 @@ import android.util.Log;
 
 public abstract class Packet {
 
-	protected static final ByteBuffer bodyBuf = ByteBuffer.allocate(EnginConst.QQ_MAX_PACKET_SIZE);
+	protected static final ByteBuffer bodyBuf = ByteBuffer
+			.allocate(EnginConst.QQ_MAX_PACKET_SIZE);
 
 	protected char command;
 
@@ -25,12 +26,12 @@ public abstract class Packet {
 		this.sequence = sequence;
 	}
 
-	public Packet(ByteBuffer buf){
+	public Packet(ByteBuffer buf) {
 		body = new byte[buf.limit()];
 		buf.get(body);
 	}
 
-	protected Packet(ByteBuffer buf, int length){
+	protected Packet(ByteBuffer buf, int length) {
 	}
 
 	protected abstract int getLength(int bodyLength);
@@ -54,14 +55,14 @@ public abstract class Packet {
 	protected abstract void parseBody(ByteBuffer buf)
 			throws PacketParseException;
 
-	protected abstract void parseHeader(ByteBuffer buf)
-			throws Exception;
+	protected abstract void parseHeader(ByteBuffer buf) throws Exception;
 
 	protected abstract void parseTail(ByteBuffer buf)
 			throws PacketParseException;
 
 	public String toString() {
-		return "Packet name: " + getPacketName() + " Packet Seriesline: " + (int) sequence;
+		return "Packet name: " + getPacketName() + " Packet Seriesline: "
+				+ (int) sequence;
 	}
 
 	public String toDebugString() {
@@ -76,7 +77,7 @@ public abstract class Packet {
 		} else
 			return super.equals(obj);
 	}
-	
+
 	/**
 	 * 把序列号和命令拼起来作为哈希码. 为了避免不同header的包有相同的命令，Header也参与进来
 	 */
