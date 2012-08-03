@@ -13,10 +13,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
@@ -32,19 +32,18 @@ import com.flurry.android.FlurryAgent;
 
 public class Messages extends ExpandableListActivity {
 	private static final String LOG_TAG = "Messages";
-	
+
 	private static final int MENU_COMPOSE = Menu.FIRST + 1;
-    private static final int MENU_REFRESH = Menu.FIRST + 2; 
-    private static final int MENU_TWITTER = Menu.FIRST + 3;
-    private static final int MENU_FAVORITES = Menu.FIRST + 4;
-    private static final int MENU_ABOUT = Menu.FIRST + 5;
-    private static final int MENU_EXIT = Menu.FIRST + 6;
-    
-    private static final int MENU_REPLY = Menu.FIRST + 7;
-    private static final int MENU_DELETE = Menu.FIRST + 8;
-    private static final int MENU_LOGOUT = Menu.FIRST + 9;
-    
-    
+	private static final int MENU_REFRESH = Menu.FIRST + 2;
+	private static final int MENU_TWITTER = Menu.FIRST + 3;
+	private static final int MENU_FAVORITES = Menu.FIRST + 4;
+	private static final int MENU_ABOUT = Menu.FIRST + 5;
+	private static final int MENU_EXIT = Menu.FIRST + 6;
+
+	private static final int MENU_REPLY = Menu.FIRST + 7;
+	private static final int MENU_DELETE = Menu.FIRST + 8;
+	private static final int MENU_LOGOUT = Menu.FIRST + 9;
+
 	private ProgressDialog progressDialog;
 	private ExpandableListAdapter expAdapter;
 	private static List<Map<String, Object>> parentData = new ArrayList<Map<String, Object>>();
@@ -61,7 +60,7 @@ public class Messages extends ExpandableListActivity {
 	private void getData() {
 		parentData.clear();
 		childData.clear();
-		
+
 		for (Message msg : messageList) {
 			Map<String, Object> curGroupMap = new HashMap<String, Object>();
 			parentData.add(curGroupMap);
@@ -83,7 +82,7 @@ public class Messages extends ExpandableListActivity {
 	}
 
 	private void getMessages() {
-	    FlurryAgent.onEvent("Messages Get Messages");
+		FlurryAgent.onEvent("Messages Get Messages");
 		progressDialog = ProgressDialog.show(Messages.this, "请稍等...",
 				"获取收件箱信息...", true);
 		new Thread() {
@@ -94,8 +93,9 @@ public class Messages extends ExpandableListActivity {
 						updateList();
 					}
 				} catch (Exception e) {
-//					Log.e(LOG_TAG, e.getMessage());
-				    FlurryAgent.onError("Get Inbox Error", e.getMessage(), LOG_TAG);
+					// Log.e(LOG_TAG, e.getMessage());
+					FlurryAgent.onError("Get Inbox Error", e.getMessage(),
+							LOG_TAG);
 				}
 				progressDialog.dismiss();
 			}
@@ -103,7 +103,7 @@ public class Messages extends ExpandableListActivity {
 	}
 
 	private void updateList() {
-	    FlurryAgent.onEvent("Messages Update List");
+		FlurryAgent.onEvent("Messages Update List");
 		handler.post(new Runnable() {
 			public void run() {
 				getData();
@@ -140,7 +140,7 @@ public class Messages extends ExpandableListActivity {
 				.getMenuInfo();
 		int type = ExpandableListView
 				.getPackedPositionType(info.packedPosition);
-		int groupPos=-1;
+		int groupPos = -1;
 		if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
 			groupPos = ExpandableListView
 					.getPackedPositionGroup(info.packedPosition);
@@ -150,105 +150,110 @@ public class Messages extends ExpandableListActivity {
 		}
 		switch (item.getItemId()) {
 		case MENU_REPLY:
-		    FlurryAgent.onEvent("Message Reply Action");
-			Intent i=new Intent(Messages.this,MessageReply.class);
+			FlurryAgent.onEvent("Message Reply Action");
+			Intent i = new Intent(Messages.this, MessageReply.class);
 			i.putExtra("replyid", messageList.get(groupPos).id);
 			i.putExtra("title", messageList.get(groupPos).title);
 			startActivity(i);
 			return true;
 		case MENU_DELETE:
-		    FlurryAgent.onEvent("Message Delete Action");
-			Message msg=new Message();
-			boolean flag=false;
-			msg.id=messageList.get(groupPos).id;
+			FlurryAgent.onEvent("Message Delete Action");
+			Message msg = new Message();
+			boolean flag = false;
+			msg.id = messageList.get(groupPos).id;
 			try {
-				flag=JavaEyeApiAccessor.deleteMessage(msg);
+				flag = JavaEyeApiAccessor.deleteMessage(msg);
 			} catch (Exception e) {
-				flag=false;
+				flag = false;
 				Log.e(LOG_TAG, e.getMessage());
 			}
-			if(!flag){
+			if (!flag) {
 				new AlertDialog.Builder(Messages.this)
-                .setMessage("短信删除失败！  请稍后再试!")
-                .setPositiveButton("Okay", null)
-                .show();
-			}else{
-				new AlertDialog.Builder(Messages.this)
-                .setMessage("短信删除成功！")
-                .setPositiveButton("Okay", null)
-                .show();
+						.setMessage("短信删除失败！  请稍后再试!")
+						.setPositiveButton("Okay", null).show();
+			} else {
+				new AlertDialog.Builder(Messages.this).setMessage("短信删除成功！")
+						.setPositiveButton("Okay", null).show();
 			}
 			return true;
 		}
 		return false;
 	}
-	
-	@Override 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        menu.add(0, MENU_COMPOSE, 0, "新短信").setIcon(R.drawable.message).setAlphabeticShortcut('N');
-        menu.add(0, MENU_REFRESH, 0, "更新").setIcon(R.drawable.refresh).setAlphabeticShortcut('R');
-        menu.add(0, MENU_TWITTER, 0, "闲聊").setIcon(R.drawable.twitter).setAlphabeticShortcut('T');;
-        menu.add(0, MENU_FAVORITES, 0, "收藏").setIcon(R.drawable.bookmark).setAlphabeticShortcut('B');
-        menu.add(0, MENU_ABOUT, 0, "关于").setIcon(R.drawable.android_cn).setAlphabeticShortcut('A');
-        menu.add(0, MENU_LOGOUT, 0, "注销").setIcon(R.drawable.logout).setAlphabeticShortcut('L');
-        menu.add(0, MENU_EXIT, 0, "退出").setIcon(R.drawable.exit).setAlphabeticShortcut('X');
-        return true;
-    } 
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case MENU_COMPOSE: {
-                FlurryAgent.onEvent("Messages Compose New Menu Click");
-                Intent i = new Intent(Messages.this,MessageNew.class);
-                startActivity(i);
-                return true;
-            }
-            case MENU_REFRESH:
-                FlurryAgent.onEvent("Messages Refresh Menu Click");
-                getMessages();
-                return true;
-            case MENU_TWITTER: {
-                FlurryAgent.onEvent("Messages Twitters Menu Click");
-                Intent i = new Intent(Messages.this, Twitters.class);
-                startActivity(i);
-                return true;
-            }
-            case MENU_FAVORITES: {
-                FlurryAgent.onEvent("Messages Favorites Menu Click");
-                Intent i = new Intent(Messages.this, Favorites.class);
-                startActivity(i);
-                return true;
-            }            
-            case MENU_ABOUT: {
-                FlurryAgent.onEvent("Messages About Menu Click");
-                Intent i = new Intent(Messages.this, About.class);
-                startActivity(i);
-                return true;
-            }
-            case MENU_LOGOUT: {
-                FlurryAgent.onEvent("Messages Logout Menu Click");
-                Intent i = new Intent(Messages.this, Logout.class);
-                startActivity(i);
-                return true;
-            }           
-            case MENU_EXIT: {
-                FlurryAgent.onEvent("Messages Exit Menu Click");
-                finish();
-                return true;
-            }           
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    
-    public void onStart() {
-        super.onStart();
-        FlurryAgent.onStartSession(this, Constants.FLURRY_API_KEY);
-    }
-    
-    public void onStop() {
-        super.onStop();
-        FlurryAgent.onEndSession(this);
-    }
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		menu.add(0, MENU_COMPOSE, 0, "新短信").setIcon(R.drawable.message)
+				.setAlphabeticShortcut('N');
+		menu.add(0, MENU_REFRESH, 0, "更新").setIcon(R.drawable.refresh)
+				.setAlphabeticShortcut('R');
+		menu.add(0, MENU_TWITTER, 0, "闲聊").setIcon(R.drawable.twitter)
+				.setAlphabeticShortcut('T');
+		;
+		menu.add(0, MENU_FAVORITES, 0, "收藏").setIcon(R.drawable.bookmark)
+				.setAlphabeticShortcut('B');
+		menu.add(0, MENU_ABOUT, 0, "关于").setIcon(R.drawable.android_cn)
+				.setAlphabeticShortcut('A');
+		menu.add(0, MENU_LOGOUT, 0, "注销").setIcon(R.drawable.logout)
+				.setAlphabeticShortcut('L');
+		menu.add(0, MENU_EXIT, 0, "退出").setIcon(R.drawable.exit)
+				.setAlphabeticShortcut('X');
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_COMPOSE: {
+			FlurryAgent.onEvent("Messages Compose New Menu Click");
+			Intent i = new Intent(Messages.this, MessageNew.class);
+			startActivity(i);
+			return true;
+		}
+		case MENU_REFRESH:
+			FlurryAgent.onEvent("Messages Refresh Menu Click");
+			getMessages();
+			return true;
+		case MENU_TWITTER: {
+			FlurryAgent.onEvent("Messages Twitters Menu Click");
+			Intent i = new Intent(Messages.this, Twitters.class);
+			startActivity(i);
+			return true;
+		}
+		case MENU_FAVORITES: {
+			FlurryAgent.onEvent("Messages Favorites Menu Click");
+			Intent i = new Intent(Messages.this, Favorites.class);
+			startActivity(i);
+			return true;
+		}
+		case MENU_ABOUT: {
+			FlurryAgent.onEvent("Messages About Menu Click");
+			Intent i = new Intent(Messages.this, About.class);
+			startActivity(i);
+			return true;
+		}
+		case MENU_LOGOUT: {
+			FlurryAgent.onEvent("Messages Logout Menu Click");
+			Intent i = new Intent(Messages.this, Logout.class);
+			startActivity(i);
+			return true;
+		}
+		case MENU_EXIT: {
+			FlurryAgent.onEvent("Messages Exit Menu Click");
+			finish();
+			return true;
+		}
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	public void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Constants.FLURRY_API_KEY);
+	}
+
+	public void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 }

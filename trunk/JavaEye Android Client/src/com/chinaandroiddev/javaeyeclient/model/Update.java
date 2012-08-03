@@ -1,4 +1,5 @@
 package com.chinaandroiddev.javaeyeclient.model;
+
 /**
  * 
  * @author mqqqvpppm
@@ -20,7 +21,7 @@ import java.util.Date;
 /**
  * 
  * @author mqqqvpppm
- *
+ * 
  */
 public class Update {
 	public long id = NULL_ID;
@@ -30,7 +31,7 @@ public class Update {
 	public User receiver = new User();
 	public long replyToId = NULL_ID;
 	public String via = "JEAndroid_Client";
-	
+
 	public static final long NULL_ID = -1;
 
 }

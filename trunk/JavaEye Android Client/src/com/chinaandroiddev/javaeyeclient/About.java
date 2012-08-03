@@ -20,48 +20,49 @@ import com.flurry.android.FlurryAgent;
 
 public class About extends Activity {
 
-    private static final String LOG_TAG = "About";
-    private LinearLayout logoRow, lordhongRow, mqqqvpppmRow, kopRow;
-    private Animation animLeft, animRight;
-    private Interpolator interpolator;
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.about);
-        
-        animLeft = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
-        animRight = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
-        interpolator = new BackInterpolator(Type.OUT, 0);
-        animLeft.setInterpolator(interpolator);
-        animRight.setInterpolator(interpolator);
-        
-        logoRow = (LinearLayout)findViewById(R.id.logo_row);
-        logoRow.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.CHINAANDROIDDEV_URL));
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("source", LOG_TAG);
-                FlurryAgent.onEvent("Visit ChinaAndroidDev.com", map);
-                startActivity(intent);
-            }
-        });
-        lordhongRow = (LinearLayout)findViewById(R.id.lordhong_row);
-        mqqqvpppmRow = (LinearLayout)findViewById(R.id.mqqqvpppm_row);
-        kopRow = (LinearLayout)findViewById(R.id.kop_row);
-        
-        lordhongRow.startAnimation(animLeft);
-        mqqqvpppmRow.startAnimation(animRight);
-        kopRow.startAnimation(animRight);
-    }
+	private static final String LOG_TAG = "About";
+	private LinearLayout logoRow, lordhongRow, mqqqvpppmRow, kopRow;
+	private Animation animLeft, animRight;
+	private Interpolator interpolator;
 
-    public void onStart() {
-        super.onStart();
-        FlurryAgent.onStartSession(this, Constants.FLURRY_API_KEY);
-    }
-    
-    public void onStop() {
-        super.onStop();
-        FlurryAgent.onEndSession(this);
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.about);
+
+		animLeft = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
+		animRight = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
+		interpolator = new BackInterpolator(Type.OUT, 0);
+		animLeft.setInterpolator(interpolator);
+		animRight.setInterpolator(interpolator);
+
+		logoRow = (LinearLayout) findViewById(R.id.logo_row);
+		logoRow.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri
+						.parse(Constants.CHINAANDROIDDEV_URL));
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("source", LOG_TAG);
+				FlurryAgent.onEvent("Visit ChinaAndroidDev.com", map);
+				startActivity(intent);
+			}
+		});
+		lordhongRow = (LinearLayout) findViewById(R.id.lordhong_row);
+		mqqqvpppmRow = (LinearLayout) findViewById(R.id.mqqqvpppm_row);
+		kopRow = (LinearLayout) findViewById(R.id.kop_row);
+
+		lordhongRow.startAnimation(animLeft);
+		mqqqvpppmRow.startAnimation(animRight);
+		kopRow.startAnimation(animRight);
+	}
+
+	public void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(this, Constants.FLURRY_API_KEY);
+	}
+
+	public void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 }
