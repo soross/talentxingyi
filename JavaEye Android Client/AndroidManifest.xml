@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.chinaandroiddev.javaeyeclient"
+      android:versionCode="2"
+      android:versionName="1.0.1">
+      <uses-permission android:name="android.permission.INTERNET"/>
+      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <application android:icon="@drawable/icon" android:label="@string/app_name">
+        <activity android:name=".Login"
+                  android:label="@string/app_name" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".Main" android:label="主菜单" android:screenOrientation="portrait"/>
+        <activity android:name=".About" android:label="关于" android:screenOrientation="portrait"/>
+        
+        <activity android:name=".ui.Twitters" android:label="闲聊" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.TwitterList" android:label="闲聊" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.ComposeUpdate" android:label="发布新闲聊" android:theme="@android:style/Theme.Dialog" android:screenOrientation="portrait"/>
+        
+        <activity android:name=".ui.Messages" android:label="短信" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.MessageNew" android:label="发送新的站内短信" android:theme="@android:style/Theme.Dialog" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.MessageReply" android:label="回复站内短信" android:theme="@android:style/Theme.Dialog" android:screenOrientation="portrait"/>
+        
+        <activity android:name=".ui.Favorites" android:label="收藏" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.FavoriteEdit" android:label="收藏编辑" android:theme="@android:style/Theme.Dialog" android:screenOrientation="portrait"/>
+    </application>
+    <uses-sdk android:minSdkVersion="3" />
+</manifest> 
