@@ -1,6 +1,7 @@
 package org.talentware.android.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,29 +36,38 @@ public class HomeActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                Intent mIntent = new Intent();
                 Bundle bundle = new Bundle();
                 switch (position) {
                     case 0:
-                        bundle.putByte("topMenuSelect", (byte) 0);
+                        bundle.putByte("DetailType", (byte) position);
+                        mIntent.setClass(HomeActivity.this, DetailActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
                         break;
                     case 1:
+                        bundle.putByte("DetailType", (byte) position);
+                        mIntent.setClass(HomeActivity.this, DetailActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
                         break;
                     case 2:
-                        bundle.putByte("topMenuSelect", (byte) 3);
+                        bundle.putByte("DetailType", (byte) position);
+                        mIntent.setClass(HomeActivity.this, DetailActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
                         break;
                     case 3:
                         break;
                     case 4:
                         break;
                     case 5:
-                        bundle.putByte("topMenuSelect", (byte) 2);
                         break;
                     case 6:
                         break;
                     case 7:
                         break;
                     case 8:
-                        bundle.putByte("topMenuSelect", (byte) 1);
                         break;
                 }
             }
