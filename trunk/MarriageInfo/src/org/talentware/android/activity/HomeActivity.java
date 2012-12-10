@@ -9,7 +9,7 @@ import android.widget.GridView;
 import org.talentware.android.R;
 import org.talentware.android.adapter.GridAdapter;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends BaseActivity {
 
     private static final int COLUMN_NUM = 3;
 
@@ -19,12 +19,16 @@ public class HomeActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-
-        initialView();
     }
 
-    private void initialView() {
+    @Override
+    protected void initialView() {
+        setContentView(R.layout.activity_home);
+
+        mTitleBar = (TitleBar) findViewById(R.id.titlebar);
+        mTitleBar.hideBackButton();
+        mTitleBar.setTitleName("我们结婚啦");
+
         mGridView = (GridView) findViewById(R.id.gv_home);
         mGridView.setNumColumns(COLUMN_NUM);
 //        setPaddingAndSpacing();
@@ -40,20 +44,23 @@ public class HomeActivity extends Activity {
                 Bundle bundle = new Bundle();
                 switch (position) {
                     case 0:
-                        bundle.putByte("DetailType", (byte) position);
+                        bundle.putString("TitleName", "婚前心里");
+                        bundle.putInt("DetailType", position);
                         mIntent.setClass(HomeActivity.this, DetailActivity.class);
                         mIntent.putExtras(bundle);
                         startActivity(mIntent);
                         break;
                     case 1:
-                        bundle.putByte("DetailType", (byte) position);
-                        mIntent.setClass(HomeActivity.this, DetailActivity.class);
+                        bundle.putString("TitleName", "婚前准备");
+                        bundle.putInt("ActivityType", position);
+                        mIntent.setClass(HomeActivity.this, IndexListActivity.class);
                         mIntent.putExtras(bundle);
                         startActivity(mIntent);
                         break;
                     case 2:
-                        bundle.putByte("DetailType", (byte) position);
-                        mIntent.setClass(HomeActivity.this, DetailActivity.class);
+                        bundle.putString("TitleName", "婚前用品");
+                        bundle.putInt("ActivityType", position);
+                        mIntent.setClass(HomeActivity.this, IndexListActivity.class);
                         mIntent.putExtras(bundle);
                         startActivity(mIntent);
                         break;
@@ -72,5 +79,10 @@ public class HomeActivity extends Activity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void getIntentData() {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }
