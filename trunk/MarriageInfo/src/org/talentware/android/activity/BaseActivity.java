@@ -3,6 +3,7 @@ package org.talentware.android.activity;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
+import com.umeng.analytics.MobclickAgent;
 import org.talentware.android.R;
 
 /**
@@ -24,6 +25,18 @@ public abstract class BaseActivity extends Activity {
 
         getIntentData();
         initialView();
+    }
+
+    @Override
+    public void onResume(){
+        MobclickAgent.onResume(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     protected abstract void initialView();
