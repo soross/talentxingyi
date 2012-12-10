@@ -26,6 +26,16 @@ public class IndexListActivity extends BaseActivity {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
     protected void initialView() {
         //To change body of implemented methods use File | Settings | File Templates.
         setContentView(R.layout.activity_indexlist);

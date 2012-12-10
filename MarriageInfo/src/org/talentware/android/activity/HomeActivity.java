@@ -22,6 +22,16 @@ public class HomeActivity extends BaseActivity {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
     protected void initialView() {
         setContentView(R.layout.activity_home);
 

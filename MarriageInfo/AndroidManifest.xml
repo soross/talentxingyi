@@ -31,5 +31,13 @@
                 android:theme="@style/NoTitle"
                 android:screenOrientation="portrait">
         </activity>
+
+        <meta-data android:value="50c5e5fd527015087b00000c" android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="mumayi" android:name="UMENG_CHANNEL"/>
     </application>
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_LOGS"></uses-permission>
 </manifest> 
