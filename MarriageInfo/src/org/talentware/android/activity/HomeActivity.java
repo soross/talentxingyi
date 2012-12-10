@@ -1,11 +1,11 @@
 package org.talentware.android.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import com.umeng.analytics.MobclickAgent;
 import org.talentware.android.R;
 import org.talentware.android.adapter.GridAdapter;
 
@@ -19,6 +19,7 @@ public class HomeActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MobclickAgent.onError(this);
     }
 
     @Override
