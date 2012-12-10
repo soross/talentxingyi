@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent"
+                android:layout_height="@dimen/titlebar_height">
+    <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/titlebar_margin"
+            android:background="@drawable/btn_back"
+            android:text="返回"
+            android:gravity="center"
+            android:textColor="#ffffffff"/>
+
+    <TextView
+            android:id="@+id/tv_titlename"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/titlebar_textsize"
+            android:gravity="center"
+            android:textColor="#ffffffff"/>
+</RelativeLayout>
