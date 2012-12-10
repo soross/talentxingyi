@@ -36,7 +36,6 @@ public class DetailActivity extends BaseActivity {
         String Content = "";
         switch (mDetailType) {
             case 0:
-
                 Content = DetailTextConst.Content1;
                 break;
             case 100:
@@ -62,6 +61,99 @@ public class DetailActivity extends BaseActivity {
                 break;
             case 107:
                 Content = DetailTextConst.Content107;
+                break;
+            case 200:
+                Content = DetailTextConst.Content200;
+                break;
+            case 201:
+                Content = DetailTextConst.Content201;
+                break;
+            case 202:
+                Content = DetailTextConst.Content202;
+                break;
+            case 203:
+                Content = DetailTextConst.Content203;
+                break;
+            case 204:
+                Content = DetailTextConst.Content204;
+                break;
+            case 205:
+                Content = DetailTextConst.Content205;
+                break;
+            case 210:
+                Content = DetailTextConst.Content210;
+                break;
+            case 211:
+                Content = DetailTextConst.Content211;
+                break;
+            case 212:
+                Content = DetailTextConst.Content212;
+                break;
+            case 213:
+                Content = DetailTextConst.Content213;
+                break;
+            case 214:
+                Content = DetailTextConst.Content214;
+                break;
+            case 300:
+                Content = DetailTextConst.Content300;
+                break;
+            case 301:
+                Content = DetailTextConst.Content301;
+                break;
+            case 302:
+                Content = DetailTextConst.Content302;
+                break;
+            case 303:
+                Content = DetailTextConst.Content303;
+                break;
+            case 304:
+                Content = DetailTextConst.Content304;
+                break;
+            case 4:
+                Content = DetailTextConst.Content4;
+                break;
+            case 500:
+                Content = DetailTextConst.Content500;
+                break;
+            case 501:
+                Content = DetailTextConst.Content501;
+                break;
+            case 502:
+                Content = DetailTextConst.Content502;
+                break;
+            case 503:
+                Content = DetailTextConst.Content503;
+                break;
+            case 504:
+                Content = DetailTextConst.Content504;
+                break;
+            case 505:
+                Content = DetailTextConst.Content505;
+                break;
+            case 506:
+                Content = DetailTextConst.Content506;
+                break;
+            case 6:
+                Content = DetailTextConst.Content6;
+                break;
+            case 700:
+                Content = DetailTextConst.Content700;
+                break;
+            case 701:
+                Content = DetailTextConst.Content701;
+                break;
+            case 702:
+                Content = DetailTextConst.Content702;
+                break;
+            case 703:
+                Content = DetailTextConst.Content703;
+                break;
+            case 704:
+                Content = DetailTextConst.Content704;
+                break;
+            case 8:
+                Content = DetailTextConst.Content8;
                 break;
         }
 

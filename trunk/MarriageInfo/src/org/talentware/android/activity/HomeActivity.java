@@ -58,23 +58,53 @@ public class HomeActivity extends BaseActivity {
                         startActivity(mIntent);
                         break;
                     case 2:
-                        bundle.putString("TitleName", "婚前用品");
+                        bundle.putString("TitleName", "婚礼用品");
                         bundle.putInt("ActivityType", position);
                         mIntent.setClass(HomeActivity.this, IndexListActivity.class);
                         mIntent.putExtras(bundle);
                         startActivity(mIntent);
                         break;
                     case 3:
+                        bundle.putString("TitleName", "婚纱礼服");
+                        bundle.putInt("ActivityType", position);
+                        mIntent.setClass(HomeActivity.this, IndexListActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
                         break;
                     case 4:
+                        bundle.putString("TitleName", "婚庆公司");
+                        bundle.putInt("DetailType", position);
+                        mIntent.setClass(HomeActivity.this, DetailActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
                         break;
                     case 5:
+                        bundle.putString("TitleName", "婚宴场地");
+                        bundle.putInt("ActivityType", position);
+                        mIntent.setClass(HomeActivity.this, IndexListActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
                         break;
                     case 6:
+                        bundle.putString("TitleName", "婚礼费用");
+                        bundle.putInt("DetailType", position);
+                        mIntent.setClass(HomeActivity.this, DetailActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
                         break;
                     case 7:
+                        bundle.putString("TitleName", "婚礼策划");
+                        bundle.putInt("ActivityType", position);
+                        mIntent.setClass(HomeActivity.this, IndexListActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
                         break;
                     case 8:
+                        bundle.putString("TitleName", "蜜月旅行");
+                        bundle.putInt("DetailType", position);
+                        mIntent.setClass(HomeActivity.this, DetailActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
                         break;
                 }
             }
