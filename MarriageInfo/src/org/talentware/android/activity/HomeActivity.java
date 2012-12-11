@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import com.umeng.analytics.MobclickAgent;
 import org.talentware.android.R;
 import org.talentware.android.adapter.GridAdapter;
 
@@ -15,11 +14,15 @@ public class HomeActivity extends BaseActivity {
 
     private GridView mGridView;
 
+    //**********************************类型*************************************//
+    // *****************ActivityType列表界面的************************************//
+    // *****************DetailType正文详情的**************************************//
+    //**********************************类型*************************************//
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MobclickAgent.onError(this);
+//        MobclickAgent.onError(this);
     }
 
     @Override
