@@ -40,7 +40,6 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
 
         mTitleBar = (TitleBar) findViewById(R.id.titlebar);
-        mTitleBar.hideBackButton();
         mTitleBar.setTitleName("我们结婚啦");
 
         mGridView = (GridView) findViewById(R.id.gv_home);

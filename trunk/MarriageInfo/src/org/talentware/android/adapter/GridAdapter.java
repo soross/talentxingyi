@@ -25,9 +25,9 @@ public class GridAdapter extends BaseAdapter {
 	/**
 	 * 9宫格图片
 	 */
-	private static final int[] mGridResources = new int[] { R.drawable.ic_1,
-			R.drawable.ic_2, R.drawable.ic_3, R.drawable.ic_4, R.drawable.ic_5,
-			R.drawable.ic_6, R.drawable.ic_7, R.drawable.ic_8, R.drawable.ic_9 };
+	private static final int[] mGridResources = new int[] { R.drawable.icon1,
+			R.drawable.icon2, R.drawable.icon3, R.drawable.icon4, R.drawable.icon5,
+			R.drawable.icon6, R.drawable.icon7, R.drawable.icon8, R.drawable.icon9 };
 
 	private Context mContext;
 

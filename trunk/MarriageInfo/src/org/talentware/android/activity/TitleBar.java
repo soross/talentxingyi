@@ -20,9 +20,9 @@ public class TitleBar extends LinearLayout {
 
     private TextView mTitleName;
 
-    private TextView mBackButton;
+//    private TextView mBackButton;
 
-    protected ImageView logo;
+//    protected ImageView logo;
 
     private TextView mSecondToRightButton;
 
@@ -56,15 +56,15 @@ public class TitleBar extends LinearLayout {
     private void InitViews() {
         // Get references to the child controls.
         mTitleName = (TextView) findViewById(R.id.tv_titlename);
-        mBackButton = (TextView) findViewById(R.id.tv_back);
+//        mBackButton = (TextView) findViewById(R.id.tv_back);
 
-        mBackButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //To change body of implemented methods use File | Settings | File Templates.
-                mActivity.finish();
-            }
-        });
+//        mBackButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //To change body of implemented methods use File | Settings | File Templates.
+//                mActivity.finish();
+//            }
+//        });
     }
 
     private Activity mActivity;
@@ -73,9 +73,9 @@ public class TitleBar extends LinearLayout {
         mActivity = iActivity;
     }
 
-    public void hideBackButton() {
-        mBackButton.setVisibility(View.INVISIBLE);
-    }
+//    public void hideBackButton() {
+//        mBackButton.setVisibility(View.INVISIBLE);
+//    }
 
     public void setTitleName(final String iTitleName) {
         mTitleName.setText(iTitleName);
