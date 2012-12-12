@@ -168,7 +168,7 @@ public class DetailActivity extends BaseActivity {
         }
 
         mTV_Detail.setTextSize(mResources.getDimension(R.dimen.content_text_size));
-        mTV_Detail.setTextColor(0xffffffff);
+        mTV_Detail.setTextColor(0xff000000);
         mTV_Detail.setText(Content);
     }
 
