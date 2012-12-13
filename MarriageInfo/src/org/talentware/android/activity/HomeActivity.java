@@ -2,9 +2,11 @@ package org.talentware.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import org.talentware.android.MarriageApp;
 import org.talentware.android.R;
 import org.talentware.android.adapter.GridAdapter;
 
@@ -23,6 +25,11 @@ public class HomeActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        MobclickAgent.onError(this);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        MarriageApp.mScreenHeight = dm.heightPixels;
+        MarriageApp.mScreenWidth = dm.widthPixels;
     }
 
     @Override

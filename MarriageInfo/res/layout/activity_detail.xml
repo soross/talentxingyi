@@ -7,11 +7,15 @@
     <org.talentware.android.activity.TitleBar android:id="@+id/titlebar" android:layout_width="fill_parent"
                                               android:layout_height="wrap_content"></org.talentware.android.activity.TitleBar>
 
-    <ScrollView android:layout_height="fill_parent" android:layout_width="fill_parent">
+    <org.talentware.android.activity.DragableSpace
+            android:id="@+id/view_dragspace" android:layout_width="fill_parent"
+            android:layout_height="fill_parent"></org.talentware.android.activity.DragableSpace>
+
+    <!--ScrollView android:layout_height="fill_parent" android:layout_width="fill_parent">
         <TextView android:id="@+id/tv_detail" android:layout_width="fill_parent"
                   android:background="@drawable/activity_bg"
                   android:layout_height="fill_parent"></TextView>
-    </ScrollView>
+    </ScrollView-->
 
 
 </LinearLayout>
