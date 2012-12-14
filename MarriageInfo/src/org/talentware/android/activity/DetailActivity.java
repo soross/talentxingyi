@@ -32,6 +32,8 @@ public class DetailActivity extends BaseActivity {
 
     private View mDetailView;
 
+    private View mTestView;
+
     private ListView mListView;
 
     private IndexListAdapter mIndexLsitAdapter;
@@ -63,8 +65,10 @@ public class DetailActivity extends BaseActivity {
         mDragableSpace = (DragableSpace) findViewById(R.id.view_dragspace);
         mMenuView = LayoutInflater.from(this).inflate(R.layout.view_menu, null);
         mDetailView = LayoutInflater.from(this).inflate(R.layout.view_detail, null);
+        mTestView = LayoutInflater.from(this).inflate(R.layout.view_test, null);
         mDragableSpace.addView(mMenuView);
         mDragableSpace.addView(mDetailView);
+//        mDragableSpace.addView(mTestView);
 
 //        TextView mTV_Detail = (TextView) mDetailView.findViewById(R.id.tv_content);
 //        mListView = (ListView) mMenuView.findViewById(R.id.lv_detail_indexlist);
