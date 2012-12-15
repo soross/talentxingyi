@@ -93,8 +93,8 @@ public class HomeActivity extends BaseActivity {
                         break;
                     case 4:
                         bundle.putString("TitleName", "婚庆公司");
-                        bundle.putInt("DetailType", position);
-                        mIntent.setClass(HomeActivity.this, DetailActivity.class);
+                        bundle.putInt("ActivityType", position);
+                        mIntent.setClass(HomeActivity.this, IndexListActivity.class);
                         mIntent.putExtras(bundle);
                         startActivity(mIntent);
                         break;
@@ -123,6 +123,27 @@ public class HomeActivity extends BaseActivity {
                         bundle.putString("TitleName", "蜜月旅行");
                         bundle.putInt("DetailType", position);
                         mIntent.setClass(HomeActivity.this, DetailActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
+                        break;
+                    case 9:
+                        bundle.putString("TitleName", "婚戒挑选");
+                        bundle.putInt("ActivityType", position);
+                        mIntent.setClass(HomeActivity.this, IndexListActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
+                        break;
+                    case 10:
+                        bundle.putString("TitleName", "婚车选择");
+                        bundle.putInt("ActivityType", position);
+                        mIntent.setClass(HomeActivity.this, IndexListActivity.class);
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
+                        break;
+                    case 11:
+                        bundle.putString("TitleName", "注意事项");
+                        bundle.putInt("ActivityType", position);
+                        mIntent.setClass(HomeActivity.this, IndexListActivity.class);
                         mIntent.putExtras(bundle);
                         startActivity(mIntent);
                         break;
