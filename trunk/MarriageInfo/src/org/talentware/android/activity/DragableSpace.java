@@ -318,6 +318,10 @@ public class DragableSpace extends ViewGroup {
         refresh(whichScreen);
     }
 
+    public void resetToContent(){
+        mScroller.startScroll(0, 0, 4 * getWidth() / 5, 0, 10);
+    }
+
     public void setScreenChangeHandler(Handler handler) {
         screenChangeHandler = handler;
     }
