@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -44,6 +46,9 @@ public class DetailActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Animation anim = AnimationUtils.loadAnimation(DetailActivity.this, R.anim.push_up_out);
+        findViewById(R.id.ll_base).startAnimation(anim);
     }
 
     @Override

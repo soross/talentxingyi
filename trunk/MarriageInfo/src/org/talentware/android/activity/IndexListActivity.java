@@ -3,7 +3,10 @@ package org.talentware.android.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -29,6 +32,9 @@ public class IndexListActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Animation anim = AnimationUtils.loadAnimation(IndexListActivity.this, R.anim.push_up_out);
+        findViewById(R.id.ll_base).startAnimation(anim);
     }
 
     @Override
@@ -428,5 +434,39 @@ public class IndexListActivity extends BaseActivity {
         mBundle.putInt("DetailType", DetailType);
         mIntent.putExtras(mBundle);
         startActivity(mIntent);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (isFinishing()) {
+            return true;
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_MENU) {
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Animation anim = AnimationUtils.loadAnimation(IndexListActivity.this, R.anim.push_up_in);
+            findViewById(R.id.ll_base).startAnimation(anim);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 }

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:id="@+id/ll_base"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:background="@drawable/activity_bg"
+
         >
     <org.talentware.android.activity.TitleBar android:id="@+id/titlebar" android:layout_width="fill_parent"
                                               android:layout_height="wrap_content"></org.talentware.android.activity.TitleBar>
 
     <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
-                  android:weightSum="3" android:orientation="vertical">
+                  android:weightSum="3" android:orientation="vertical" android:background="@drawable/activity_bg">
         <ScrollView android:id="@+id/sv_prehint" android:layout_height="fill_parent" android:layout_width="fill_parent"
                     android:layout_weight="2"
                     android:visibility="gone">
