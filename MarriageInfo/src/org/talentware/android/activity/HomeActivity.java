@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import org.talentware.android.MarriageApp;
@@ -33,7 +35,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
     }
 
@@ -62,6 +64,9 @@ public class HomeActivity extends BaseActivity {
                                     int position, long id) {
                 Intent mIntent = new Intent();
                 Bundle bundle = new Bundle();
+
+
+
                 switch (position) {
                     case 0:
                         bundle.putString("TitleName", "婚前心里");
@@ -69,6 +74,7 @@ public class HomeActivity extends BaseActivity {
                         mIntent.setClass(HomeActivity.this, DetailActivity.class);
                         mIntent.putExtras(bundle);
                         startActivity(mIntent);
+
                         break;
                     case 1:
                         bundle.putString("TitleName", "婚前准备");
@@ -146,6 +152,7 @@ public class HomeActivity extends BaseActivity {
                         mIntent.setClass(HomeActivity.this, IndexListActivity.class);
                         mIntent.putExtras(bundle);
                         startActivity(mIntent);
+
                         break;
                 }
             }
