@@ -73,9 +73,9 @@ public class DetailActivity extends BaseActivity {
 
         mDragableSpace = (DragableSpace) findViewById(R.id.view_dragspace);
 
-        if (mDetailType == 0) {
+//        if (mDetailType == 0) {
             mDragableSpace.setDragable(false);
-        }
+//        }
 
 
         mMenuView = LayoutInflater.from(this).inflate(R.layout.view_menu, null);
