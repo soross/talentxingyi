@@ -3,14 +3,18 @@ package org.talentware.android.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import com.umeng.analytics.MobclickAgent;
 import org.talentware.android.MarriageApp;
 import org.talentware.android.R;
 import org.talentware.android.adapter.GridAdapter;
+
+import java.util.Calendar;
 
 public class HomeActivity extends BaseActivity {
 
@@ -47,6 +51,12 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void initialView() {
         setContentView(R.layout.activity_home);
+        MobclickAgent.onError(this);
+
+        Calendar c = Calendar.getInstance();
+        c.set(2012, 12, 19);
+        c.add(Calendar.DATE, 150);
+        Log.e("bbbbbbbbbbbbbbbbbbbbbb", c.toString());
 
         mTitleBar = (TitleBar) findViewById(R.id.titlebar);
         mTitleBar.setTitleName("我们结婚啦");
@@ -64,7 +74,6 @@ public class HomeActivity extends BaseActivity {
                                     int position, long id) {
                 Intent mIntent = new Intent();
                 Bundle bundle = new Bundle();
-
 
 
                 switch (position) {
