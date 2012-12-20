@@ -32,6 +32,53 @@
                 android:screenOrientation="portrait">
         </activity>
 
+        <!--金蛋模块-->
+        <activity
+                android:label="推荐列表"
+                android:name="com.mobile.app.adlist.GEList"
+                android:theme="@android:style/Theme.NoTitleBar"
+                android:configChanges="orientation|keyboardHidden|locale"
+                android:screenOrientation="portrait"
+                >
+        </activity>
+        <activity
+                android:name="com.mobile.app.adpush.GELaunchNotify"
+                android:theme="@android:style/Theme.Translucent"
+                android:configChanges="orientation|keyboardHidden|locale"
+                >
+        </activity>
+        <service
+                android:name="org.talentware.android.service.PushService"
+                android:enabled="true"
+                android:label="NotificationService2">
+            <intent-filter>
+                <action android:name="com.eastmoney.android.msg2.NotificationService"/>
+            </intent-filter>
+        </service>
+
+        <receiver android:name="org.talentware.android.service.RestartReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED">
+                    <category android:name="android.intent.category.HOME"/>
+                </action>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+                android:name="com.mobile.app.utils.GESoftInspector"
+                >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+        <!--开发者标识联系商务分配-->
+        <meta-data android:name="GE-UID" android:value="51748"/>
+        <!--分发渠道标识暂时无效-->
+        <meta-data android:name="GE-PID" android:value="mumayi"/>
+        <!--金蛋模块-->
+
+
         <meta-data android:value="50c5e5fd527015087b00000c" android:name="UMENG_APPKEY"></meta-data>
         <meta-data android:value="mumayi" android:name="UMENG_CHANNEL"/>
     </application>
@@ -40,6 +87,9 @@
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
     <uses-permission android:name="android.permission.READ_LOGS"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RESTART_PACKAGES"/>
 
     <supports-screens
             android:anyDensity="true"
