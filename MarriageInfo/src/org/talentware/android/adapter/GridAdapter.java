@@ -20,7 +20,7 @@ public class GridAdapter extends BaseAdapter {
      * 9宫格文字
      */
     private static final String[] mGridTitles = new String[]{"婚前心里", "婚前准备",
-            "婚礼用品", "婚纱礼服", "婚庆公司", "婚宴场地", "婚礼费用", "婚礼策划", "蜜月旅行", "婚戒挑选", "婚车选择", "注意事项"};
+            "婚礼用品", "婚纱礼服", "婚庆公司", "婚宴场地", "婚礼费用", "婚礼策划", "蜜月旅行", "婚戒挑选", "婚车选择", "更多"};
 
     /**
      * 9宫格图片

@@ -7,10 +7,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.*;
+import com.mobile.app.main.GEInstance;
 import org.talentware.android.R;
 import org.talentware.android.adapter.IndexListAdapter;
 
@@ -31,6 +29,8 @@ public class IndexListActivity extends BaseActivity {
     private ScrollView mSV_PreHint;
 
     private TextView mTV_PreRead;
+
+    private LinearLayout mLinearLayout;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +53,13 @@ public class IndexListActivity extends BaseActivity {
     protected void initialView() {
         //To change body of implemented methods use File | Settings | File Templates.
         setContentView(R.layout.activity_indexlist);
+
+        mLinearLayout = (LinearLayout) findViewById(R.id.interGELinearLayout);
+        GEInstance geInstance = new GEInstance();
+        geInstance.loadInterAd(5, GEInstance.INTERUP, mLinearLayout);
+        geInstance.setInterAdVisible(View.VISIBLE);//显示
+
+
 
         mTitleBar = (TitleBar) findViewById(R.id.titlebar);
         mTitleBar.setActivity(this);

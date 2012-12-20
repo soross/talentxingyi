@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.mobile.app.main.GEInstance;
 import org.talentware.android.DetailTextConst;
 import org.talentware.android.MarriageApp;
 import org.talentware.android.R;
@@ -28,21 +29,23 @@ import org.talentware.android.adapter.IndexListAdapter;
  */
 public class DetailActivity extends BaseActivity {
 
-    private DragableSpace mDragableSpace;
-
-    private View mMenuView;
-
-    private View mDetailView;
-
-    private View mTestView;
-
-    private ListView mListView;
-
-    private IndexListAdapter mIndexLsitAdapter;
+//    private DragableSpace mDragableSpace;
+//
+//    private View mMenuView;
+//
+//    private View mDetailView;
+//
+//    private View mTestView;
+//
+//    private ListView mListView;
+//
+//    private IndexListAdapter mIndexLsitAdapter;
 
     TextView mTV_Detail;
 
     String[] mListContents;
+
+    LinearLayout mLinearLayout;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,117 +74,109 @@ public class DetailActivity extends BaseActivity {
         mTitleBar.setActivity(this);
         mTitleBar.setTitleName(mTitleName);
 
-        mDragableSpace = (DragableSpace) findViewById(R.id.view_dragspace);
+        mLinearLayout = (LinearLayout) findViewById(R.id.interGELinearLayout);
+        GEInstance geInstance = new GEInstance();
+        geInstance.loadInterAd(5, GEInstance.INTERUP, mLinearLayout);
+        geInstance.setInterAdVisible(View.VISIBLE);//显示
 
-//        if (mDetailType == 0) {
-            mDragableSpace.setDragable(false);
-//        }
-
-
-        mMenuView = LayoutInflater.from(this).inflate(R.layout.view_menu, null);
-        mDetailView = LayoutInflater.from(this).inflate(R.layout.view_detail, null);
-        mTestView = LayoutInflater.from(this).inflate(R.layout.view_test, null);
-        mDragableSpace.addView(mMenuView);
-        mDragableSpace.addView(mDetailView);
-
-        mTV_Detail = (TextView) mDetailView.findViewById(R.id.tv_content);
-        mListView = (ListView) mMenuView.findViewById(R.id.lv_detail_indexlist);
-        mListContents = getIndexListData();
-        mIndexLsitAdapter = new IndexListAdapter(this, mListContents);
-        mListView.setAdapter(mIndexLsitAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //To change body of implemented methods use File | Settings | File Templates.
-                switch (mDetailType) {
-                    case 0:
-                        mDetailType = 0;
-                        break;
-                    case 100:
-                    case 101:
-                    case 102:
-                    case 103:
-                    case 104:
-                    case 105:
-                    case 106:
-                    case 107:
-                        mDetailType = 100 + i;
-                        mTitleBar.setTitleName(mListContents[i]);
-                        break;
-                    case 200:
-                    case 201:
-                    case 202:
-                    case 203:
-                    case 204:
-                    case 205:
-                        mDetailType = 200 + i;
-                        mTitleBar.setTitleName(mListContents[i]);
-                        break;
-                    case 210:
-                    case 211:
-                    case 212:
-                    case 213:
-                    case 214:
-                        mDetailType = 210 + i;
-                        mTitleBar.setTitleName(mListContents[i]);
-                        break;
-                    case 300:
-                    case 301:
-                    case 302:
-                    case 303:
-                    case 304:
-                        mDetailType = 300 + i;
-                        mTitleBar.setTitleName(mListContents[i]);
-                        break;
-                    case 400:
-                    case 401:
-                    case 402:
-                    case 403:
-                    case 404:
-                    case 405:
-                    case 406:
-                        mDetailType = 400 + i;
-                        mTitleBar.setTitleName(mListContents[i]);
-                        break;
-                    case 500:
-                    case 501:
-                    case 502:
-                    case 503:
-                    case 504:
-                    case 505:
-                    case 506:
-                        mDetailType = 500 + i;
-                        mTitleBar.setTitleName(mListContents[i]);
-                        break;
-                    case 700:
-                    case 701:
-                    case 702:
-                    case 703:
-                    case 704:
-                        mDetailType = 700 + i;
-                        mTitleBar.setTitleName(mListContents[i]);
-                        break;
-                    case 900:
-                    case 901:
-                    case 902:
-                        mDetailType = 900 + i;
-                        mTitleBar.setTitleName(mListContents[i]);
-                        break;
-                    case 1000:
-                    case 1001:
-                    case 1002:
-                    case 1003:
-                    case 1004:
-                    case 1005:
-                        mDetailType = 1000 + i;
-                        mTitleBar.setTitleName(mListContents[i]);
-                        break;
-                }
-
-                setContent();
-                mDragableSpace.resetToContent();
-            }
-        });
+        mTV_Detail = (TextView) findViewById(R.id.tv_content);
+//        mListView = (ListView) mMenuView.findViewById(R.id.lv_detail_indexlist);
+//        mListContents = getIndexListData();
+//        mIndexLsitAdapter = new IndexListAdapter(this, mListContents);
+//        mListView.setAdapter(mIndexLsitAdapter);
+//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                //To change body of implemented methods use File | Settings | File Templates.
+//                switch (mDetailType) {
+//                    case 0:
+//                        mDetailType = 0;
+//                        break;
+//                    case 100:
+//                    case 101:
+//                    case 102:
+//                    case 103:
+//                    case 104:
+//                    case 105:
+//                    case 106:
+//                    case 107:
+//                        mDetailType = 100 + i;
+//                        mTitleBar.setTitleName(mListContents[i]);
+//                        break;
+//                    case 200:
+//                    case 201:
+//                    case 202:
+//                    case 203:
+//                    case 204:
+//                    case 205:
+//                        mDetailType = 200 + i;
+//                        mTitleBar.setTitleName(mListContents[i]);
+//                        break;
+//                    case 210:
+//                    case 211:
+//                    case 212:
+//                    case 213:
+//                    case 214:
+//                        mDetailType = 210 + i;
+//                        mTitleBar.setTitleName(mListContents[i]);
+//                        break;
+//                    case 300:
+//                    case 301:
+//                    case 302:
+//                    case 303:
+//                    case 304:
+//                        mDetailType = 300 + i;
+//                        mTitleBar.setTitleName(mListContents[i]);
+//                        break;
+//                    case 400:
+//                    case 401:
+//                    case 402:
+//                    case 403:
+//                    case 404:
+//                    case 405:
+//                    case 406:
+//                        mDetailType = 400 + i;
+//                        mTitleBar.setTitleName(mListContents[i]);
+//                        break;
+//                    case 500:
+//                    case 501:
+//                    case 502:
+//                    case 503:
+//                    case 504:
+//                    case 505:
+//                    case 506:
+//                        mDetailType = 500 + i;
+//                        mTitleBar.setTitleName(mListContents[i]);
+//                        break;
+//                    case 700:
+//                    case 701:
+//                    case 702:
+//                    case 703:
+//                    case 704:
+//                        mDetailType = 700 + i;
+//                        mTitleBar.setTitleName(mListContents[i]);
+//                        break;
+//                    case 900:
+//                    case 901:
+//                    case 902:
+//                        mDetailType = 900 + i;
+//                        mTitleBar.setTitleName(mListContents[i]);
+//                        break;
+//                    case 1000:
+//                    case 1001:
+//                    case 1002:
+//                    case 1003:
+//                    case 1004:
+//                    case 1005:
+//                        mDetailType = 1000 + i;
+//                        mTitleBar.setTitleName(mListContents[i]);
+//                        break;
+//                }
+//
+//                setContent();
+//                mDragableSpace.resetToContent();
+//            }
+//        });
 
         setContent();
     }

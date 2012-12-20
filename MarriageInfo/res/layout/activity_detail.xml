@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent" android:id="@+id/ll_base"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" android:id="@+id/ll_base"
         >
     <org.talentware.android.activity.TitleBar android:id="@+id/titlebar" android:layout_width="fill_parent"
+                                              android:layout_alignParentTop="true"
                                               android:layout_height="wrap_content"></org.talentware.android.activity.TitleBar>
 
-    <org.talentware.android.activity.DragableSpace
+    <!--org.talentware.android.activity.DragableSpace
             android:id="@+id/view_dragspace" android:layout_width="fill_parent"
-            android:layout_height="fill_parent"></org.talentware.android.activity.DragableSpace>
+            android:layout_height="fill_parent"></org.talentware.android.activity.DragableSpace-->
 
-    <!--ScrollView android:layout_height="fill_parent" android:layout_width="fill_parent">
-        <TextView android:id="@+id/tv_detail" android:layout_width="fill_parent"
+
+    <LinearLayout
+            android:id="@+id/interGELinearLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_alignParentBottom="true"/>
+
+    <ScrollView android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_below="@id/titlebar"
+                android:layout_above="@id/interGELinearLayout">
+        <TextView android:id="@+id/tv_content" android:layout_width="fill_parent"
                   android:background="@drawable/activity_bg"
                   android:layout_height="fill_parent"></TextView>
-    </ScrollView-->
+    </ScrollView>
 
 
-</LinearLayout>
+</RelativeLayout>
