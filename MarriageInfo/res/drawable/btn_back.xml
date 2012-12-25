@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 所在窗口有没有获得焦点 -->
-	<item android:state_window_focused="false" android:drawable="@drawable/btn_back_unpressed" />
-	<item android:state_pressed="true" android:drawable="@drawable/btn_back_pressed" />
-</selector> 
