@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">我们结婚啦</string>
+
+    <string name="versionString">0.0.0</string>
+    <string name="scoreString">积分:0</string>
+    <string name="addScoreString">增加积分(100)</string>
+    <string name="delScoreString">减少积分(100)</string>
+    <string name="showPushString">推送广告</string>
+    <string name="showMiniString">迷你广告</string>
+    <string name="changeMiniSprString">迷你广告动画切换(上下)</string>
+    <string name="notifyMiniSprString">隐藏迷你广告</string>
+    <string name="showInterString">互动广告</string>
+    <string name="changeInterSprString">互动广告动画切换(上下)</string>
+    <string name="notifyInterSprString">隐藏互动广告</string>
+    <string name="showListString">积分墙</string>
+    <string name="showInfoSingleString">自定义广告(单项)</string>
+    <string name="showInfoMoreString">自定义广告(多项)</string>
+    <string name="openListString">点击任意广告默认打开积分墙(未激活)</string>
+
+    <string name="geContentDes">第七传媒</string>
+    <string name="geListFootText">更多应用推荐</string>
+    <string name="geListFootDesText">说明文字</string>
+    <string name="geListFootFeedText">用户反馈</string>
+    <string name="geInfoVerText">版本:</string>
+    <string name="geInfoVolText">大小:</string>
+    <string name="geInfoBtnText">免费下载</string>
+    <string name="geInfoBackText">返回</string>
+</resources>
