@@ -20,11 +20,12 @@
             android:gravity="center_horizontal"
             android:layout_alignParentBottom="true"/>
 
-    <ScrollView android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_below="@id/titlebar"
+    <ScrollView android:layout_height="fill_parent" android:layout_width="fill_parent"
+                android:layout_below="@id/titlebar"
                 android:layout_above="@id/interGELinearLayout">
-        <TextView android:id="@+id/tv_content" android:layout_width="fill_parent"
-                  android:background="@drawable/activity_bg"
-                  android:layout_height="fill_parent"></TextView>
+        <TextView android:id="@+id/tv_content" android:layout_width="fill_parent" android:lineSpacingExtra="2px"
+                  android:background="@drawable/activity_bg" android:textSize="@dimen/content_text_size"
+                  android:layout_height="wrap_content"></TextView>
     </ScrollView>
 
 

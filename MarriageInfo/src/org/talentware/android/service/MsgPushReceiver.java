@@ -23,7 +23,20 @@ public class MsgPushReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+
+        Log.e("BBB","BBB");
+//        new Thread() {
+//            public void run() {
+//                getMsgMemo(context);
+//            }
+//        }.start();
+    }
+
+    private void getMsgMemo(Context iContext) {
         GEInstance geInstance = new GEInstance();
+        if (geInstance == null) {
+            Log.e("bbbbbbbbbbb", "null!!!!!!");
+        }
         geInstance.loadPushAd();
         geInstance.setNotificationIcon(R.drawable.icon);
     }

@@ -27,7 +27,7 @@ import org.talentware.android.adapter.IndexListAdapter;
  * Time: 下午8:20
  * To change this template use File | Settings | File Templates.
  */
-public class DetailActivity extends BaseActivity {
+public class DetailActivity extends BaseActivity{
 
 //    private DragableSpace mDragableSpace;
 //
