@@ -50,11 +50,14 @@
         <service
                 android:name="org.talentware.android.service.PushService"
                 android:enabled="true"
-                android:label="NotificationService2">
+                android:label="MarriageInfoPushService">
             <intent-filter>
-                <action android:name="com.eastmoney.android.msg2.NotificationService"/>
+                <action android:name="org.talentware.android.service.PushService"/>
             </intent-filter>
         </service>
+
+        <receiver android:name="org.talentware.android.service.MsgPushReceiver" >
+        </receiver>
 
         <receiver android:name="org.talentware.android.service.RestartReceiver">
             <intent-filter>
