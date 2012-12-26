@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="app_name">我们结婚啦</string>
+    <string name="notification">免费M币</string>
+	<string name="get_balance">查询余额</string>
+	<string name="comsume">消费</string>
+	<string name="comsume_money_tip">消费金额:</string>
+	<string name="show_balance">当前余额:</string>	
+</resources>
