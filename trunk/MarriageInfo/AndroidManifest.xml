@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.talentware.android"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="3" />
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity
+            android:name="org.talentware.android.activity.HomeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.talentware.android.activity.DetailActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle" >
+        </activity>
+        <activity
+            android:name="org.talentware.android.activity.IndexListActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle" >
+        </activity>
+        <activity
+            android:name="com.nd.dianjin.activity.OfferAppActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop" />
+        <activity
+            android:name="com.nd.dianjin.activity.DownloadManagerActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop" />
+        <activity
+            android:name="com.nd.dianjin.activity.DetailActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop" />
+        <activity
+            android:name="com.igexin.sdk.GexinSdkActivity"
+            android:excludeFromRecents="true"
+            android:process="org.talentware.android.pushservice"
+            android:taskAffinity="android.task.GexinSdkActivityTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="com.igexin.action.popupact.org.talentware.android" />
+                <!-- com.igexin.action.popupact.第三方的包名 -->
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.igexin.sdk.aidl.GexinMsgService"
+            android:label="NotificationCenterAIDL"
+            android:process="org.talentware.android.pushservice" >
+            <intent-filter>
+                <action android:name="com.igexin.sdk.aidl.action.org.talentware.android" />
+                <!-- com.igexin.sdk.action.第三方的包名 -->
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.igexin.sdk.GexinMainService"
+            android:label="NotificationCenter"
+            android:process="org.talentware.android.pushservice" >
+            <intent-filter>
+                <action android:name="com.igexin.sdk.action.org.talentware.android" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name="com.igexin.sdk.GexinSdkReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="sdk.download.DownloadService"
+            android:process="org.talentware.android.pushservice" />
+
+        <receiver
+            android:name="sdk.download.DownloadReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="sdk.download.DownloadProvider"
+            android:authorities="sdk.download.org.talentware.android"
+            android:process="org.talentware.android.pushservice" />
+
+        <service android:name="com.nd.dianjin.service.PackageChangedService" />
+        <service android:name="com.nd.dianjin.appdownload.DownloadService" >
+            <intent-filter>
+                <action android:name="org.talentware.android" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="org.talentware.android.service.PushService"
+            android:enabled="true"
+            android:label="MarriageInfoPushService" >
+            <intent-filter>
+                <action android:name="org.talentware.android.service.PushService" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name="org.talentware.android.service.MsgPushReceiver" >
+        </receiver>
+        <receiver android:name=".DianYingSdkMsgReceiver" >
+            <intent-filter>
+                <action android:name="com.igexin.sdk.action.H2IWy1KKFrA96xiTrPPBv2" />
+                <!-- com.igexin.sdk.action.第三方的appid -->
+            </intent-filter>
+        </receiver>
+        <receiver android:name="org.talentware.android.service.RestartReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" >
+                    <category android:name="android.intent.category.HOME" />
+                </action>
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="50c5e5fd527015087b00000c" >
+        </meta-data>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="mumayi" />
+        <meta-data
+            android:name="appid"
+            android:value=" H2IWy1KKFrA96xiTrPPBv2" />
+        <meta-data
+            android:name="appsecret"
+            android:value=" JxAuJHEcmh6MAPGqxPikU9" />
+        <meta-data
+            android:name="appkey"
+            android:value=" twRaWQUgjbAXgjsgafHde8" />
+    </application>
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.READ_LOGS" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" >
+    </supports-screens>
+
+</manifest>

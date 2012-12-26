@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dianjin="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_base"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <org.talentware.android.activity.TitleBar
+        android:id="@+id/titlebar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+    </org.talentware.android.activity.TitleBar>
+
+    <!--
+        org.talentware.android.activity.DragableSpace
+            android:id="@+id/view_dragspace" android:layout_width="fill_parent"
+            android:layout_height="fill_parent"></org.talentware.android.activity.DragableSpace
+    -->
+
+    <com.nd.dianjin.OfferBanner
+        android:id="@+id/banner_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        dianjin:background_color="#3366FF"
+        dianjin:content_color="#3366FF"
+        dianjin:name_color="#FF3300"
+        dianjin:overlay_color="#6eadd8"
+        dianjin:refresh_interval="5000"
+        dianjin:request_type="0"
+        dianjin:tips_color="#FF66FF"
+        dianjin:transition="hyperspace" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/banner_layout"
+        android:layout_below="@id/titlebar" >
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/activity_bg"
+            android:lineSpacingExtra="2px"
+            android:textSize="@dimen/content_text_size" >
+        </TextView>
+    </ScrollView>
+
+</RelativeLayout>
