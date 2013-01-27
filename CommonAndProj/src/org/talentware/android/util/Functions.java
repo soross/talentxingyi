@@ -1,45 +1,70 @@
 package org.talentware.android.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.zip.Deflater;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 
 public class Functions {
 
-	public static byte[] CompressData(byte[] data) {
-		final int originalSize = data.length;
+	private static final String TAG = "Functions";
 
-		final Deflater compresser = new Deflater();
-		compresser.setLevel(Deflater.BEST_COMPRESSION);
-		compresser.setInput(data);
-		compresser.finish();
+	/** 获得正在运行的任务列表 */
+	public static List<RunningTaskInfo> getRunningTasks(Context context) {
+		ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		return manager == null ? null : manager.getRunningTasks(Integer.MAX_VALUE);
+	}
 
-		final ByteArrayOutputStream bos = new ByteArrayOutputStream(originalSize);
-		final byte[] compressBuf = new byte[originalSize];
-		while (!compresser.finished()) {
-			int count = compresser.deflate(compressBuf);
-			bos.write(compressBuf, 0, count);
-		}
+	/** 获得前台的任务 */
+	public static RunningTaskInfo getCurrentRunningTask(Context context) {
+		List<RunningTaskInfo> runningTask = getRunningTasks(context);
+		return runningTask == null ? null : runningTask.get(0);
+	}
 
+	/** 当前任务是否是首页 */
+	public static boolean isHome(Context context) {
+		List<String> homes = getHomes(context);
+		ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningTaskInfo> rti = null;
 		try {
-			bos.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			rti = mActivityManager.getRunningTasks(1);
+		} catch (SecurityException e) {
+			// TODO: handle exception
+			Logger.e(TAG, "SecurityException err:" + e.getMessage());
 		}
-		compresser.end();
+		return homes.contains(rti.get(0).topActivity.getPackageName());
+	}
 
-		final byte[] bytes = bos.toByteArray();
-		final int compressedSize = bytes.length;
-		final byte[] result = new byte[compressedSize + 4];
-		result[0] = (byte) (originalSize & 0xff);
-		result[1] = (byte) ((originalSize >>> 8) & 0xff);
-		result[2] = (byte) (compressedSize & 0xff);
-		result[3] = (byte) ((compressedSize >>> 8) & 0xff);
-		System.arraycopy(bytes, 0, result, 4, compressedSize);
-		// Log.d("compress", "cs:" + compressedSize);
+	/** 获取所有首页列表 */
+	public static List<String> getHomes(Context context) {
+		List<String> packages = new ArrayList<String>();
+		PackageManager packageManager = context.getPackageManager();
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_HOME);
+		List<ResolveInfo> resolveInfo = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+		if (resolveInfo != null) {
+			for (ResolveInfo info : resolveInfo) {
+				packages.add(info.activityInfo.packageName);
+			}
+		}
+		return packages;
+	}
 
-		return result;
+	/** dp转px */
+	public int Dp2Px(Context context, float dp) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (dp * scale + 0.5f);
+	}
+
+	/** px转dp */
+	public int Px2Dp(Context context, float px) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (px / scale + 0.5f);
 	}
 
 }
