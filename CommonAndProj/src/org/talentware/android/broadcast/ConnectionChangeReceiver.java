@@ -1,17 +1,12 @@
 package org.talentware.android.broadcast;
 
-import org.talentware.android.R;
-
-import util.Logger;
+import org.talentware.android.util.Logger;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.NetworkInfo.State;
-import android.util.Log;
-import android.widget.Toast;
 
 public class ConnectionChangeReceiver extends BroadcastReceiver {
 	private static final String TAG = "ConnectionChangeReceiver";

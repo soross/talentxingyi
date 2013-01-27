@@ -17,13 +17,17 @@
         android:xlargeScreens="true" />
 
     <application
-        android:allowBackup="true"
         android:name="org.talentware.android.TalentWareApp"
+        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name="org.talentware.android.HomeActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="org.talentware.android.test.SqliteActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +39,14 @@
         <receiver android:name="ConnectionChangeReceiver" >
             <intent-filter>
                 <action android:name="org.talentware.android.broadcast.ConnectionChangeReceiver" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="org.talentware.android.broadcast.StallReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
     </application>
