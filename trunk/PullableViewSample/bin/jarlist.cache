@@ -1,0 +1,6 @@
+# cache for current jar dependecy. DO NOT EDIT.
+# format is <lastModified> <length> <SHA-1> <path>
+# Encoding is UTF-8
+1357082872000 349252 612846c9857077a039b533718f72db3bc041d389 C:\Users\Administrator\Desktop\PullableView\PullableViewSample\libs\android-support-v4.jar
+1357082872000 349252 612846c9857077a039b533718f72db3bc041d389 C:\Users\Administrator\Desktop\PullableView\PullableView\PullToRefreshViewPager\libs\android-support-v4.jar
+1357082872000 349252 612846c9857077a039b533718f72db3bc041d389 C:\Users\Administrator\Desktop\PullableView\PullableView\PullToRefreshListFragment\libs\android-support-v4.jar
