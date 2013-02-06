@@ -42,10 +42,10 @@ import com.handmark.pulltorefresh.library.extras.SoundPullEventListener;
 
 public final class PullToRefreshListActivity extends ListActivity {
 
-	static final int MENU_MANUAL_REFRESH = 0;
-	static final int MENU_DISABLE_SCROLL = 1;
-	static final int MENU_SET_MODE = 2;
-	static final int MENU_DEMO = 3;
+	private static final int MENU_MANUAL_REFRESH = 0;
+	private static final int MENU_DISABLE_SCROLL = 1;
+	private static final int MENU_SET_MODE = 2;
+	private static final int MENU_DEMO = 3;
 
 	private LinkedList<String> mListItems;
 	private PullToRefreshListView mPullRefreshListView;
@@ -184,7 +184,7 @@ public final class PullToRefreshListActivity extends ListActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private String[] mStrings = {
+	private static final String[] mStrings = {
 			"Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi", "Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre", "Allgauer Emmentaler", "Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
 			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre", "Allgauer Emmentaler"
 	};
