@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +34,8 @@ import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 
 public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {
+
+	private static final String TAG = PullToRefreshListView.class.getSimpleName();
 
 	private LoadingLayout mHeaderLoadingView;
 	private LoadingLayout mFooterLoadingView;
@@ -205,8 +208,10 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 	protected ListView createListView(Context context, AttributeSet attrs) {
 		final ListView lv;
 		if (VERSION.SDK_INT >= VERSION_CODES.GINGERBREAD) {
+			Log.d(TAG, "SDK >= 9");
 			lv = new InternalListViewSDK9(context, attrs);
 		} else {
+			Log.d(TAG, "SDK < 9");
 			lv = new InternalListView(context, attrs);
 		}
 		return lv;
@@ -263,6 +268,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
 
 			final boolean returnValue = super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+			Log.d(TAG, "returnValue:" + returnValue);
 
 			// Does all of the hard work...
 			OverscrollHelper.overScrollBy(PullToRefreshListView.this, deltaX, scrollX, deltaY, scrollY, isTouchEvent);

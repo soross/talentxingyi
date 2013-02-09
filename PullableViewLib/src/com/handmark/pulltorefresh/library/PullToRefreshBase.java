@@ -46,6 +46,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	// Constants
 	// ===========================================================
 
+	private static final String TAG = PullToRefreshBase.class.getSimpleName();
+
 	static final boolean DEBUG = true;
 
 	static final String LOG_TAG = "PullToRefresh";
@@ -67,6 +69,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	// Fields
 	// ===========================================================
 
+	/** 认为开始Scroll的值 */
 	private int mTouchSlop;
 	private float mLastMotionX, mLastMotionY;
 	private float mInitialMotionX, mInitialMotionY;
@@ -125,7 +128,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	}
 
 	@Override
-	public void addView(View child, int index, ViewGroup.LayoutParams params) {
+	public void addView(View child, int index, ViewGroup.LayoutParams params) {// ScrollView和Horizontal ScrollView会用到
 		if (DEBUG) {
 			Log.d(LOG_TAG, "addView: " + child.getClass().getSimpleName());
 		}
@@ -1059,13 +1062,18 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
 		// Styleables from XML
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PullToRefresh);
+		Log.d(TAG, "TypedArray a Length:" + a.length());
 
 		if (a.hasValue(R.styleable.PullToRefresh_ptrMode)) {
+			Log.d(TAG, "hasValue PullToRefresh_ptrMode");
 			mMode = Mode.mapIntToValue(a.getInteger(R.styleable.PullToRefresh_ptrMode, 0));
+			Log.d(TAG, "mMode:" + mMode);
 		}
 
 		if (a.hasValue(R.styleable.PullToRefresh_ptrAnimationStyle)) {
+			Log.d(TAG, "hasValue PullToRefresh_ptrAnimationStyle");
 			mLoadingAnimationStyle = AnimationStyle.mapIntToValue(a.getInteger(R.styleable.PullToRefresh_ptrAnimationStyle, 0));
+			Log.d(TAG, "mLoadingAnimationStyle:" + mLoadingAnimationStyle);
 		}
 
 		// Refreshable View
@@ -1081,23 +1089,29 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		 * Styleables from XML
 		 */
 		if (a.hasValue(R.styleable.PullToRefresh_ptrRefreshableViewBackground)) {
+			Log.d(TAG, "hasValue PullToRefresh_ptrRefreshableViewBackground");
 			Drawable background = a.getDrawable(R.styleable.PullToRefresh_ptrRefreshableViewBackground);
 			if (null != background) {
+				Log.d(TAG, "null != background");
 				mRefreshableView.setBackgroundDrawable(background);
 			}
 		} else if (a.hasValue(R.styleable.PullToRefresh_ptrAdapterViewBackground)) {
+			Log.d(TAG, "hasValue PullToRefresh_ptrAdapterViewBackground");
 			Utils.warnDeprecation("ptrAdapterViewBackground", "ptrRefreshableViewBackground");
 			Drawable background = a.getDrawable(R.styleable.PullToRefresh_ptrAdapterViewBackground);
 			if (null != background) {
+				Log.d(TAG, "null != background");
 				mRefreshableView.setBackgroundDrawable(background);
 			}
 		}
 
 		if (a.hasValue(R.styleable.PullToRefresh_ptrOverScroll)) {
+			Log.d(TAG, "hasValue PullToRefresh_ptrOverScroll");
 			mOverScrollEnabled = a.getBoolean(R.styleable.PullToRefresh_ptrOverScroll, true);
 		}
 
 		if (a.hasValue(R.styleable.PullToRefresh_ptrScrollingWhileRefreshingEnabled)) {
+			Log.d(TAG, "hasValue PullToRefresh_ptrScrollingWhileRefreshingEnabled");
 			mScrollingWhileRefreshingEnabled = a.getBoolean(R.styleable.PullToRefresh_ptrScrollingWhileRefreshingEnabled, false);
 		}
 
