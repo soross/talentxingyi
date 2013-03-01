@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:imo="http://schemas.android.com/apk/res/com.imo"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+	<View
+		android:id="@+id/outside"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_above="@+id/state"
+		android:background="@drawable/pop_outside_bg" />
+	<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:imo="http://schemas.android.com/apk/res/com.imo"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:id="@+id/state"
+		android:orientation="vertical">
+		<!-- android:background="@color/state_item_bg" -->
+
+
+<!--  android:background="@drawable/pop_top_bg"-->
+		<com.imo.view.StateItemView
+			android:id="@+id/item_onLineState"
+			android:layout_width="fill_parent"
+			android:layout_height="@dimen/pop_item_height"
+			imo:statename="@string/online_state"
+			imo:statesrc="@drawable/online_state" 
+			android:background="@drawable/pop_bottom_bg"/>
+		<!-- imo:ischeckedsrc="@drawable/state_checked" -->
+
+		<!-- <include layout="@layout/line" /> -->
+		<View 
+		    android:layout_height="2px"
+		    android:layout_width="fill_parent"
+		    android:background="@drawable/state_division_line"
+		    />
+
+		<com.imo.view.StateItemView
+			android:id="@+id/item_logout"
+			android:layout_width="fill_parent"
+			android:layout_height="@dimen/pop_item_height"
+			imo:statename="@string/logout_account"
+			imo:statesrc="@drawable/logout_account"
+			android:background="@drawable/pop_bottom_bg" />
+	</LinearLayout>
+
+</RelativeLayout>

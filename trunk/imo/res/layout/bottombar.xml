@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="fill"
+        android:listSelector="@android:color/transparent"
+        android:background="@drawable/bottom_bg"
+        android:spacing="0dp" />
+</merge>
+
+<!--
+    android:listSelector="@drawable/list_bg"
+    
+    @dimen/bottombar_height
+      android:background="@drawable/menu_bg"
+-->
+
+<!--
+<RadioGroup
+        android:id="@+id/buttombar_group"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" 
+        >
+
+        <RadioButton
+            android:id="@+id/menu_dialogue"
+            style="@style/bottombar_item"
+            android:checked="true"
+            android:drawableTop="@drawable/menu_dialogue_item"
+            android:text="@string/dialogue" />
+
+        <RadioButton
+            android:id="@+id/menu_organize"
+            style="@style/bottombar_item"
+            android:drawableTop="@drawable/menu_organize_item"
+            android:text="@string/organize" />
+
+        <RadioButton
+            android:id="@+id/menu_linkman"
+            style="@style/bottombar_item"
+            android:drawableTop="@drawable/menu_linkman_item"
+            android:text="@string/linkman"
+            />
+
+        <RadioButton
+            android:id="@+id/menu_group"
+            style="@style/bottombar_item"
+           
+            android:drawableTop="@drawable/menu_group_item"
+            android:text="@string/group" 
+           />
+        menu_group_item 
+
+    </RadioGroup>
+
+</LinearLayout>
+-->

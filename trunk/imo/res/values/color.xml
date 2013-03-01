@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="default_bg">#ecf9ff</color><!-- #DCECF8 -->
+
+    <!--titlebar  begin -->
+    <color name="titlebar_name_color">#173A72</color>
+    <color name="titlebar_worksign_color">#356B9A</color>
+    
+     <color name="titlebar_gradient_bg_begin">#cee8ff</color>
+    <color name="titlebar_gradient_bg_middle">#bbddf9</color>
+    <color name="titlebar_gradient_bg_end">#a9d1f4</color>
+    <!--titlebar  end -->
+    
+    <!--SearchBar  begin -->
+    <color name="searchbar_gradient_bg_begin">#F0F4F7</color>
+    <color name="searchbar_gradient_bg_middle">#E4E7EA</color><!--#FEFEFE  -->
+    <color name="searchbar_gradient_bg_end">#D8D8DA</color><!-- EEF2F3 -->
+    <color name="searchbar_gradient_bg">#eff3f6</color><!-- EEF2F3 -->
+    <color name="search_key_hint_font_color">#cccccc</color>
+    <color name="search_key_font_color">#000000</color>
+    <!--SearchBar  end -->
+    
+    <!--dept_gradient_bg  begin -->
+    <color name="dept_gradient_bg_begin">#ffffff</color>
+    <color name="dept_gradient_bg_middle">#ffffff</color><!--#FEFEFE  -->
+    <color name="dept_gradient_bg_end">#e8edf0</color><!-- EEF2F3 -->
+    <!--dept_gradient_bg  end -->
+    
+    <color name="dept_node_font_color">#666666</color>
+    <color name="dept_statistics_font_color">#c0c0c0</color>
+    
+    <!--user_gradient_bg  begin -->
+    <color name="user_gradient_bg_begin">#f3fbfe</color><!-- EFFAFE -->
+    <color name="user_gradient_bg_middle">#f0fbff</color><!-- EFFAFE -->
+    <color name="user_gradient_bg_end">#ecf9ff</color><!--  ECF9FF-->
+    <!--user_gradient_bg  end -->
+    
+    
+    
+    <color name="gray">#3c3c3c</color>
+    <color name="white">#ffffff</color>
+    
+  <!--   <color name="blue">#3E39D4</color> -->
+   <color name="blue">#5A5Aff</color>
+   <color name="setting_select_bg">#ffe4ba</color>
+    <color name="black">#000000</color>
+    <color name="blue_light">#3778c9</color>
+    
+    <color name="state_item_bg">#D6DFE4</color>
+   
+    <color name="border">#cccccc</color><!-- #E3E8EA -->
+<!--     <color name="border">#CDCECE</color> -->
+    
+    <color name="titlebar_bg">#B3D7F7</color>
+    <color name="titlebar_btn_text_color">#7F7F80</color>
+     <color name="titlebar_btn_normal">#E9EEF0</color>
+     <color name="titlebar_btn_pressed">#969A9C</color>
+     
+    <color name="recentcontact_info_color">#999999</color>
+    <color name="recentcontact_bg">#ecf9ff</color>
+     
+     <color name="chat_self_item_bg_solid">#ffececec</color>
+     <color name="emotion_unit_bg">#ECF9FF</color>
+     
+     <!-- welcome页面 -->
+     <color name="welcome_tv_text3_color">#547a9a</color>
+     <color name="welcome_tv_text2_color">#547a9a</color>
+     <color name="welcome_tv_text1_color">#244968</color>
+   
+    
+</resources>
