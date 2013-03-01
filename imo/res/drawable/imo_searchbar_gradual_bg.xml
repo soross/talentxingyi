@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+
+<!--     <gradient
+        android:startColor="@color/searchbar_gradient_bg_begin" 
+        android:centerColor="@color/searchbar_gradient_bg_middle"
+        android:endColor="@color/searchbar_gradient_bg_end"
+        android:angle="270" />   -->
+        
+        <solid  android:color="@color/searchbar_gradient_bg"/>
+</shape>

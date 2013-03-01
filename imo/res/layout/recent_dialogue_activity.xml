@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/recentcontact_bg"
+    android:orientation="vertical" >
+
+    <!-- android:layout_marginBottom="@dimen/bottombar_height" -->
+
+    <ListView
+        android:id="@+id/recent_contact_list"
+        style="@style/imo_listview_style"
+        />
+    <!-- 
+        android:divider="@drawable/line"
+        android:layout_weight="1.0"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="#00000000"
+        android:drawSelectorOnTop="false"
+        android:fadingEdgeLength="0.0sp"
+        android:fastScrollEnabled="true"
+        android:scrollbars="none"
+        android:scrollingCache="false" 
+     -->
+
+<!--     <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/recent_contact_list"
+        android:background="#D7E2E8" /> -->
+
+    <LinearLayout
+        android:id="@+id/iv_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="@dimen/no_recent_contact_img_width"
+            android:layout_height="@dimen/no_recent_contact_img_height"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/no_recent_contact" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/no_dialogue_record"
+            android:textColor="#83a1ae"
+            android:textSize="20sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</RelativeLayout>

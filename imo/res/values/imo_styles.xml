@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+        
+    <style name="ContentOverlay" parent="@android:style/Theme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowEnterAnimation">@anim/slide_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_out</item>
+    </style>
+    
+    <style name="layout_default_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+    
+    <style name="view_default_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    
+    <!-- imo TitleBar 默认按钮的样式 -->
+ 	<style name="titlebar_btn_style">
+        <item name="android:layout_width">@dimen/titlebar_btn_width</item>
+        <item name="android:layout_height">@dimen/titlebar_btn_height</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">@drawable/titlebar_btn_bg</item>
+        <item name="android:textSize">@dimen/titlebar_btn_fontsize</item>
+        <item name="android:textColor">#575757</item>
+    </style>
+	<style name="titlebar_btn_style1">
+        <item name="android:layout_width">@dimen/titlebar_btn_width1</item>
+        <item name="android:layout_height">@dimen/titlebar_btn_height</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">@drawable/titlebar_btn_bg</item>
+        <item name="android:textSize">@dimen/titlebar_btn_fontsize</item>
+        <item name="android:textColor">#575757</item>
+    </style>
+    <!-- imo中使用到的样式 -->
+
+
+    <!-- 默认按钮的样式 -->
+    
+     <!-- ListView的样式 -->
+	<style name="imo_listview_style">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:cacheColorHint">#00000000</item>
+        <item name="android:divider">@null</item>
+        <item name="android:drawSelectorOnTop">false</item>
+        <item name="android:fadingEdgeLength">0.0sp</item>
+        <item name="android:fastScrollEnabled">false</item>
+        <item name="android:scrollbars">none</item>
+        <item name="android:scrollingCache">false</item>
+    </style>
+   
+
+
+    <!-- Dialog的样式 -->
+    
+    <!-- 关于界面的字体样式 -->
+	<style name="imo_about_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    
+	   <!-- 名片Item的样式 -->
+     <style name="card_item_default">
+        <item name="android:textColor">#696969</item>
+        <item name="android:textSize">@dimen/card_name_fontsize</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:paddingTop">@dimen/card_name_padding_top</item>
+        <item name= "android:paddingBottom">@dimen/card_name_padding_top</item>
+    </style>
+    <style name="card_item_left" parent="card_item_default">
+         <item name= "android:ems">5</item>
+          <item name= "android:gravity">right</item>
+          <item name= "android:layout_marginRight">15dip</item>
+    </style>
+	<style name="copybutton">
+          <item name= "android:gravity">center</item>
+    </style>
+</resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <!-- default -->
+    <!--Titlebar Begin  -->
+    <dimen name="titlebar_height">60dip</dimen><!-- 78px -->
+    <dimen name="titlebar_face_height">51dip</dimen><!--  66px-->
+    <dimen name="titlebar_face_margin_left">10dip</dimen><!-- 10px -->
+    <dimen name="titlebar_name_fontsize">26px</dimen>
+    <dimen name="titlebar_worksign_fontsize">20px</dimen>
+    <dimen name="titlebar_state_height">25px</dimen>
+    
+    <dimen name="titlebar_center_fontsize">20sp</dimen>
+    <dimen name="titlebar_btn_width">70dip</dimen>
+    <dimen name="titlebar_btn_width1">93dip</dimen>
+    <dimen name="titlebar_btn_height">36dip</dimen>
+    <!--Titlebar End  -->
+     
+      <!--Searchbar Begin  -->
+     <dimen name="searchbar_height_out">71px</dimen>
+     <dimen name="searchbar_height_in">51px</dimen>
+     <dimen name="searchbar_padding">10px</dimen>
+     <dimen name="searchbar_content_padding_left">10px</dimen><!-- 19px -->
+     <dimen name="searchbar_content_padding_right">30px</dimen>
+     <dimen name="searchbar_key_font_size">23px</dimen>
+      <!--Searchbar end  -->
+      
+      
+      <!--NavBar begin  -->
+     <dimen name="navbar_height">68px</dimen>
+     <dimen name="navbar_item_fontsize">23px</dimen>
+     <dimen name="navbar_item_next_fontsize">30sp</dimen>
+      <!--NavBar begin  -->
+      
+      <!--Organize begin  -->
+     <dimen name="dept_node_height">68px</dimen>
+     <dimen name="dept_left_padding">29px</dimen>
+     <dimen name="dept_node_fontsize">23px</dimen>
+      <!--Organize end  -->
+      
+      <!--Organize loading data  begin-->
+      <dimen name="loading_icon_width">40dip</dimen>
+      <dimen name="loading_icon_height">40dip</dimen>
+      <dimen name="loading_anim_width">40dip</dimen>
+      <dimen name="loading_anim_height">40dip</dimen>
+      <!--Organize loading data  end-->
+      
+    
+    <!--BottomBar Begin  -->
+    <dimen name="bottombar_height">76px</dimen>
+    <dimen name="bottombar_item_height">50dp</dimen>
+    <dimen name="buttombar_item_font_size">13sp</dimen>
+    <!--BottomBar End  -->
+
+
+
+    <!--RecentContact Begin  -->
+    <dimen name="recent_contact_name_padding_left">10dip</dimen>
+    <dimen name="recent_contact_item_height">60dip</dimen>
+    <!--RecentContact End  -->
+    
+</resources>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <!-- lpdi -->
+
+
+    <!-- Titlebar Begin -->
+    <dimen name="titlebar_height">34.5px</dimen>
+    <dimen name="titlebar_face_frame_height">30.75px</dimen> <!-- update -->
+    <dimen name="titlebar_face_height">29.25px</dimen>
+    <dimen name="titlebar_face_margin_left">7.5px</dimen>
+    <dimen name="titlebar_name_fontsize">11.25px</dimen>
+    <dimen name="titlebar_worksign_fontsize">7.5px</dimen> <!-- none -->
+    <dimen name="titlebar_state_height">10.1px</dimen>
+    <dimen name="titlebar_center_fontsize">11.25px</dimen>
+    <dimen name="titlebar_btn_width">45px</dimen>
+    <dimen name="titlebar_btn_width1">60px</dimen>
+    <dimen name="titlebar_btn_height">21px</dimen>
+    <dimen name="titlebar_btn_fontsize">11.25px</dimen>
+    <dimen name="titlebar_btn_marginleft">7.5px</dimen>
+    <!-- Titlebar End -->
+
+
+    <!-- NavBar begin -->
+    <dimen name="navbar_height">@dimen/dept_node_height</dimen>
+    <dimen name="navbar_item_fontsize">@dimen/dept_node_fontsize</dimen>
+    <dimen name="navbar_item_next_fontsize">@dimen/dept_node_fontsize</dimen>
+    <dimen name="navbar_item_margin">15px</dimen>
+    <!-- NavBar begin -->
+
+
+    <!-- Searchbar Begin -->
+    <dimen name="searchbar_border_padding">5px</dimen>
+    <dimen name="searchbar_icon_paddingleft">5px</dimen>
+    <dimen name="searchbar_height_out">30.75px</dimen>
+    <dimen name="searchbar_height_in">24px</dimen>
+    <dimen name="searchbar_icon_width">10.5px</dimen>
+    <dimen name="searchbar_delete_width">20px</dimen>
+    <dimen name="searchbar_padding">3.75px</dimen>
+    <dimen name="searchbar_content_padding_left">5px</dimen> <!-- 19px -->
+    <dimen name="searchbar_content_padding_right">22.5px</dimen>
+    <dimen name="searchbar_key_font_size">10.5px</dimen>
+    <!-- Searchbar end -->
+
+
+    <!-- Organize begin -->
+    <dimen name="dept_node_pressed_bottom_height">28px</dimen>
+    <dimen name="dept_node_height">30px</dimen>
+    <dimen name="dept_left_padding">14.5px</dimen>
+    <dimen name="dept_node_fontsize">10.5px</dimen>
+    <dimen name="dept_node_treess_state_width">6px</dimen>
+    <dimen name="dept_node_treess_state_height">8.25px</dimen>
+    <dimen name="dept_statistics_fontsize">8.625px</dimen>
+    <dimen name="dept_statistics_marginright">13.5px</dimen>
+    <dimen name="user_node_line_top">29px</dimen>
+    <dimen name="user_node_first_top">28px</dimen>
+    <dimen name="user_node_sex_icon_width">18.75px</dimen>
+    <dimen name="user_node_triangle_layout_width">37.5px</dimen>
+    <dimen name="user_node_triangle_width">7.5px</dimen>
+    <dimen name="user_node_triangle_height">11.25px</dimen>
+    <dimen name="user_node_triangle_margin_right">13.5px</dimen>
+    <!-- Organize end -->
+
+
+    <!-- BottomBar Begin -->
+    <dimen name="bottombar_height">36.75px</dimen>
+    <!-- BottomBar End -->
+
+
+    <!-- WorkSign begin -->
+    <dimen name="worksign_content_height">225px</dimen>
+    <dimen name="worksign_delete_height">19.5px</dimen>
+    <!-- WorkSign end -->
+
+
+    <!-- Dialogue begin -->
+    <dimen name="begin_dialog_btn_width">110.5px</dimen>
+    <dimen name="begin_dialog_btn_height">23px</dimen>
+    <!-- Dialogue end -->
+
+
+    <!-- loading button begin -->
+    <dimen name="loading_btn_width">141px</dimen>
+    <dimen name="loading_btn_height">26px</dimen>
+    <!-- loading button end -->
+
+
+    <!-- Setting item view  begin  OK -->
+    <dimen name="setting_item_height">36.75px</dimen>
+    <dimen name="setting_item_view_icon_width">24px</dimen>
+    <dimen name="setting_item_view_name_fontsize">10.125px</dimen>
+    <dimen name="setting_item_checkbox_width">30px</dimen>
+    <dimen name="setting_item_margintop">13.875px</dimen>
+    <!-- Setting item view end -->
+
+
+    <!-- TitleMiddle item view begin -->
+    <dimen name="middle_divider_height">6px</dimen>
+    <dimen name="middle_userconfig_height">69px</dimen>
+    <dimen name="middle_edit_worksign_width">18px</dimen>
+    <dimen name="middle_edit_worksign_height">18px</dimen>
+    <dimen name="middle_worksign_fontsize">9px</dimen>
+    <dimen name="middle_title_height">45px</dimen>
+    <dimen name="middle_title_face_board_height">36px</dimen>
+    <dimen name="middle_title_face_top_margin">3.75px</dimen> <!-- ()/2 -->
+    <dimen name="middle_title_face_height">28.5px</dimen>
+    <dimen name="middle_title_name_fontsize">11.25px</dimen>
+    <dimen name="middle_title_position_fontsize">8.625px</dimen>
+    <!-- TitleMiddle item view end -->
+
+
+    <!-- Card end -->
+    <dimen name="card_name_fontsize">10.125px</dimen>
+    <dimen name="card_name_padding_top">10.5px</dimen>
+    <!-- Card Begin -->
+
+
+    <!-- RecentContact Begin -->
+    <dimen name="recent_contact_category_height">20.25px</dimen>
+    <dimen name="recent_contact_category_paddingleft">7.5px</dimen>
+    <dimen name="recent_contact_category_fontsize">10.125px</dimen>
+    <dimen name="recent_contact_item_height">46.5px</dimen>
+    <dimen name="recent_contact_face_marginleft">7.5px</dimen>
+    <dimen name="recent_contact_name_margin_left">7.5px</dimen>
+    <dimen name="recent_contact_rightpart_width">60px</dimen>
+    <dimen name="recent_contact_name_fontsize">9.75px</dimen> <!-- 这边的数据给的不对 -->
+    <dimen name="recent_contact_info_fontsize">9px</dimen>
+    <dimen name="recent_contact_time_fontsize">8.25px</dimen>
+    <dimen name="recent_contact_count_fontsize">9px</dimen>
+    <dimen name="recent_contact_close_btn_width">45px</dimen>
+    <dimen name="recent_contact_close_btn_height">22.5px</dimen>
+    <!-- RecentContact End -->
+
+
+    <!-- Group begin -->
+    <dimen name="group_img_width">180.5px</dimen>
+    <dimen name="group_img_height">120px</dimen>
+    <!-- Group End -->
+    <dimen name="no_recent_contact_img_width">107px</dimen>
+    <dimen name="no_recent_contact_img_height">92.5px</dimen>
+    <dimen name="pop_item_height">39px</dimen>
+    <dimen name="pop_item_fontsize">11.25px</dimen>
+    <dimen name="pop_item_icon_height">16.5px</dimen>
+
+    <!-- LoginActivity -->
+    <dimen name="login_btnLogin_marginBottom">15dp</dimen>
+
+    <!-- 240*320dp -->
+    <dimen name="fengxiaowei_10">5dp</dimen>
+    <dimen name="fengxiaowei_20">10dp</dimen>
+    <dimen name="fengxiaowei_30">15dp</dimen>
+    <dimen name="fengxiaowei_40">20dp</dimen>
+    <dimen name="fengxiaowei_50">25dp</dimen>
+    <dimen name="fengxiaowei_60">30dp</dimen>
+    <dimen name="fengxiaowei_70">35dp</dimen>
+    <dimen name="fengxiaowei_80">40dp</dimen>
+    <dimen name="fengxiaowei_90">45dp</dimen>
+    <dimen name="fengxiaowei_5">2.5dp</dimen>
+    <dimen name="fengxiaowei_4">2dp</dimen>
+    <dimen name="fengxiaowei_15">7.5dp</dimen>
+    <dimen name="fengxiaowei_25">12.5dp</dimen>
+    <dimen name="fengxiaowei_35">17.5dp</dimen>
+    <dimen name="fengxiaowei_45">22.5dp</dimen>
+    <dimen name="fengxiaowei_55">27.5dp</dimen>
+    <dimen name="fengxiaowei_65">32.5dp</dimen>
+    <dimen name="fengxiaowei_75">37.5dp</dimen>
+    <dimen name="fengxiaowei_85">42.5dp</dimen>
+    <dimen name="fengxiaowei_95">47.5dp</dimen>
+    <dimen name="fengxiaowei_96">48dp</dimen>
+    <dimen name="fengxiaowei_100">50dp</dimen>
+    <dimen name="fengxiaowei_200">100dp</dimen>
+    <dimen name="fengxiaowei_login_btn">160dp</dimen>
+    <dimen name="fengxiaowei_login_checkbox_padding">14dp</dimen>
+    <dimen name="login_logo_frame">80dp</dimen>
+    <dimen name="login_logo_img">70dp</dimen>
+    <dimen name="login_logo_margin">5dp</dimen>
+    <dimen name="dialogue_head">40dp</dimen>
+
+    <!-- 240*320sp -->
+    <dimen name="fengxiaowei_21sp">17sp</dimen>
+    <dimen name="fengxiaowei_16sp">12sp</dimen>
+    
+    <dimen name="system_set_btn_w">44dp</dimen>
+    <dimen name="system_set_btn_h">29dp</dimen>
+
+     <!--copy namecard  -->
+     <dimen name="copynamecard_width">100px</dimen>
+     <dimen name="copynamecard_height">22px</dimen>
+</resources>
