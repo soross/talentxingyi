@@ -14,12 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.imo.network.Encrypt;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.regex.Matcher;
@@ -51,11 +49,11 @@ public class StringUtils {
 	 * charset, storing the result into a new byte array.
 	 * 
 	 * @param string
-	 *            the String to encode
+	 *        the String to encode
 	 * @return encoded bytes
 	 * @throws IllegalStateException
-	 *             Thrown when the charset is missing, which should be never
-	 *             according the the Java specification.
+	 *         Thrown when the charset is missing, which should be never
+	 *         according the the Java specification.
 	 * @see <a
 	 *      href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">Standard
 	 *      charsets</a>
@@ -70,11 +68,11 @@ public class StringUtils {
 	 * charset, storing the result into a new byte array.
 	 * 
 	 * @param string
-	 *            the String to encode
+	 *        the String to encode
 	 * @return encoded bytes
 	 * @throws IllegalStateException
-	 *             Thrown when the charset is missing, which should be never
-	 *             according the the Java specification.
+	 *         Thrown when the charset is missing, which should be never
+	 *         according the the Java specification.
 	 * @see <a
 	 *      href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">Standard
 	 *      charsets</a>
@@ -89,11 +87,11 @@ public class StringUtils {
 	 * charset, storing the result into a new byte array.
 	 * 
 	 * @param string
-	 *            the String to encode
+	 *        the String to encode
 	 * @return encoded bytes
 	 * @throws IllegalStateException
-	 *             Thrown when the charset is missing, which should be never
-	 *             according the the Java specification.
+	 *         Thrown when the charset is missing, which should be never
+	 *         according the the Java specification.
 	 * @see <a
 	 *      href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">Standard
 	 *      charsets</a>
@@ -108,11 +106,11 @@ public class StringUtils {
 	 * charset, storing the result into a new byte array.
 	 * 
 	 * @param string
-	 *            the String to encode
+	 *        the String to encode
 	 * @return encoded bytes
 	 * @throws IllegalStateException
-	 *             Thrown when the charset is missing, which should be never
-	 *             according the the Java specification.
+	 *         Thrown when the charset is missing, which should be never
+	 *         according the the Java specification.
 	 * @see <a
 	 *      href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">Standard
 	 *      charsets</a>
@@ -127,11 +125,11 @@ public class StringUtils {
 	 * charset, storing the result into a new byte array.
 	 * 
 	 * @param string
-	 *            the String to encode
+	 *        the String to encode
 	 * @return encoded bytes
 	 * @throws IllegalStateException
-	 *             Thrown when the charset is missing, which should be never
-	 *             according the the Java specification.
+	 *         Thrown when the charset is missing, which should be never
+	 *         according the the Java specification.
 	 * @see <a
 	 *      href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">Standard
 	 *      charsets</a>
@@ -146,11 +144,11 @@ public class StringUtils {
 	 * charset, storing the result into a new byte array.
 	 * 
 	 * @param string
-	 *            the String to encode
+	 *        the String to encode
 	 * @return encoded bytes
 	 * @throws IllegalStateException
-	 *             Thrown when the charset is missing, which should be never
-	 *             according the the Java specification.
+	 *         Thrown when the charset is missing, which should be never
+	 *         according the the Java specification.
 	 * @see <a
 	 *      href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">Standard
 	 *      charsets</a>
@@ -171,13 +169,13 @@ public class StringUtils {
 	 * </p>
 	 * 
 	 * @param string
-	 *            the String to encode
+	 *        the String to encode
 	 * @param charsetName
-	 *            The name of a required {@link java.nio.charset.Charset}
+	 *        The name of a required {@link java.nio.charset.Charset}
 	 * @return encoded bytes
 	 * @throws IllegalStateException
-	 *             Thrown when a {@link UnsupportedEncodingException} is caught,
-	 *             which should never happen for a required charset name.
+	 *         Thrown when a {@link UnsupportedEncodingException} is caught,
+	 *         which should never happen for a required charset name.
 	 * @see CharEncoding
 	 * @see String#getBytes(String)
 	 */
@@ -192,8 +190,7 @@ public class StringUtils {
 		}
 	}
 
-	private static IllegalStateException newIllegalStateException(
-			String charsetName, UnsupportedEncodingException e) {
+	private static IllegalStateException newIllegalStateException(String charsetName, UnsupportedEncodingException e) {
 		return new IllegalStateException(charsetName + ": " + e);
 	}
 
@@ -208,14 +205,14 @@ public class StringUtils {
 	 * </p>
 	 * 
 	 * @param bytes
-	 *            The bytes to be decoded into characters
+	 *        The bytes to be decoded into characters
 	 * @param charsetName
-	 *            The name of a required {@link java.nio.charset.Charset}
+	 *        The name of a required {@link java.nio.charset.Charset}
 	 * @return A new <code>String</code> decoded from the specified array of
 	 *         bytes using the given charset.
 	 * @throws IllegalStateException
-	 *             Thrown when a {@link UnsupportedEncodingException} is caught,
-	 *             which should never happen for a required charset name.
+	 *         Thrown when a {@link UnsupportedEncodingException} is caught,
+	 *         which should never happen for a required charset name.
 	 * @see CharEncoding
 	 * @see String#String(byte[], String)
 	 */
@@ -235,12 +232,12 @@ public class StringUtils {
 	 * bytes using the ISO-8859-1 charset.
 	 * 
 	 * @param bytes
-	 *            The bytes to be decoded into characters
+	 *        The bytes to be decoded into characters
 	 * @return A new <code>String</code> decoded from the specified array of
 	 *         bytes using the given charset.
 	 * @throws IllegalStateException
-	 *             Thrown when a {@link UnsupportedEncodingException} is caught,
-	 *             which should never happen since the charset is required.
+	 *         Thrown when a {@link UnsupportedEncodingException} is caught,
+	 *         which should never happen since the charset is required.
 	 */
 	public static String newStringIso8859_1(byte[] bytes) {
 		return StringUtils.newString(bytes, CharEncoding.ISO_8859_1);
@@ -251,12 +248,12 @@ public class StringUtils {
 	 * bytes using the US-ASCII charset.
 	 * 
 	 * @param bytes
-	 *            The bytes to be decoded into characters
+	 *        The bytes to be decoded into characters
 	 * @return A new <code>String</code> decoded from the specified array of
 	 *         bytes using the given charset.
 	 * @throws IllegalStateException
-	 *             Thrown when a {@link UnsupportedEncodingException} is caught,
-	 *             which should never happen since the charset is required.
+	 *         Thrown when a {@link UnsupportedEncodingException} is caught,
+	 *         which should never happen since the charset is required.
 	 */
 	public static String newStringUsAscii(byte[] bytes) {
 		return StringUtils.newString(bytes, CharEncoding.US_ASCII);
@@ -267,12 +264,12 @@ public class StringUtils {
 	 * bytes using the UTF-16 charset.
 	 * 
 	 * @param bytes
-	 *            The bytes to be decoded into characters
+	 *        The bytes to be decoded into characters
 	 * @return A new <code>String</code> decoded from the specified array of
 	 *         bytes using the given charset.
 	 * @throws IllegalStateException
-	 *             Thrown when a {@link UnsupportedEncodingException} is caught,
-	 *             which should never happen since the charset is required.
+	 *         Thrown when a {@link UnsupportedEncodingException} is caught,
+	 *         which should never happen since the charset is required.
 	 */
 	public static String newStringUtf16(byte[] bytes) {
 		return StringUtils.newString(bytes, CharEncoding.UTF_16);
@@ -283,12 +280,12 @@ public class StringUtils {
 	 * bytes using the UTF-16BE charset.
 	 * 
 	 * @param bytes
-	 *            The bytes to be decoded into characters
+	 *        The bytes to be decoded into characters
 	 * @return A new <code>String</code> decoded from the specified array of
 	 *         bytes using the given charset.
 	 * @throws IllegalStateException
-	 *             Thrown when a {@link UnsupportedEncodingException} is caught,
-	 *             which should never happen since the charset is required.
+	 *         Thrown when a {@link UnsupportedEncodingException} is caught,
+	 *         which should never happen since the charset is required.
 	 */
 	public static String newStringUtf16Be(byte[] bytes) {
 		return StringUtils.newString(bytes, CharEncoding.UTF_16BE);
@@ -299,12 +296,12 @@ public class StringUtils {
 	 * bytes using the UTF-16LE charset.
 	 * 
 	 * @param bytes
-	 *            The bytes to be decoded into characters
+	 *        The bytes to be decoded into characters
 	 * @return A new <code>String</code> decoded from the specified array of
 	 *         bytes using the given charset.
 	 * @throws IllegalStateException
-	 *             Thrown when a {@link UnsupportedEncodingException} is caught,
-	 *             which should never happen since the charset is required.
+	 *         Thrown when a {@link UnsupportedEncodingException} is caught,
+	 *         which should never happen since the charset is required.
 	 */
 	public static String newStringUtf16Le(byte[] bytes) {
 		return StringUtils.newString(bytes, CharEncoding.UTF_16LE);
@@ -315,24 +312,23 @@ public class StringUtils {
 	 * bytes using the UTF-8 charset.
 	 * 
 	 * @param bytes
-	 *            The bytes to be decoded into characters
+	 *        The bytes to be decoded into characters
 	 * @return A new <code>String</code> decoded from the specified array of
 	 *         bytes using the given charset.
 	 * @throws IllegalStateException
-	 *             Thrown when a {@link UnsupportedEncodingException} is caught,
-	 *             which should never happen since the charset is required.
+	 *         Thrown when a {@link UnsupportedEncodingException} is caught,
+	 *         which should never happen since the charset is required.
 	 */
 	public static String newStringUtf8(byte[] bytes) {
 		return StringUtils.newString(bytes, CharEncoding.UTF_8);
 	}
 
 	public static byte[] ToUnicode(String str) {
-		if(str.length() == 0)
-		{
+		if (str.length() == 0) {
 			byte temp[] = new byte[3];
 			return temp;
 		}
-		
+
 		byte[] temp = null;
 		try {
 			temp = str.getBytes("Unicode");
@@ -342,7 +338,7 @@ public class StringUtils {
 		}
 		byte[] dataBuf = new byte[temp.length];
 
-		System.arraycopy(temp, 2, dataBuf, 0, temp.length-2);
+		System.arraycopy(temp, 2, dataBuf, 0, temp.length - 2);
 		dataBuf[temp.length - 2] = '\0';
 		dataBuf[temp.length - 1] = '\0';
 
@@ -356,8 +352,9 @@ public class StringUtils {
 		 */
 	}
 
-	private static final char[] hexDigit = { '0', '1', '2', '3', '4', '5', '6',
-			'7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+	private static final char[] hexDigit = {
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+	};
 
 	private static char toHex(int nibble) {
 		return hexDigit[(nibble & 0xF)];
@@ -367,9 +364,9 @@ public class StringUtils {
 	 * 将字符串编码成 Unicode 形式的字符串. 如 "黄" to "\u9EC4"
 	 * 
 	 * @param theString
-	 *            待转换成Unicode编码的字符串。
+	 *        待转换成Unicode编码的字符串。
 	 * @param escapeSpace
-	 *            是否忽略空格，为true时在空格后面是否加个反斜杠。
+	 *        是否忽略空格，为true时在空格后面是否加个反斜杠。
 	 * @return 返回转换后Unicode编码的字符串。
 	 */
 	public static String toEncodedUnicode(String theString, boolean escapeSpace) {
@@ -393,46 +390,46 @@ public class StringUtils {
 				continue;
 			}
 			switch (aChar) {
-			case ' ':
-				if (x == 0 || escapeSpace)
+				case ' ':
+					if (x == 0 || escapeSpace)
+						outBuffer.append('\\');
+					outBuffer.append(' ');
+					break;
+				case '\t':
 					outBuffer.append('\\');
-				outBuffer.append(' ');
-				break;
-			case '\t':
-				outBuffer.append('\\');
-				outBuffer.append('t');
-				break;
-			case '\n':
-				outBuffer.append('\\');
-				outBuffer.append('n');
-				break;
-			case '\r':
-				outBuffer.append('\\');
-				outBuffer.append('r');
-				break;
-			case '\f':
-				outBuffer.append('\\');
-				outBuffer.append('f');
-				break;
-			case '=': // Fall through
-			case ':': // Fall through
-			case '#': // Fall through
-			case '!':
-				outBuffer.append('\\');
-				outBuffer.append(aChar);
-				break;
-			default:
-				if ((aChar < 0x0020) || (aChar > 0x007e)) {
-					// 每个unicode有16位，每四位对应的16进制从高位保存到低位
+					outBuffer.append('t');
+					break;
+				case '\n':
 					outBuffer.append('\\');
-					outBuffer.append('u');
-					outBuffer.append(toHex((aChar >> 12) & 0xF));
-					outBuffer.append(toHex((aChar >> 8) & 0xF));
-					outBuffer.append(toHex((aChar >> 4) & 0xF));
-					outBuffer.append(toHex(aChar & 0xF));
-				} else {
+					outBuffer.append('n');
+					break;
+				case '\r':
+					outBuffer.append('\\');
+					outBuffer.append('r');
+					break;
+				case '\f':
+					outBuffer.append('\\');
+					outBuffer.append('f');
+					break;
+				case '=': // Fall through
+				case ':': // Fall through
+				case '#': // Fall through
+				case '!':
+					outBuffer.append('\\');
 					outBuffer.append(aChar);
-				}
+					break;
+				default:
+					if ((aChar < 0x0020) || (aChar > 0x007e)) {
+						// 每个unicode有16位，每四位对应的16进制从高位保存到低位
+						outBuffer.append('\\');
+						outBuffer.append('u');
+						outBuffer.append(toHex((aChar >> 12) & 0xF));
+						outBuffer.append(toHex((aChar >> 8) & 0xF));
+						outBuffer.append(toHex((aChar >> 4) & 0xF));
+						outBuffer.append(toHex(aChar & 0xF));
+					} else {
+						outBuffer.append(aChar);
+					}
 			}
 		}
 		return outBuffer.toString();
@@ -445,11 +442,10 @@ public class StringUtils {
 
 	public static String UNICODE_TO_UTF8(byte[] b) {
 		int bufLen = b.length;
-		if(bufLen == 3&&b[0] == 0&&b[1] == 0&&b[2] == 0)
-		{
+		if (bufLen == 3 && b[0] == 0 && b[1] == 0 && b[2] == 0) {
 			return "";
 		}
-		
+
 		int i = 0;
 		int j = 0;
 		byte[] utf8Byte = new byte[b.length * 2];
@@ -482,63 +478,56 @@ public class StringUtils {
 		System.arraycopy(utf8Byte, 0, b, 0, j);
 		return new String(b);
 	}
-	
+
 	public static final int imageItemType = 0x01;
 	public static final int textItemType = 0x02;
 	public static final int linkItemType = 0x03;
 	public static ArrayList<RegexItem> itemArrayList = new ArrayList<RegexItem>();
-	
+
 	public static Comparator<RegexItem> comparator = new Comparator<RegexItem>() {
 		public int compare(RegexItem s1, RegexItem s2) {
 			// 按照起始位置大小进行排序
 			return s1.getStart() - s2.getStart();
 		}
 	};
-	
-	public static JSONArray AnalyseStr2Json(String aOriginStr) throws JSONException
-	{		
+
+	public static JSONArray AnalyseStr2Json(String aOriginStr) throws JSONException {
 		ArrayList<JSONObject> jsonCollection = new ArrayList<JSONObject>();
-		
+
 		AnalyseHrefTags(aOriginStr);
 		AnalyseImageTags(aOriginStr);
-		
+
 		Collections.sort(itemArrayList, comparator);
-		
-		for( int i = 0; i < itemArrayList.size(); i++ )
-		{
+
+		for (int i = 0; i < itemArrayList.size(); i++) {
 			RegexItem tempItem = itemArrayList.get(i);
-			
+
 			String textStr = null;
-			if( 0 == i)
-				textStr = aOriginStr.substring(0,tempItem.getStart());
-			else
-			{
-				textStr = aOriginStr.substring(itemArrayList.get(i-1).getEnd(),itemArrayList.get(i).getStart());
+			if (0 == i)
+				textStr = aOriginStr.substring(0, tempItem.getStart());
+			else {
+				textStr = aOriginStr.substring(itemArrayList.get(i - 1).getEnd(), itemArrayList.get(i).getStart());
 			}
-			
-			if( textStr.length() > 0 )
-			{
+
+			if (textStr.length() > 0) {
 				JSONObject txtJsonObj = new JSONObject();
 				txtJsonObj.put("txt", textStr);
 				jsonCollection.add(txtJsonObj);
 			}
-			
+
 			JSONObject sepcialJsonObj = new JSONObject();
-			
-			if( imageItemType == tempItem.getItemType() )
-			{
+
+			if (imageItemType == tempItem.getItemType()) {
 				sepcialJsonObj.put("img", tempItem.getContent());
-			}
-			else if( linkItemType == tempItem.getItemType() )
-			{
+			} else if (linkItemType == tempItem.getItemType()) {
 				sepcialJsonObj.put("lnk", tempItem.getContent());
 			}
 			jsonCollection.add(sepcialJsonObj);
-			
+
 		}
-		
+
 		itemArrayList.clear();
-		
+
 		JSONArray jsonArr = new JSONArray(jsonCollection);
 		return jsonArr;
 	}
@@ -547,9 +536,9 @@ public class StringUtils {
 		try {
 			// search for all occurrences of pattern
 			String patternString = "(http://|ftp://|https://)?(w{3}\\.)?([a-zA-Z0-9]+)(\\.)((org)|(cn)|(com)|(net)|(edu)|(gov))([\\[a-zA-Z0-9]\\-\\.,@?^=%&amp;:/~\\+#]*[\\[a-zA-Z0-9]\\-\\@?^=%&amp;/~\\+#])?";
-			Pattern pattern = Pattern.compile(patternString,Pattern.CASE_INSENSITIVE);
+			Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
 			Matcher matcher = pattern.matcher(aOriginStr);
-			
+
 			while (matcher.find()) {
 				int start = matcher.start();
 				int end = matcher.end();
@@ -561,16 +550,16 @@ public class StringUtils {
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 	}
-	
+
 	public static void AnalyseImageTags(String aOriginStr) {
 		try {
 			// search for all occurrences of pattern
 			String patternString = "\\{[^{}]*\\}";
-			Pattern pattern = Pattern.compile(patternString,Pattern.CASE_INSENSITIVE);
+			Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
 			Matcher matcher = pattern.matcher(aOriginStr);
-			
+
 			while (matcher.find()) {
 				int start = matcher.start();
 				int end = matcher.end();
@@ -582,7 +571,7 @@ public class StringUtils {
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 	}
 
 }
