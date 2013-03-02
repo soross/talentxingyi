@@ -1,6 +1,5 @@
 package com.imo.common;
 
-import android.R.integer;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;

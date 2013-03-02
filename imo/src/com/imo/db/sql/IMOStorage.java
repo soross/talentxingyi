@@ -1,13 +1,16 @@
 package com.imo.db.sql;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 
 import com.imo.db.entity.Dept;
 import com.imo.db.entity.DeptUser;
@@ -20,7 +23,6 @@ import com.imo.db.entity.InnerGroup;
 import com.imo.db.entity.InnerGroupUc;
 import com.imo.db.entity.MessageInfo;
 import com.imo.db.entity.OuterGroup;
-import com.imo.db.entity.RecentContactor;
 import com.imo.db.entity.User;
 import com.imo.global.Globe;
 import com.imo.module.contact.OuterContactBasicInfo;
@@ -35,20 +37,10 @@ import com.imo.network.packages.InnerContactorItem;
 import com.imo.network.packages.OfflineMsgItem;
 import com.imo.network.packages.OuterContactorItem;
 import com.imo.util.Functions;
-import com.imo.util.LogFactory;
-
-import android.R.integer;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 
 /**
  * 方法addEmployeesUID(2003),getDeptAndUserUC和addDeptAndUserUC(2009),addDepts(2010
  * ),addEmployeesInfo(3009)可用。
- * 
- * @author fengxiaowei
- * 
  */
 public class IMOStorage {
 	private static String CorpInfo = DataHelper.CorpInfo;
@@ -140,16 +132,15 @@ public class IMOStorage {
 	//
 	// return list;
 	// }
-	
+
 	public ArrayList<Integer> search(String key) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		searchUserBaseInfo(key, list);
 		searchOuterContactInfo(key, list);
 		return list;
 	}
-	
-	
-	public ArrayList<Integer> findAllUids(){
+
+	public ArrayList<Integer> findAllUids() {
 
 		sql = "select Uid from  " + UserBaseInfo;
 
@@ -161,8 +152,7 @@ public class IMOStorage {
 			if (count < 1)
 				return result;
 
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				result.add(cursor.getInt(0));
 			}
 			return result;
@@ -173,11 +163,11 @@ public class IMOStorage {
 				cursor.close();
 			}
 		}
-		
+
 		return result;
-	
+
 	}
-	
+
 	public Integer findDidByUid(int uid) {
 		sql = "select Did from  " + UserBaseInfo + " where Uid = " + uid;
 
@@ -189,24 +179,21 @@ public class IMOStorage {
 			if (count < 1)
 				return result;
 
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
-				result =  cursor.getInt(0);
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+				result = cursor.getInt(0);
 			}
 			return result;
-		} catch (Exception e) {
-		} finally {
+		} catch (Exception e) {} finally {
 			if (cursor != null && !cursor.isClosed()) {
 				cursor.close();
 			}
 		}
-		
+
 		return result;
 	}
 
 	public void searchUserBaseInfo(String key, ArrayList<Integer> list) {
-		sql = "select * from  " + UserBaseInfo + " where Name like '%" + key
-				+ "%' or SimplePY like '%" + key + "%'";
+		sql = "select * from  " + UserBaseInfo + " where Name like '%" + key + "%' or SimplePY like '%" + key + "%'";
 
 		Cursor cursor = null;
 		try {
@@ -228,8 +215,7 @@ public class IMOStorage {
 	}
 
 	public void searchOuterContactInfo(String key, ArrayList<Integer> list) {
-		sql = "select * from  " + OuterContactInfo + " where Name like '%"
-				+ key + "%' or SimplePY like '%" + key + "%'";
+		sql = "select * from  " + OuterContactInfo + " where Name like '%" + key + "%' or SimplePY like '%" + key + "%'";
 
 		Cursor cursor = null;
 		try {
@@ -238,28 +224,18 @@ public class IMOStorage {
 			if (count < 1)
 				return;
 
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				list.add(cursor.getInt(1));
 			}
-		} catch (Exception e) {
-		} finally {
+		} catch (Exception e) {} finally {
 			if (cursor != null && !cursor.isClosed()) {
 				cursor.close();
 			}
 		}
 	}
 
-	public boolean update(int[] deptid, int[] dept_uc, int[] dept_user_uc,
-			ArrayList<Integer> needAddLocalDept,
-			ArrayList<Integer> needDelLocalDept,
-			ArrayList<Integer> needUpdateLocalDept,
-			ArrayList<Integer> needUpdateLocalDeptUser,
-			HashMap<Integer, DeptMaskItem> deptInfoMap,
-			HashMap<Integer, int[]> deptUserIdsMap,
-			HashMap<Integer, int[]> deptUserNextSiblingMap,
-			HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> deptUserInfoMap)
-			throws Exception {
+	public boolean update(int[] deptid, int[] dept_uc, int[] dept_user_uc, ArrayList<Integer> needAddLocalDept, ArrayList<Integer> needDelLocalDept, ArrayList<Integer> needUpdateLocalDept, ArrayList<Integer> needUpdateLocalDeptUser, HashMap<Integer, DeptMaskItem> deptInfoMap,
+			HashMap<Integer, int[]> deptUserIdsMap, HashMap<Integer, int[]> deptUserNextSiblingMap, HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> deptUserInfoMap) throws Exception {
 		mDatabase.beginTransaction();
 		try {
 			updateDeptAndUserUC(deptid, dept_uc, dept_user_uc);
@@ -276,10 +252,8 @@ public class IMOStorage {
 			addDepts(EngineConst.cId, needAddLocalDept, deptInfoMap);
 
 			deleteEmployeesByDeptId(needUpdateLocalDeptUser);
-			
 
-			updateEmployeesInfo(EngineConst.cId, needUpdateLocalDeptUser,
-					deptUserInfoMap);
+			updateEmployeesInfo(EngineConst.cId, needUpdateLocalDeptUser, deptUserInfoMap);
 
 			addEmployeesUID(deptUserIdsMap, deptUserNextSiblingMap);// ?
 
@@ -341,12 +315,7 @@ public class IMOStorage {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean add(int[] deptid, int[] dept_uc, int[] dept_user_uc,
-			HashMap<Integer, DeptMaskItem> deptInfoMap,
-			HashMap<Integer, int[]> deptUserIdsMap,
-			HashMap<Integer, int[]> deptUserNextSiblingMap,
-			HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> deptUserInfoMap)
-			throws Exception {
+	public boolean add(int[] deptid, int[] dept_uc, int[] dept_user_uc, HashMap<Integer, DeptMaskItem> deptInfoMap, HashMap<Integer, int[]> deptUserIdsMap, HashMap<Integer, int[]> deptUserNextSiblingMap, HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> deptUserInfoMap) throws Exception {
 		mDatabase.beginTransaction();
 		try {
 			addDeptAndUserUC(deptid, dept_uc, dept_user_uc);
@@ -378,11 +347,7 @@ public class IMOStorage {
 	 * @return int[] dId, int[] uc, int[] user_uc组成的二维数组
 	 * @throws Exception
 	 */
-	public int[][] get(HashMap<Integer, DeptMaskItem> deptInfoMap,
-			HashMap<Integer, int[]> deptUserIdsMap,
-			HashMap<Integer, int[]> deptUserNextSiblingMap,
-			HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> deptUserInfoMap)
-			throws Exception {
+	public int[][] get(HashMap<Integer, DeptMaskItem> deptInfoMap, HashMap<Integer, int[]> deptUserIdsMap, HashMap<Integer, int[]> deptUserNextSiblingMap, HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> deptUserInfoMap) throws Exception {
 		mDatabase.beginTransaction();
 		int[][] result = null;
 		try {
@@ -406,16 +371,16 @@ public class IMOStorage {
 	public boolean addDeptAndUserUC(int[] dId, int[] uc, int[] user_uc) {
 		if (dId == null || uc == null || user_uc == null)
 			return false;
-		sql = "replace into " + DeptAndUserUC + "(Did , UC , USER_UC )"
-				+ " values (?,?,?)";
+		sql = "replace into " + DeptAndUserUC + "(Did , UC , USER_UC )" + " values (?,?,?)";
 		for (int i = 0; i < dId.length; i++) {
-			mDatabase.execSQL(sql, new Object[] { dId[i], uc[i], user_uc[i] });
+			mDatabase.execSQL(sql, new Object[] {
+					dId[i], uc[i], user_uc[i]
+			});
 		}
 		return true;
 	}
 
-	public void getDeptAndUserUC(int[] deptid, int[] dept_uc, int[] dept_user_uc)
-			throws Exception {
+	public void getDeptAndUserUC(int[] deptid, int[] dept_uc, int[] dept_user_uc) throws Exception {
 		sql = "select * from " + DeptAndUserUC;
 		Cursor cursor = null;
 		try {
@@ -456,15 +421,13 @@ public class IMOStorage {
 			int i = 0;
 			result = new int[3][count];
 
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				result[0][i] = cursor.getInt(0);
 				result[1][i] = cursor.getInt(1);
 				result[2][i] = cursor.getInt(2);
 				i++;
 			}
-		} catch (Exception e) {
-		} finally {
+		} catch (Exception e) {} finally {
 			if (cursor != null && !cursor.isClosed()) {
 				cursor.close();
 			}
@@ -480,19 +443,27 @@ public class IMOStorage {
 	public void deleteDepts(Object[] deptIds) {
 		sql = "delete from " + DeptInfo + " where Did = ?";
 		for (Object deptId : deptIds) {
-			mDatabase.execSQL(sql, new Object[] { deptId });
+			mDatabase.execSQL(sql, new Object[] {
+				deptId
+			});
 		}
 		sql = "delete from " + DeptAndUserUC + " where Did = ?";
 		for (Object deptId : deptIds) {
-			mDatabase.execSQL(sql, new Object[] { deptId });
+			mDatabase.execSQL(sql, new Object[] {
+				deptId
+			});
 		}
 		sql = "delete from " + DeptUserInfo + " where Did = ?";
 		for (Object deptId : deptIds) {
-			mDatabase.execSQL(sql, new Object[] { deptId });
+			mDatabase.execSQL(sql, new Object[] {
+				deptId
+			});
 		}
 		sql = "delete from " + UserBaseInfo + " where Did = ?";
 		for (Object deptId : deptIds) {
-			mDatabase.execSQL(sql, new Object[] { deptId });
+			mDatabase.execSQL(sql, new Object[] {
+				deptId
+			});
 		}
 
 	}
@@ -519,16 +490,18 @@ public class IMOStorage {
 	 * @param user_uc
 	 */
 	public void updateDeptAndUserUC1(int[] dId, int[] uc, int[] user_uc) {
-		sql = "update " + DeptAndUserUC + " set "
-				+ "UC = ?,USER_UC = ? where Did = ?";
+		sql = "update " + DeptAndUserUC + " set " + "UC = ?,USER_UC = ? where Did = ?";
 		for (int i = 0; i < dId.length; i++) {
-			mDatabase.execSQL(sql, new Object[] { uc[i], user_uc[i], dId[i] });
+			mDatabase.execSQL(sql, new Object[] {
+					uc[i], user_uc[i], dId[i]
+			});
 		}
 
-		sql = "update " + DeptInfo + " set "
-				+ "UC = ?,DeptUserUC = ? where Did = ?";
+		sql = "update " + DeptInfo + " set " + "UC = ?,DeptUserUC = ? where Did = ?";
 		for (int i = 0; i < dId.length; i++) {
-			mDatabase.execSQL(sql, new Object[] { uc[i], user_uc[i], dId[i] });
+			mDatabase.execSQL(sql, new Object[] {
+					uc[i], user_uc[i], dId[i]
+			});
 		}
 
 	}
@@ -541,12 +514,10 @@ public class IMOStorage {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean addEmployeesUID(HashMap<Integer, int[]> deptUserIdsMap,
-			HashMap<Integer, int[]> deptUserNextSiblingMap) throws Exception {
+	public boolean addEmployeesUID(HashMap<Integer, int[]> deptUserIdsMap, HashMap<Integer, int[]> deptUserNextSiblingMap) throws Exception {
 		if (deptUserIdsMap == null || deptUserNextSiblingMap == null)
 			return false;
-		sql = "replace into " + DeptUserInfo
-				+ "(Did, Uid, NextSiblingUid) values (?,?,?)";
+		sql = "replace into " + DeptUserInfo + "(Did, Uid, NextSiblingUid) values (?,?,?)";
 		SQLiteStatement sqLiteStatement = mDatabase.compileStatement(sql);
 		Set<Integer> keys = deptUserIdsMap.keySet();
 		Integer dId = null;
@@ -556,8 +527,7 @@ public class IMOStorage {
 			dId = it.next();
 			deptUserIds = deptUserIdsMap.get(dId);
 			deptUserNextSibling = deptUserNextSiblingMap.get(dId);
-			if (dId == null || deptUserIds == null
-					|| deptUserNextSibling == null)
+			if (dId == null || deptUserIds == null || deptUserNextSibling == null)
 				continue;
 			for (int i = 0; i < deptUserIds.length; i++) {
 				try {
@@ -574,8 +544,7 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean updateEmployeesUID(HashMap<Integer, int[]> deptUserIdsMap,
-			HashMap<Integer, int[]> deptUserNextSiblingMap) throws Exception {
+	public boolean updateEmployeesUID(HashMap<Integer, int[]> deptUserIdsMap, HashMap<Integer, int[]> deptUserNextSiblingMap) throws Exception {
 		if (deptUserIdsMap == null || deptUserNextSiblingMap == null)
 			return false;
 		Set<Integer> keys = deptUserIdsMap.keySet();
@@ -596,9 +565,7 @@ public class IMOStorage {
 	 * @param deptUserNextSiblingMap
 	 * @throws Exception
 	 */
-	public void getEmployeesUID(int[] deptIds,
-			HashMap<Integer, int[]> deptUserIdsMap,
-			HashMap<Integer, int[]> deptUserNextSiblingMap) throws Exception {
+	public void getEmployeesUID(int[] deptIds, HashMap<Integer, int[]> deptUserIdsMap, HashMap<Integer, int[]> deptUserNextSiblingMap) throws Exception {
 
 		sql = "select * from " + DeptUserInfo + " where Did = ?";
 
@@ -607,7 +574,9 @@ public class IMOStorage {
 		int[] nextSiblingUids = null;
 		for (int deptId : deptIds) {
 			try {
-				cursor = mDatabase.rawQuery(sql, new String[] { deptId + "" });
+				cursor = mDatabase.rawQuery(sql, new String[] {
+					deptId + ""
+				});
 				int count = cursor.getCount();
 				if (count < 1)
 					continue;
@@ -615,16 +584,14 @@ public class IMOStorage {
 				nextSiblingUids = new int[count];
 				int i = 0;
 
-				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-						.moveToNext()) {
+				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 					uIds[i] = cursor.getInt(1);
 					nextSiblingUids[i] = cursor.getInt(2);
 					i++;
 				}
 				deptUserIdsMap.put(deptId, uIds);
 				deptUserNextSiblingMap.put(deptId, nextSiblingUids);
-			} catch (Exception e) {
-			} finally {
+			} catch (Exception e) {} finally {
 				if (cursor != null && !cursor.isClosed()) {
 					cursor.close();
 				}
@@ -672,16 +639,11 @@ public class IMOStorage {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean addEmployeesInfo(
-			Integer cId,
-			HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> employeeInfoItems)
-			throws Exception {
+	public boolean addEmployeesInfo(Integer cId, HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> employeeInfoItems) throws Exception {
 		if (employeeInfoItems == null)
 			return false;
 
-		sql = "replace into " + UserBaseInfo
-				+ "(Uid ,Cid ,Did,Flag ,Account ,SimplePY,Name ,Gender)"
-				+ " values (?,?,?,?,?,?,?,?)";
+		sql = "replace into " + UserBaseInfo + "(Uid ,Cid ,Did,Flag ,Account ,SimplePY,Name ,Gender)" + " values (?,?,?,?,?,?,?,?)";
 		SQLiteStatement sqLiteStatement = mDatabase.compileStatement(sql);
 		Set<Integer> dIds = employeeInfoItems.keySet();
 		Integer dId = null;
@@ -700,14 +662,8 @@ public class IMOStorage {
 					sqLiteStatement.bindLong(2, cId);
 					sqLiteStatement.bindLong(3, dId);
 					sqLiteStatement.bindLong(4, employeeInfoItem.getFlag());
-					sqLiteStatement.bindString(5,
-							employeeInfoItem.getUser_account());
-					sqLiteStatement
-							.bindString(
-									6,
-									Functions.getChinessFirstSpellInstance()
-											.GetChineseSpell(
-													employeeInfoItem.getName()));
+					sqLiteStatement.bindString(5, employeeInfoItem.getUser_account());
+					sqLiteStatement.bindString(6, Functions.getChinessFirstSpellInstance().GetChineseSpell(employeeInfoItem.getName()));
 					sqLiteStatement.bindString(7, employeeInfoItem.getName());
 					sqLiteStatement.bindLong(8, employeeInfoItem.getGender());
 					sqLiteStatement.executeInsert();
@@ -773,24 +729,16 @@ public class IMOStorage {
 	// return true;
 	// }
 
-	public boolean sb2(List<EmployeeInfoItem> employeeInfoItems)
-			throws Exception {
+	public boolean sb2(List<EmployeeInfoItem> employeeInfoItems) throws Exception {
 
-		sql = "replace into " + UserBaseInfo
-				+ "(Uid ,Cid ,Did,Flag ,Account ,SimplePY,Name ,Gender)"
-				+ " values (?,?,?,?,?,?,?,?)";
+		sql = "replace into " + UserBaseInfo + "(Uid ,Cid ,Did,Flag ,Account ,SimplePY,Name ,Gender)" + " values (?,?,?,?,?,?,?,?)";
 
 		mDatabase.beginTransaction();
 		try {
 			for (EmployeeInfoItem employeeInfoItem : employeeInfoItems) {
-				mDatabase.execSQL(
-						sql,
-						new Object[] { employeeInfoItem.getUid(), 0, 0,
-								employeeInfoItem.getFlag(),
-								employeeInfoItem.getUser_account(),
-								employeeInfoItem.getName(),
-								employeeInfoItem.getName(),
-								employeeInfoItem.getGender() });
+				mDatabase.execSQL(sql, new Object[] {
+						employeeInfoItem.getUid(), 0, 0, employeeInfoItem.getFlag(), employeeInfoItem.getUser_account(), employeeInfoItem.getName(), employeeInfoItem.getName(), employeeInfoItem.getGender()
+				});
 			}
 			mDatabase.setTransactionSuccessful();
 		} catch (Exception e) {
@@ -815,7 +763,9 @@ public class IMOStorage {
 		sql = "select Name from " + UserBaseInfo + " where Uid = ?";
 		Cursor cursor = null;
 		try {
-			cursor = mDatabase.rawQuery(sql, new String[] { uid + "" });
+			cursor = mDatabase.rawQuery(sql, new String[] {
+				uid + ""
+			});
 			int count = cursor.getCount();
 			if (count < 1)
 				return "";
@@ -838,9 +788,7 @@ public class IMOStorage {
 	 * @param deptIds
 	 * @param employeeInfoItems
 	 */
-	public void getEmployeesInfo(
-			int[] deptIds,
-			HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> employeeInfoItems) {
+	public void getEmployeesInfo(int[] deptIds, HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> employeeInfoItems) {
 
 		sql = "select * from " + UserBaseInfo + " where Did = ?";
 		HashMap<Integer, EmployeeInfoItem> employeeInfoItemMap = null;
@@ -849,18 +797,17 @@ public class IMOStorage {
 		EmployeeInfoItem employeeInfoItem = null;
 		for (int deptId : deptIds) {
 			try {
-				cursor = mDatabase.rawQuery(sql, new String[] { deptId + "" });
+				cursor = mDatabase.rawQuery(sql, new String[] {
+					deptId + ""
+				});
 				int count = cursor.getCount();
 				if (count < 1)
 					continue;
 
 				employeeInfoItemMap = new HashMap<Integer, EmployeeInfoItem>();
-				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-						.moveToNext()) {
+				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 					uId = cursor.getInt(0);
-					employeeInfoItem = new EmployeeInfoItem(
-							uId, cursor.getInt(3), cursor.getString(4),
-							cursor.getString(6), cursor.getInt(7));
+					employeeInfoItem = new EmployeeInfoItem(uId, cursor.getInt(3), cursor.getString(4), cursor.getString(6), cursor.getInt(7));
 					employeeInfoItemMap.put(uId, employeeInfoItem);
 				}
 				employeeInfoItems.put(deptId, employeeInfoItemMap);
@@ -877,43 +824,26 @@ public class IMOStorage {
 
 	}
 
-	String delDeptString = "delete from "+ DeptInfo +" where Cid= ? and Did= ?";
-	
-	public boolean addDepts(Integer cId, ArrayList<Integer> needAddLocalDept,
-			Map<Integer, DeptMaskItem> deptMaskItems) throws Exception {
+	String delDeptString = "delete from " + DeptInfo + " where Cid= ? and Did= ?";
+
+	public boolean addDepts(Integer cId, ArrayList<Integer> needAddLocalDept, Map<Integer, DeptMaskItem> deptMaskItems) throws Exception {
 		if (deptMaskItems == null)
 			return false;
 
-		sql = "replace into "
-				+ DeptInfo
-				+ "(Cid ,Did ,Name ,PDid ,UC ,DeptUserUC ,FirstChild ,NextSibling ,Desp ,Fax ,HideDeptList ,Addr ,Tel ,Website ,FirstChildUser)"
-				+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		sql = "replace into " + DeptInfo + "(Cid ,Did ,Name ,PDid ,UC ,DeptUserUC ,FirstChild ,NextSibling ,Desp ,Fax ,HideDeptList ,Addr ,Tel ,Website ,FirstChildUser)" + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Set<Integer> keys = deptMaskItems.keySet();
 		for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 			Integer key = it.next();
 			if (needAddLocalDept.contains(key)) {
 				DeptMaskItem deptMaskItem = deptMaskItems.get(key);
 				try {
-					mDatabase.execSQL(delDeptString, 
-							new Object[]{
+					mDatabase.execSQL(delDeptString, new Object[] {
 							cId, deptMaskItem.getDept_id()
 					});
-					mDatabase.execSQL(
-							sql,
-							new Object[] { cId, deptMaskItem.getDept_id(),
-									deptMaskItem.getName(),
-									deptMaskItem.getParent_dept_id(),
-									deptMaskItem.getDept_uc(),
-									deptMaskItem.getFdept_user_uc(),
-									deptMaskItem.getFirst_child(),
-									deptMaskItem.getNext_sibling(),
-									deptMaskItem.getDesp(),
-									deptMaskItem.getFax(),
-									deptMaskItem.getHide_dept_list(),
-									deptMaskItem.getFaddr(),
-									deptMaskItem.getFtel(),
-									deptMaskItem.getFwebsite(),
-									deptMaskItem.getFfirst_user() });
+					mDatabase.execSQL(sql, new Object[] {
+							cId, deptMaskItem.getDept_id(), deptMaskItem.getName(), deptMaskItem.getParent_dept_id(), deptMaskItem.getDept_uc(), deptMaskItem.getFdept_user_uc(), deptMaskItem.getFirst_child(), deptMaskItem.getNext_sibling(), deptMaskItem.getDesp(), deptMaskItem.getFax(),
+							deptMaskItem.getHide_dept_list(), deptMaskItem.getFaddr(), deptMaskItem.getFtel(), deptMaskItem.getFwebsite(), deptMaskItem.getFfirst_user()
+					});
 				} catch (Exception e) {
 					throw e;
 				}
@@ -923,12 +853,9 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean sb1(List<EmployeeInfoItem> employeeInfoItems)
-			throws Exception {
+	public boolean sb1(List<EmployeeInfoItem> employeeInfoItems) throws Exception {
 
-		sql = "replace into " + UserBaseInfo
-				+ "(Uid ,Cid ,Did,Flag ,Account ,SimplePY,Name ,Gender)"
-				+ " values (?,?,?,?,?,?,?,?)";
+		sql = "replace into " + UserBaseInfo + "(Uid ,Cid ,Did,Flag ,Account ,SimplePY,Name ,Gender)" + " values (?,?,?,?,?,?,?,?)";
 		SQLiteStatement sqLiteStatement = mDatabase.compileStatement(sql);
 
 		mDatabase.beginTransaction();
@@ -938,8 +865,7 @@ public class IMOStorage {
 				sqLiteStatement.bindLong(2, 0);
 				sqLiteStatement.bindLong(3, 0);
 				sqLiteStatement.bindLong(4, employeeInfoItem.getFlag());
-				sqLiteStatement.bindString(5,
-						employeeInfoItem.getUser_account());
+				sqLiteStatement.bindString(5, employeeInfoItem.getUser_account());
 				sqLiteStatement.bindString(6, employeeInfoItem.getName());
 				sqLiteStatement.bindString(7, employeeInfoItem.getName());
 				sqLiteStatement.bindLong(8, employeeInfoItem.getGender());
@@ -955,15 +881,11 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean addDepts(Integer cId,
-			Map<Integer, DeptMaskItem> deptMaskItems) throws Exception {
+	public boolean addDepts(Integer cId, Map<Integer, DeptMaskItem> deptMaskItems) throws Exception {
 		if (deptMaskItems == null)
 			return false;
 
-		sql = "replace into "
-				+ DeptInfo
-				+ "(Cid ,Did ,Name ,PDid ,UC ,DeptUserUC ,FirstChild ,NextSibling ,Desp ,Fax ,HideDeptList ,Addr ,Tel ,Website ,FirstChildUser)"
-				+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		sql = "replace into " + DeptInfo + "(Cid ,Did ,Name ,PDid ,UC ,DeptUserUC ,FirstChild ,NextSibling ,Desp ,Fax ,HideDeptList ,Addr ,Tel ,Website ,FirstChildUser)" + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		SQLiteStatement sqLiteStatement = mDatabase.compileStatement(sql);
 		Set<Integer> keys = deptMaskItems.keySet();
 		Integer key = null;
@@ -982,8 +904,7 @@ public class IMOStorage {
 				sqLiteStatement.bindLong(8, deptMaskItem.getNext_sibling());
 				sqLiteStatement.bindString(9, deptMaskItem.getDesp());
 				sqLiteStatement.bindString(10, deptMaskItem.getFax());
-				sqLiteStatement
-						.bindString(11, deptMaskItem.getHide_dept_list());
+				sqLiteStatement.bindString(11, deptMaskItem.getHide_dept_list());
 				sqLiteStatement.bindString(12, deptMaskItem.getFaddr());
 				sqLiteStatement.bindString(13, deptMaskItem.getFtel());
 				sqLiteStatement.bindString(14, deptMaskItem.getFwebsite());
@@ -997,8 +918,7 @@ public class IMOStorage {
 		return true;
 	}
 
-	public int[] getDepts(Map<Integer, DeptMaskItem> deptMaskItems)
-			throws Exception {
+	public int[] getDepts(Map<Integer, DeptMaskItem> deptMaskItems) throws Exception {
 		sql = "select * from " + DeptInfo;
 		Cursor cursor = null;
 		int[] deptIds = null;
@@ -1011,16 +931,10 @@ public class IMOStorage {
 			int i = 0;
 			DeptMaskItem dept = null;
 			int deptId = 0;
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				deptId = cursor.getInt(1);
-				dept = new DeptMaskItem(deptId, cursor.getInt(3),
-						cursor.getString(2), cursor.getString(8),
-						cursor.getInt(4), cursor.getString(9),
-						cursor.getString(10), cursor.getInt(6),
-						cursor.getInt(7), cursor.getString(11),
-						cursor.getString(12), cursor.getString(13),
-						cursor.getInt(14), cursor.getInt(5));
+				dept = new DeptMaskItem(deptId, cursor.getInt(3), cursor.getString(2), cursor.getString(8), cursor.getInt(4), cursor.getString(9), cursor.getString(10), cursor.getInt(6), cursor.getInt(7), cursor.getString(11), cursor.getString(12), cursor.getString(13), cursor.getInt(14),
+						cursor.getInt(5));
 				deptMaskItems.put(deptId, dept);
 				deptIds[i] = deptId;
 				i++;
@@ -1044,40 +958,20 @@ public class IMOStorage {
 	 * @param deptMaskItems
 	 * @throws Exception
 	 */
-	public void updateDepts(Integer cId,
-			ArrayList<Integer> needUpdateLocalDept,
-			Map<Integer, DeptMaskItem> deptMaskItems) throws Exception {
+	public void updateDepts(Integer cId, ArrayList<Integer> needUpdateLocalDept, Map<Integer, DeptMaskItem> deptMaskItems) throws Exception {
 		if (deptMaskItems == null)
 			return;
-		sql = "update "
-				+ DeptInfo
-				+ " set "
-				+ "Cid = "
-				+ EngineConst.cId
-				+ " ,Name=? ,PDid=? ,UC=? ,DeptUserUC=? ,FirstChild=? ,NextSibling=? ,Desp=? ,Fax=? ,HideDeptList=? ,Addr=? ,Tel=? ,Website=? ,FirstChildUser=? "
-				+ " where Did = ?";
+		sql = "update " + DeptInfo + " set " + "Cid = " + EngineConst.cId + " ,Name=? ,PDid=? ,UC=? ,DeptUserUC=? ,FirstChild=? ,NextSibling=? ,Desp=? ,Fax=? ,HideDeptList=? ,Addr=? ,Tel=? ,Website=? ,FirstChildUser=? " + " where Did = ?";
 		Set<Integer> keys = deptMaskItems.keySet();
 		for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 			Integer key = it.next();
 			if (needUpdateLocalDept.contains(key)) {
 				DeptMaskItem deptMaskItem = deptMaskItems.get(key);
 				try {
-					mDatabase.execSQL(
-							sql,
-							new Object[] { deptMaskItem.getName(),
-									deptMaskItem.getParent_dept_id(),
-									deptMaskItem.getDept_uc(),
-									deptMaskItem.getFdept_user_uc(),
-									deptMaskItem.getFirst_child(),
-									deptMaskItem.getNext_sibling(),
-									deptMaskItem.getDesp(),
-									deptMaskItem.getFax(),
-									deptMaskItem.getHide_dept_list(),
-									deptMaskItem.getFaddr(),
-									deptMaskItem.getFtel(),
-									deptMaskItem.getFwebsite(),
-									deptMaskItem.getFfirst_user(),
-									deptMaskItem.getDept_id() });
+					mDatabase.execSQL(sql, new Object[] {
+							deptMaskItem.getName(), deptMaskItem.getParent_dept_id(), deptMaskItem.getDept_uc(), deptMaskItem.getFdept_user_uc(), deptMaskItem.getFirst_child(), deptMaskItem.getNext_sibling(), deptMaskItem.getDesp(), deptMaskItem.getFax(), deptMaskItem.getHide_dept_list(),
+							deptMaskItem.getFaddr(), deptMaskItem.getFtel(), deptMaskItem.getFwebsite(), deptMaskItem.getFfirst_user(), deptMaskItem.getDept_id()
+					});
 				} catch (Exception e) {
 					throw e;
 				}
@@ -1094,37 +988,20 @@ public class IMOStorage {
 	 * @param deptMaskItems
 	 * @throws Exception
 	 */
-	public void updateDepts(Integer cId,
-			Map<Integer, DeptMaskItem> deptMaskItems) throws Exception {
+	public void updateDepts(Integer cId, Map<Integer, DeptMaskItem> deptMaskItems) throws Exception {
 		if (deptMaskItems == null)
 			return;
-		sql = "update "
-				+ DeptInfo
-				+ " set "
-				+ "Cid = "
-				+ EngineConst.cId
-				+ " ,Name=? ,PDid=? ,UC=? ,DeptUserUC=? ,FirstChild=? ,NextSibling=? ,Desp=? ,Fax=? ,HideDeptList=? ,Addr=? ,Tel=? ,Website=? ,FirstChildUser=? "
-				+ " where Did = ?";
+		sql = "update " + DeptInfo + " set " + "Cid = " + EngineConst.cId + " ,Name=? ,PDid=? ,UC=? ,DeptUserUC=? ,FirstChild=? ,NextSibling=? ,Desp=? ,Fax=? ,HideDeptList=? ,Addr=? ,Tel=? ,Website=? ,FirstChildUser=? " + " where Did = ?";
 		Set<Integer> keys = deptMaskItems.keySet();
 		for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 			Integer key = it.next();
 			DeptMaskItem deptMaskItem = deptMaskItems.get(key);
 			try {
-				mDatabase.execSQL(
-						sql,
-						new Object[] { deptMaskItem.getName(),
-								deptMaskItem.getParent_dept_id(),
-								deptMaskItem.getDept_uc(),
-								deptMaskItem.getFdept_user_uc(),
-								deptMaskItem.getFirst_child(),
-								deptMaskItem.getNext_sibling(),
-								deptMaskItem.getDesp(), deptMaskItem.getFax(),
-								deptMaskItem.getHide_dept_list(),
-								deptMaskItem.getFaddr(),
-								deptMaskItem.getFtel(),
-								deptMaskItem.getFwebsite(),
-								deptMaskItem.getFfirst_user(),
-								deptMaskItem.getDept_id() });
+				mDatabase.execSQL(sql,
+						new Object[] {
+								deptMaskItem.getName(), deptMaskItem.getParent_dept_id(), deptMaskItem.getDept_uc(), deptMaskItem.getFdept_user_uc(), deptMaskItem.getFirst_child(), deptMaskItem.getNext_sibling(), deptMaskItem.getDesp(), deptMaskItem.getFax(), deptMaskItem.getHide_dept_list(),
+								deptMaskItem.getFaddr(), deptMaskItem.getFtel(), deptMaskItem.getFwebsite(), deptMaskItem.getFfirst_user(), deptMaskItem.getDept_id()
+						});
 			} catch (Exception e) {
 				throw e;
 			}
@@ -1132,15 +1009,16 @@ public class IMOStorage {
 
 	}
 
-	public void deleteEmployeesByDeptId(
-			ArrayList<Integer> needUpdateLocalDeptUser) throws Exception {
+	public void deleteEmployeesByDeptId(ArrayList<Integer> needUpdateLocalDeptUser) throws Exception {
 		if (needUpdateLocalDeptUser == null)
 			return;
 		sql = "delete from " + UserBaseInfo + " where " + "Did = ?";
 		Object[] objects = needUpdateLocalDeptUser.toArray();
 		try {
 			for (int i = 0; i < objects.length; i++) {
-				mDatabase.execSQL(sql, new Object[] { objects[i] });
+				mDatabase.execSQL(sql, new Object[] {
+					objects[i]
+				});
 			}
 		} catch (Exception e) {
 			throw e;
@@ -1149,7 +1027,9 @@ public class IMOStorage {
 		sql = "delete from " + DeptUserInfo + " where " + "Did = ?";
 		try {
 			for (int i = 0; i < objects.length; i++) {
-				mDatabase.execSQL(sql, new Object[] { objects[i] });
+				mDatabase.execSQL(sql, new Object[] {
+					objects[i]
+				});
 			}
 		} catch (Exception e) {
 			throw e;
@@ -1162,22 +1042,16 @@ public class IMOStorage {
 	 * 
 	 * @param cId
 	 * @param needUpdateLocalDeptUser
-	 *            有员工需要更新的部门ID列表
+	 *        有员工需要更新的部门ID列表
 	 * @param employeeInfoItems
 	 * @throws Exception
 	 */
-	public void updateEmployeesInfo(
-			Integer cId,
-			ArrayList<Integer> needUpdateLocalDeptUser,
-			HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> employeeInfoItems)
-			throws Exception {
+	public void updateEmployeesInfo(Integer cId, ArrayList<Integer> needUpdateLocalDeptUser, HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> employeeInfoItems) throws Exception {
 
 		if (employeeInfoItems == null)
 			return;
 
-		sql = "replace into " + UserBaseInfo
-				+ "(Uid ,Cid ,Did,Flag ,Account ,SimplePY,Name ,Gender)"
-				+ " values (?,?,?,?,?,?,?,?)";
+		sql = "replace into " + UserBaseInfo + "(Uid ,Cid ,Did,Flag ,Account ,SimplePY,Name ,Gender)" + " values (?,?,?,?,?,?,?,?)";
 		Set<Integer> dIds = employeeInfoItems.keySet();
 		try {
 			for (Iterator<Integer> it = dIds.iterator(); it.hasNext();) {
@@ -1187,23 +1061,10 @@ public class IMOStorage {
 					Set<Integer> uIds = employeeInfoItemMap.keySet();
 					for (Iterator<Integer> it1 = uIds.iterator(); it1.hasNext();) {
 						Integer uId = it1.next();
-						EmployeeInfoItem employeeInfoItem = employeeInfoItemMap
-								.get(uId);
-						mDatabase.execSQL(
-								sql,
-								new Object[] {
-										employeeInfoItem.getUid(),
-										cId,
-										dId,
-										employeeInfoItem.getFlag(),
-										employeeInfoItem.getUser_account(),
-										Functions
-												.getChinessFirstSpellInstance()
-												.GetChineseSpell(
-														employeeInfoItem
-																.getName()),
-										employeeInfoItem.getName(),
-										employeeInfoItem.getGender() });
+						EmployeeInfoItem employeeInfoItem = employeeInfoItemMap.get(uId);
+						mDatabase.execSQL(sql, new Object[] {
+								employeeInfoItem.getUid(), cId, dId, employeeInfoItem.getFlag(), employeeInfoItem.getUser_account(), Functions.getChinessFirstSpellInstance().GetChineseSpell(employeeInfoItem.getName()), employeeInfoItem.getName(), employeeInfoItem.getGender()
+						});
 					}
 				}
 			}
@@ -1213,41 +1074,23 @@ public class IMOStorage {
 
 	}
 
-	public void updateEmployeesInfo(
-			Integer cId,
-			HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> employeeInfoItems)
-			throws Exception {
+	public void updateEmployeesInfo(Integer cId, HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> employeeInfoItems) throws Exception {
 		if (employeeInfoItems == null)
 			return;
 
-		sql = "update " + UserBaseInfo + " set " + "Cid=" + EngineConst.cId
-				+ " ,Did = ?,Flag=? ,Account=? ,SimplePY=?,Name=? ,Gender=?"
-				+ " where Uid = ?";
+		sql = "update " + UserBaseInfo + " set " + "Cid=" + EngineConst.cId + " ,Did = ?,Flag=? ,Account=? ,SimplePY=?,Name=? ,Gender=?" + " where Uid = ?";
 		Set<Integer> dIds = employeeInfoItems.keySet();
 		try {
 			for (Iterator<Integer> it = dIds.iterator(); it.hasNext();) {
 				Integer dId = it.next();
-				HashMap<Integer, EmployeeInfoItem> employeeInfoItemMap = employeeInfoItems
-						.get(dId);
+				HashMap<Integer, EmployeeInfoItem> employeeInfoItemMap = employeeInfoItems.get(dId);
 				Set<Integer> uIds = employeeInfoItemMap.keySet();
 				for (Iterator<Integer> it1 = uIds.iterator(); it1.hasNext();) {
 					Integer uId = it1.next();
 					EmployeeInfoItem employeeInfoItem = employeeInfoItemMap.get(uId);
-					mDatabase
-							.execSQL(
-									sql,
-									new Object[] {
-											dId,
-											employeeInfoItem.getFlag(),
-											employeeInfoItem.getUser_account(),
-											Functions
-													.getChinessFirstSpellInstance()
-													.GetChineseSpell(
-															employeeInfoItem
-																	.getName()),
-											employeeInfoItem.getName(),
-											employeeInfoItem.getGender(),
-											employeeInfoItem.getUid() });
+					mDatabase.execSQL(sql, new Object[] {
+							dId, employeeInfoItem.getFlag(), employeeInfoItem.getUser_account(), Functions.getChinessFirstSpellInstance().GetChineseSpell(employeeInfoItem.getName()), employeeInfoItem.getName(), employeeInfoItem.getGender(), employeeInfoItem.getUid()
+					});
 				}
 			}
 		} catch (Exception e) {
@@ -1262,7 +1105,9 @@ public class IMOStorage {
 		sql = "delete from " + UserBaseInfo + " where " + "Uid = ?";
 		try {
 			for (int i = 0; i < uIds.length; i++) {
-				mDatabase.execSQL(sql, new Object[] { uIds[i] });
+				mDatabase.execSQL(sql, new Object[] {
+					uIds[i]
+				});
 			}
 		} catch (Exception e) {
 			throw e;
@@ -1271,7 +1116,9 @@ public class IMOStorage {
 		sql = "delete from " + DeptAndUserUC + " where " + "Uid = ?";
 		try {
 			for (int i = 0; i < uIds.length; i++) {
-				mDatabase.execSQL(sql, new Object[] { uIds[i] });
+				mDatabase.execSQL(sql, new Object[] {
+					uIds[i]
+				});
 			}
 		} catch (Exception e) {
 			throw e;
@@ -1281,27 +1128,16 @@ public class IMOStorage {
 	// ****************************************上面的方法是经过测试，可以使用的*******************************************
 
 	// 以下是对CorpInfo表的增删改查操作
-	public boolean addCorpInfo(String corp_account, String short_name,
-			String cn_name, String domain, int state, int user_card,
-			int logo_type, String en_name, String nation, String province,
-			String city, String country, String addr, int type, String desp,
-			int zipcode, String tel, String fax, String contactor,
-			String email, String website, int reg_capital, int employee_num,
-			int pc_num, String slogan, String config) throws Exception {
+	public boolean addCorpInfo(String corp_account, String short_name, String cn_name, String domain, int state, int user_card, int logo_type, String en_name, String nation, String province, String city, String country, String addr, int type, String desp, int zipcode, String tel, String fax,
+			String contactor, String email, String website, int reg_capital, int employee_num, int pc_num, String slogan, String config) throws Exception {
 		if (corp_account == null)
 			return false;
-		sql = "replace into "
-				+ CorpInfo
-				+ "(corp_account ,short_name ,cn_name ,domain ,state ,"
-				+ "user_card ,logo_type ,en_name ,nation ,province ,city ,country ,addr ,type ,desp ,zipcode ,tel ,fax ,contactor ,"
-				+ "email ,website ,reg_capital ,employee_num ,pc_num ,slogan ,config )"
+		sql = "replace into " + CorpInfo + "(corp_account ,short_name ,cn_name ,domain ,state ," + "user_card ,logo_type ,en_name ,nation ,province ,city ,country ,addr ,type ,desp ,zipcode ,tel ,fax ,contactor ," + "email ,website ,reg_capital ,employee_num ,pc_num ,slogan ,config )"
 				+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try {
-			mDatabase.execSQL(sql, new Object[] { corp_account, short_name,
-					cn_name, domain, state, user_card, logo_type, en_name,
-					nation, province, city, country, addr, type, desp, zipcode,
-					tel, fax, contactor, email, website, reg_capital,
-					employee_num, pc_num, slogan, config });
+			mDatabase.execSQL(sql, new Object[] {
+					corp_account, short_name, cn_name, domain, state, user_card, logo_type, en_name, nation, province, city, country, addr, type, desp, zipcode, tel, fax, contactor, email, website, reg_capital, employee_num, pc_num, slogan, config
+			});
 		} catch (Exception e) {
 			throw e;
 		}
@@ -1309,23 +1145,14 @@ public class IMOStorage {
 	}
 
 	public boolean addCorpInfo(CorpMaskItem corp) throws Exception {
-		return addCorpInfo(corp.getCorp_account(), corp.getShort_name(),
-				corp.getCn_name(), corp.getDomain(), corp.getState(),
-				corp.getUser_card(), corp.getLogo_type(), corp.getEn_name(),
-				corp.getNation(), corp.getProvince(), corp.getCity(),
-				corp.getCountry(), corp.getAddr(), corp.getType(),
-				corp.getDesp(), corp.getZipcode(), corp.getTel(),
-				corp.getFax(), corp.getContactor(), corp.getEmail(),
-				corp.getWebsite(), corp.getReg_capital(),
-				corp.getEmployee_num(), corp.getPc_num(), corp.getSlogan(),
-				corp.getConfig());
+		return addCorpInfo(corp.getCorp_account(), corp.getShort_name(), corp.getCn_name(), corp.getDomain(), corp.getState(), corp.getUser_card(), corp.getLogo_type(), corp.getEn_name(), corp.getNation(), corp.getProvince(), corp.getCity(), corp.getCountry(), corp.getAddr(), corp.getType(),
+				corp.getDesp(), corp.getZipcode(), corp.getTel(), corp.getFax(), corp.getContactor(), corp.getEmail(), corp.getWebsite(), corp.getReg_capital(), corp.getEmployee_num(), corp.getPc_num(), corp.getSlogan(), corp.getConfig());
 	}
 
 	public boolean deleteCorpInfo(String corp_account) throws Exception {
 		if (corp_account == null)
 			return false;
-		sql = "delete from " + CorpInfo + " where " + "corp_account = "
-				+ corp_account;
+		sql = "delete from " + CorpInfo + " where " + "corp_account = " + corp_account;
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1362,19 +1189,8 @@ public class IMOStorage {
 		try {
 			cursor = mDatabase.rawQuery(sql, null);
 			if (cursor.moveToFirst()) {
-				corp = new CorpMaskItem(cursor.getString(0),
-						cursor.getString(1), cursor.getString(2),
-						cursor.getString(3), cursor.getInt(4),
-						cursor.getInt(5), cursor.getInt(6),
-						cursor.getString(7), cursor.getString(8),
-						cursor.getString(9), cursor.getString(10),
-						cursor.getString(11), cursor.getString(12),
-						cursor.getInt(13), cursor.getString(14),
-						cursor.getInt(15), cursor.getString(16),
-						cursor.getString(17), cursor.getString(18),
-						cursor.getString(19), cursor.getString(20),
-						cursor.getInt(21), cursor.getInt(22),
-						cursor.getInt(23), cursor.getString(24),
+				corp = new CorpMaskItem(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4), cursor.getInt(5), cursor.getInt(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10), cursor.getString(11),
+						cursor.getString(12), cursor.getInt(13), cursor.getString(14), cursor.getInt(15), cursor.getString(16), cursor.getString(17), cursor.getString(18), cursor.getString(19), cursor.getString(20), cursor.getInt(21), cursor.getInt(22), cursor.getInt(23), cursor.getString(24),
 						cursor.getString(25));
 			}
 		} catch (Exception e) {
@@ -1387,10 +1203,8 @@ public class IMOStorage {
 		return corp;
 	}
 
-	public EmployeeProfileItem getSelfInfo(String user_account)
-			throws Exception {
-		sql = "select * from " + UserProfile + " where user_account = '"
-				+ user_account + "'";
+	public EmployeeProfileItem getSelfInfo(String user_account) throws Exception {
+		sql = "select * from " + UserProfile + " where user_account = '" + user_account + "'";
 		Cursor cursor = null;
 		EmployeeProfileItem employeeProfileItem = null;
 		try {
@@ -1399,14 +1213,8 @@ public class IMOStorage {
 			if (count < 1)
 				return null;
 			if (cursor.moveToFirst()) {
-				employeeProfileItem = new EmployeeProfileItem(
-						cursor.getString(0), cursor.getString(1),
-						cursor.getString(2), cursor.getInt(3),
-						cursor.getString(4), cursor.getString(5),
-						cursor.getString(6), cursor.getInt(7),
-						cursor.getInt(8), cursor.getInt(9), cursor.getInt(10),
-						cursor.getString(11), cursor.getString(12),
-						cursor.getString(13), cursor.getString(14));
+				employeeProfileItem = new EmployeeProfileItem(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getInt(7), cursor.getInt(8), cursor.getInt(9), cursor.getInt(10),
+						cursor.getString(11), cursor.getString(12), cursor.getString(13), cursor.getString(14));
 			}
 		} catch (Exception e) {
 			throw e;
@@ -1420,8 +1228,7 @@ public class IMOStorage {
 	}
 
 	public void updateSelfInfo(String sign) throws Exception {
-		sql = "update " + UserProfile + " set " + "sign='" + sign + "'"
-				+ " where RecId=1";
+		sql = "update " + UserProfile + " set " + "sign='" + sign + "'" + " where RecId=1";
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1429,33 +1236,15 @@ public class IMOStorage {
 		}
 	}
 
-	public void addSelfInfo(EmployeeProfileItem employeeProfileItem)
-			throws Exception {
+	public void addSelfInfo(EmployeeProfileItem employeeProfileItem) throws Exception {
 		if (employeeProfileItem == null)
 			return;
-		sql = "replace into "
-				+ UserProfile
-				+ " (user_account ,corp_account ,name ,gender ,sign ,mobile , email ,"
-				+ "role_id ,head_pic ,privacy_flag ,birth ,pos ,tel ,desp ,hide_dept_list )"
-				+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		sql = "replace into " + UserProfile + " (user_account ,corp_account ,name ,gender ,sign ,mobile , email ," + "role_id ,head_pic ,privacy_flag ,birth ,pos ,tel ,desp ,hide_dept_list )" + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try {
-			mDatabase.execSQL(
-					sql,
-					new Object[] { employeeProfileItem.getUser_account(),
-							employeeProfileItem.getCorp_account(),
-							employeeProfileItem.getName(),
-							employeeProfileItem.getGender(),
-							employeeProfileItem.getSign(),
-							employeeProfileItem.getMobile(),
-							employeeProfileItem.getEmail(),
-							employeeProfileItem.getRole_id(),
-							employeeProfileItem.getHead_pic(),
-							employeeProfileItem.getPrivacy_flag(),
-							employeeProfileItem.getBirth(),
-							employeeProfileItem.getPos(),
-							employeeProfileItem.getTel(),
-							employeeProfileItem.getDesp(),
-							employeeProfileItem.getHide_dept_list() });
+			mDatabase.execSQL(sql, new Object[] {
+					employeeProfileItem.getUser_account(), employeeProfileItem.getCorp_account(), employeeProfileItem.getName(), employeeProfileItem.getGender(), employeeProfileItem.getSign(), employeeProfileItem.getMobile(), employeeProfileItem.getEmail(), employeeProfileItem.getRole_id(),
+					employeeProfileItem.getHead_pic(), employeeProfileItem.getPrivacy_flag(), employeeProfileItem.getBirth(), employeeProfileItem.getPos(), employeeProfileItem.getTel(), employeeProfileItem.getDesp(), employeeProfileItem.getHide_dept_list()
+			});
 		} catch (Exception e) {
 			throw e;
 		}
@@ -1465,8 +1254,7 @@ public class IMOStorage {
 	public boolean addInnerContactUC(Integer innerContactUC) throws Exception {
 		if (innerContactUC == null)
 			return false;
-		sql = "replace into " + InnerContactUC + " values (" + innerContactUC
-				+ ")";
+		sql = "replace into " + InnerContactUC + " values (" + innerContactUC + ")";
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1475,17 +1263,14 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean addInnerContactUC(InnerContactorUC innerContactorUC)
-			throws Exception {
+	public boolean addInnerContactUC(InnerContactorUC innerContactorUC) throws Exception {
 		return addInnerContactUC(innerContactorUC.getInnerContactUC());
 	}
 
-	public boolean deleteInnerContactUC(Integer innerContactUC)
-			throws Exception {
+	public boolean deleteInnerContactUC(Integer innerContactUC) throws Exception {
 		if (innerContactUC == null)
 			return false;
-		sql = "delete from " + InnerContactUC + " where " + "InnerContactUC = "
-				+ innerContactUC;
+		sql = "delete from " + InnerContactUC + " where " + "InnerContactUC = " + innerContactUC;
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1494,8 +1279,7 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean deleteInnerContactUC(InnerContactorUC innerContactorUC)
-			throws Exception {
+	public boolean deleteInnerContactUC(InnerContactorUC innerContactorUC) throws Exception {
 		return deleteInnerContactUC(innerContactorUC.getInnerContactUC());
 	}
 
@@ -1537,8 +1321,7 @@ public class IMOStorage {
 	public boolean deleteInnerGroupUC(Integer innerGroupUC) throws Exception {
 		if (innerGroupUC == null)
 			return false;
-		sql = "delete from " + InnerGroupUC + " where " + "InnerGroupUC = "
-				+ innerGroupUC;
+		sql = "delete from " + InnerGroupUC + " where " + "InnerGroupUC = " + innerGroupUC;
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1547,8 +1330,7 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean deleteInnerGroupUC(InnerGroupUc innerGroupUC)
-			throws Exception {
+	public boolean deleteInnerGroupUC(InnerGroupUc innerGroupUC) throws Exception {
 		return deleteInnerGroupUC(innerGroupUC.getInnerGroupUC());
 	}
 
@@ -1571,12 +1353,10 @@ public class IMOStorage {
 	}
 
 	// 以下是对InnerContactListInfo表的增删改查操作
-	public boolean addInnerContactListInfo(Integer gId, Integer cId,
-			Integer uId, Integer flag) throws Exception {
+	public boolean addInnerContactListInfo(Integer gId, Integer cId, Integer uId, Integer flag) throws Exception {
 		if (uId == null)
 			return false;
-		sql = "replace into " + InnerContactListInfo + " values (" + gId + ","
-				+ cId + "," + uId + "," + flag + ")";
+		sql = "replace into " + InnerContactListInfo + " values (" + gId + "," + cId + "," + uId + "," + flag + ")";
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1585,18 +1365,14 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean addInnerContactListInfo(InnerContactList innerContactList)
-			throws Exception {
-		return addInnerContactListInfo(innerContactList.getgId(),
-				innerContactList.getcId(), innerContactList.getuId(),
-				innerContactList.getFlag());
+	public boolean addInnerContactListInfo(InnerContactList innerContactList) throws Exception {
+		return addInnerContactListInfo(innerContactList.getgId(), innerContactList.getcId(), innerContactList.getuId(), innerContactList.getFlag());
 	}
 
 	public boolean deleteInnerContactListInfo(Integer uId) throws Exception {
 		if (uId == null)
 			return false;
-		sql = "delete from " + InnerContactListInfo + " where " + "Uid = "
-				+ uId;
+		sql = "delete from " + InnerContactListInfo + " where " + "Uid = " + uId;
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1605,20 +1381,14 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean deleteInnerContactListInfo(InnerContactList innerContactList)
-			throws Exception {
+	public boolean deleteInnerContactListInfo(InnerContactList innerContactList) throws Exception {
 		return deleteInnerContactListInfo(innerContactList.getuId());
 	}
 
-	public boolean updateInnerContactListInfo(InnerContactList innerContactList)
-			throws Exception {
+	public boolean updateInnerContactListInfo(InnerContactList innerContactList) throws Exception {
 		if (innerContactList.getuId() == null)
 			return false;
-		sql = "update " + InnerContactListInfo + " set " + "Gid="
-				+ innerContactList.getgId() + "," + "Cid="
-				+ innerContactList.getcId() + "," + "Flag="
-				+ innerContactList.getFlag() + " where " + "Uid = "
-				+ innerContactList.getuId();
+		sql = "update " + InnerContactListInfo + " set " + "Gid=" + innerContactList.getgId() + "," + "Cid=" + innerContactList.getcId() + "," + "Flag=" + innerContactList.getFlag() + " where " + "Uid = " + innerContactList.getuId();
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1627,10 +1397,8 @@ public class IMOStorage {
 		return true;
 	}
 
-	public InnerContactList getInnerContactListInfo(Integer uId)
-			throws Exception {
-		sql = "select * from " + InnerContactListInfo + " where " + "Uid = "
-				+ uId;
+	public InnerContactList getInnerContactListInfo(Integer uId) throws Exception {
+		sql = "select * from " + InnerContactListInfo + " where " + "Uid = " + uId;
 		Cursor cursor = null;
 		try {
 			cursor = mDatabase.rawQuery(sql, null);
@@ -1654,8 +1422,7 @@ public class IMOStorage {
 	public boolean addInnerGroupInfo(Integer gId, String name) throws Exception {
 		if (gId == null || name == null)
 			return false;
-		sql = "replace into " + InnerGroupInfo + " values (" + gId + ",'" + name
-				+ "')";
+		sql = "replace into " + InnerGroupInfo + " values (" + gId + ",'" + name + "')";
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1687,9 +1454,7 @@ public class IMOStorage {
 	public boolean updateInnerGroupInfo(InnerGroup innerGroup) throws Exception {
 		if (innerGroup.getgId() == null)
 			return false;
-		sql = "update " + InnerGroupInfo + " set " + "Name='"
-				+ innerGroup.getName() + "'" + " where " + "Gid = "
-				+ innerGroup.getgId();
+		sql = "update " + InnerGroupInfo + " set " + "Name='" + innerGroup.getName() + "'" + " where " + "Gid = " + innerGroup.getgId();
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1718,17 +1483,16 @@ public class IMOStorage {
 	}
 
 	// 以下是对DeptUserInfo表的增删改查操作
-	public boolean addEmployeesUID(Integer dId, int[] uId, int[] nextSiblingUid)
-			throws Exception {
+	public boolean addEmployeesUID(Integer dId, int[] uId, int[] nextSiblingUid) throws Exception {
 		if (dId == null || uId == null || nextSiblingUid == null)
 			return false;
-		sql = "replace into " + DeptUserInfo
-				+ "(Did, Uid, NextSiblingUid) values (?,?,?)";
+		sql = "replace into " + DeptUserInfo + "(Did, Uid, NextSiblingUid) values (?,?,?)";
 
 		for (int i = 0; i < uId.length; i++) {
 			try {
-				mDatabase.execSQL(sql, new Object[] { dId, uId[i],
-						nextSiblingUid[i] });
+				mDatabase.execSQL(sql, new Object[] {
+						dId, uId[i], nextSiblingUid[i]
+				});
 			} catch (Exception e) {
 				throw e;
 			}
@@ -1736,17 +1500,16 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean updateEmployeesUID(Integer dId, int[] uId,
-			int[] nextSiblingUid) throws Exception {
+	public boolean updateEmployeesUID(Integer dId, int[] uId, int[] nextSiblingUid) throws Exception {
 		if (dId == null || uId == null || nextSiblingUid == null)
 			return false;
-		sql = "update " + DeptUserInfo + " set "
-				+ "NextSiblingUid=? where Did = ? and Uid=?";
+		sql = "update " + DeptUserInfo + " set " + "NextSiblingUid=? where Did = ? and Uid=?";
 
 		for (int i = 0; i < uId.length; i++) {
 			try {
-				mDatabase.execSQL(sql, new Object[] { nextSiblingUid[i], dId,
-						uId[i] });
+				mDatabase.execSQL(sql, new Object[] {
+						nextSiblingUid[i], dId, uId[i]
+				});
 			} catch (Exception e) {
 				throw e;
 			}
@@ -1754,12 +1517,10 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean addDeptUserInfo(Integer dId, Integer uId,
-			Integer nextSiblingUid) throws Exception {
+	public boolean addDeptUserInfo(Integer dId, Integer uId, Integer nextSiblingUid) throws Exception {
 		if (dId == null || uId == null)
 			return false;
-		sql = "replace into " + DeptUserInfo + " values (" + dId + "," + uId
-				+ "," + nextSiblingUid + ")";
+		sql = "replace into " + DeptUserInfo + " values (" + dId + "," + uId + "," + nextSiblingUid + ")";
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1769,16 +1530,13 @@ public class IMOStorage {
 	}
 
 	public boolean addDeptUserInfo(DeptUser deptUser) throws Exception {
-		return addDeptUserInfo(deptUser.getdId(), deptUser.getuId(),
-				deptUser.getNextSiblingUid());
+		return addDeptUserInfo(deptUser.getdId(), deptUser.getuId(), deptUser.getNextSiblingUid());
 	}
 
-	public boolean deleteDeptUserInfo(Integer dId, Integer uId)
-			throws Exception {
+	public boolean deleteDeptUserInfo(Integer dId, Integer uId) throws Exception {
 		if (dId == null || uId == null)
 			return false;
-		sql = "delete from " + DeptUserInfo + " where " + "Did = " + dId
-				+ " and Uid = " + uId;
+		sql = "delete from " + DeptUserInfo + " where " + "Did = " + dId + " and Uid = " + uId;
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1794,9 +1552,7 @@ public class IMOStorage {
 	public boolean updateDeptUserInfo(DeptUser deptUser) throws Exception {
 		if (deptUser.getdId() == null || deptUser.getuId() == null)
 			return false;
-		sql = "update " + DeptUserInfo + " set " + "NextSiblingUid="
-				+ deptUser.getNextSiblingUid() + " where " + "Did = "
-				+ deptUser.getdId() + " and Uid = " + deptUser.getuId();
+		sql = "update " + DeptUserInfo + " set " + "NextSiblingUid=" + deptUser.getNextSiblingUid() + " where " + "Did = " + deptUser.getdId() + " and Uid = " + deptUser.getuId();
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1806,8 +1562,7 @@ public class IMOStorage {
 	}
 
 	public DeptUser getDeptUserInfo(Integer dId, Integer uId) throws Exception {
-		sql = "select * from " + DeptUserInfo + " where " + "Did = " + dId
-				+ " and Uid = " + uId;
+		sql = "select * from " + DeptUserInfo + " where " + "Did = " + dId + " and Uid = " + uId;
 		Cursor cursor = null;
 		try {
 			cursor = mDatabase.rawQuery(sql, null);
@@ -1830,8 +1585,7 @@ public class IMOStorage {
 	public boolean addOuterGroupInfo(Integer gId, String name) throws Exception {
 		if (gId == null || name == null)
 			return false;
-		sql = "replace into " + OuterGroupInfo + " values (" + gId + ",'" + name
-				+ "')";
+		sql = "replace into " + OuterGroupInfo + " values (" + gId + ",'" + name + "')";
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1865,9 +1619,7 @@ public class IMOStorage {
 	public boolean updateOuterGroupInfo(OuterGroup outerGroup) throws Exception {
 		if (outerGroup.getgId() == null)
 			return false;
-		sql = "update " + OuterGroupInfo + " set " + "Name='"
-				+ outerGroup.getName() + "'" + " where " + "Gid = "
-				+ outerGroup.getgId();
+		sql = "update " + OuterGroupInfo + " set " + "Name='" + outerGroup.getName() + "'" + " where " + "Gid = " + outerGroup.getgId();
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1905,8 +1657,7 @@ public class IMOStorage {
 	public boolean addExternalGroupUC(Integer externalGroupUC) throws Exception {
 		if (externalGroupUC == null)
 			return false;
-		sql = "replace into " + ExternalGroupUC + " values (" + externalGroupUC
-				+ ")";
+		sql = "replace into " + ExternalGroupUC + " values (" + externalGroupUC + ")";
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1915,17 +1666,14 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean addExternalGroupUC(ExternalGroupUc externalGroupUc)
-			throws Exception {
+	public boolean addExternalGroupUC(ExternalGroupUc externalGroupUc) throws Exception {
 		return addExternalGroupUC(externalGroupUc.getExternalGroupUC());
 	}
 
-	public boolean deleteExternalGroupUC(Integer externalGroupUc)
-			throws Exception {
+	public boolean deleteExternalGroupUC(Integer externalGroupUc) throws Exception {
 		if (externalGroupUc == null)
 			return false;
-		sql = "delete from " + ExternalGroupUC + " where "
-				+ "ExternalGroupUC = " + externalGroupUc;
+		sql = "delete from " + ExternalGroupUC + " where " + "ExternalGroupUC = " + externalGroupUc;
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1934,8 +1682,7 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean deleteExternalGroupUC(ExternalGroupUc externalGroupUc)
-			throws Exception {
+	public boolean deleteExternalGroupUC(ExternalGroupUc externalGroupUc) throws Exception {
 		return deleteExternalGroupUC(externalGroupUc.getExternalGroupUC());
 	}
 
@@ -1960,12 +1707,10 @@ public class IMOStorage {
 	}
 
 	// 以下是对ExternalContactUC表的增删改查操作
-	public boolean addExternalContactUC(Integer externalContactUC)
-			throws Exception {
+	public boolean addExternalContactUC(Integer externalContactUC) throws Exception {
 		if (externalContactUC == null)
 			return false;
-		sql = "replace into " + ExternalContactUC + " values ("
-				+ externalContactUC + ")";
+		sql = "replace into " + ExternalContactUC + " values (" + externalContactUC + ")";
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1977,17 +1722,14 @@ public class IMOStorage {
 		// return mDatabase.insert(ExternalContactUC, null, values);
 	}
 
-	public boolean addExternalContactUC(ExternalContactorUC externalContactorUC)
-			throws Exception {
+	public boolean addExternalContactUC(ExternalContactorUC externalContactorUC) throws Exception {
 		return addExternalContactUC(externalContactorUC.getExternalContactUC());
 	}
 
-	public boolean deleteExternalContactUC(Integer externalContactUC)
-			throws Exception {
+	public boolean deleteExternalContactUC(Integer externalContactUC) throws Exception {
 		if (externalContactUC == null)
 			return false;
-		sql = "delete from " + ExternalContactUC + " where "
-				+ "ExternalContactUC = " + externalContactUC;
+		sql = "delete from " + ExternalContactUC + " where " + "ExternalContactUC = " + externalContactUC;
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -1998,10 +1740,8 @@ public class IMOStorage {
 		// new String[] { String.valueOf(externalContactUC) });
 	}
 
-	public boolean deleteExternalContactUC(
-			ExternalContactorUC externalContactorUC) throws Exception {
-		return deleteExternalContactUC(externalContactorUC
-				.getExternalContactUC());
+	public boolean deleteExternalContactUC(ExternalContactorUC externalContactorUC) throws Exception {
+		return deleteExternalContactUC(externalContactorUC.getExternalContactUC());
 	}
 
 	public ExternalContactorUC getExternalContactUC() throws Exception {
@@ -2025,12 +1765,10 @@ public class IMOStorage {
 	}
 
 	// 以下是对ExternalContactListInfo表的增删改查操作
-	public boolean addExternalContactListInfo(Integer gId, Integer cId,
-			Integer uId, Integer flag) throws Exception {
+	public boolean addExternalContactListInfo(Integer gId, Integer cId, Integer uId, Integer flag) throws Exception {
 		if (uId == null)
 			return false;
-		sql = "replace into " + ExternalContactListInfo + " values (" + gId
-				+ "," + cId + "," + uId + "," + flag + ")";
+		sql = "replace into " + ExternalContactListInfo + " values (" + gId + "," + cId + "," + uId + "," + flag + ")";
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -2039,18 +1777,14 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean addExternalContactListInfo(
-			ExternalContactList externalContactList) throws Exception {
-		return addExternalContactListInfo(externalContactList.getgId(),
-				externalContactList.getcId(), externalContactList.getuId(),
-				externalContactList.getFlag());
+	public boolean addExternalContactListInfo(ExternalContactList externalContactList) throws Exception {
+		return addExternalContactListInfo(externalContactList.getgId(), externalContactList.getcId(), externalContactList.getuId(), externalContactList.getFlag());
 	}
 
 	public boolean deleteExternalContactListInfo(Integer uId) throws Exception {
 		if (uId == null)
 			return false;
-		sql = "delete from " + ExternalContactListInfo + " where " + "Uid = "
-				+ uId;
+		sql = "delete from " + ExternalContactListInfo + " where " + "Uid = " + uId;
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -2059,20 +1793,14 @@ public class IMOStorage {
 		return true;
 	}
 
-	public boolean deleteExternalContactListInfo(
-			ExternalContactList externalContactList) throws Exception {
+	public boolean deleteExternalContactListInfo(ExternalContactList externalContactList) throws Exception {
 		return deleteExternalContactListInfo(externalContactList.getuId());
 	}
 
-	public boolean updateExternalContactListInfo(
-			ExternalContactList externalContactList) throws Exception {
+	public boolean updateExternalContactListInfo(ExternalContactList externalContactList) throws Exception {
 		if (externalContactList.getuId() == null)
 			return false;
-		sql = "update " + ExternalContactListInfo + " set " + "Gid="
-				+ externalContactList.getgId() + "," + "Cid="
-				+ externalContactList.getcId() + "," + "Flag="
-				+ externalContactList.getFlag() + " where " + "Uid = "
-				+ externalContactList.getuId();
+		sql = "update " + ExternalContactListInfo + " set " + "Gid=" + externalContactList.getgId() + "," + "Cid=" + externalContactList.getcId() + "," + "Flag=" + externalContactList.getFlag() + " where " + "Uid = " + externalContactList.getuId();
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -2081,10 +1809,8 @@ public class IMOStorage {
 		return true;
 	}
 
-	public ExternalContactList getExternalContactListInfo(Integer uId)
-			throws Exception {
-		sql = "select * from " + ExternalContactListInfo + " where " + "Uid = "
-				+ uId;
+	public ExternalContactList getExternalContactListInfo(Integer uId) throws Exception {
+		sql = "select * from " + ExternalContactListInfo + " where " + "Uid = " + uId;
 		Cursor cursor = null;
 		try {
 			cursor = mDatabase.rawQuery(sql, null);
@@ -2136,9 +1862,7 @@ public class IMOStorage {
 	}
 
 	private boolean hasRecentContact(RecentContactInfo recentContactInfo) {
-		sql = "select count(*) from " + RecentContact + " where type = "
-				+ recentContactInfo.getType() + " and UId = "
-				+ recentContactInfo.getUid();
+		sql = "select count(*) from " + RecentContact + " where type = " + recentContactInfo.getType() + " and UId = " + recentContactInfo.getUid();
 		Cursor cursor = null;
 		try {
 			cursor = mDatabase.rawQuery(sql, null);
@@ -2165,64 +1889,51 @@ public class IMOStorage {
 	 * @param date
 	 * @throws Exception
 	 */
-	public void addRecentContact(RecentContactInfo recentContactInfo,
-			String date) throws Exception {
+	public void addRecentContact(RecentContactInfo recentContactInfo, String date) throws Exception {
 		if (hasRecentContact(recentContactInfo))
 			deleteRecentContact(recentContactInfo);
 
-		sql = "replace into " + RecentContact
-				+ "(type,UId,Name, Date, Time,CId)" + " values (?,?,?,?,?,?)";
+		sql = "replace into " + RecentContact + "(type,UId,Name, Date, Time,CId)" + " values (?,?,?,?,?,?)";
 		try {
-			mDatabase.execSQL(
-					sql,
-					new Object[] { recentContactInfo.getType(),
-							recentContactInfo.getUid(),
-							recentContactInfo.getName(), date,
-							recentContactInfo.getTime(),
-							recentContactInfo.getCid() });
+			mDatabase.execSQL(sql, new Object[] {
+					recentContactInfo.getType(), recentContactInfo.getUid(), recentContactInfo.getName(), date, recentContactInfo.getTime(), recentContactInfo.getCid()
+			});
 		} catch (Exception e) {
 			throw e;
 		}
 
 	}
 
-	public boolean deleteRecentContact(Integer type, Integer uid)
-			throws Exception {
+	public boolean deleteRecentContact(Integer type, Integer uid) throws Exception {
 		if (type == null || uid == null) {
 			return false;
 		}
-		
-		return mDatabase.delete(RecentContact, "type = ? and UId = ?",
-				new String[] { type + "", uid + "" }) > 0;
-		
-//		sql = "delete from " + RecentContact + " where " + "type = " + type
-//				+ " and UId = " + uid;
-//		try {
-//			mDatabase.execSQL(sql);
-//		} catch (Exception e) {
-//			throw e;
-//		}
-//		return true;
+
+		return mDatabase.delete(RecentContact, "type = ? and UId = ?", new String[] {
+				type + "", uid + ""
+		}) > 0;
+
+		// sql = "delete from " + RecentContact + " where " + "type = " + type
+		// + " and UId = " + uid;
+		// try {
+		// mDatabase.execSQL(sql);
+		// } catch (Exception e) {
+		// throw e;
+		// }
+		// return true;
 	}
 
-	public boolean deleteRecentContact(RecentContactInfo recentContactInfo)
-			throws Exception {
-		return deleteRecentContact(recentContactInfo.getType(),
-				recentContactInfo.getUid());
+	public boolean deleteRecentContact(RecentContactInfo recentContactInfo) throws Exception {
+		return deleteRecentContact(recentContactInfo.getType(), recentContactInfo.getUid());
 	}
 
-	public boolean updateRecentContact(RecentContactInfo recentContactInfo,
-			String date) throws Exception {
+	public boolean updateRecentContact(RecentContactInfo recentContactInfo, String date) throws Exception {
 		// deleteRecentContact(recentContactInfo);
 		addRecentContact(recentContactInfo, date);
 		return true;
 	}
 
-	public void getRecentContactData(
-			ArrayList<String> dateList,
-			ArrayList<Integer> idList,
-			HashMap<String, HashMap<Integer, RecentContactInfo>> recentContactMap)
-			throws Exception {
+	public void getRecentContactData(ArrayList<String> dateList, ArrayList<Integer> idList, HashMap<String, HashMap<Integer, RecentContactInfo>> recentContactMap) throws Exception {
 
 		getDateList(dateList);
 
@@ -2233,32 +1944,26 @@ public class IMOStorage {
 		}
 	}
 
-	private void getRecentContactMap(
-			ArrayList<String> dateList,
-			HashMap<String, HashMap<Integer, RecentContactInfo>> recentContactMap)
-			throws Exception {
+	private void getRecentContactMap(ArrayList<String> dateList, HashMap<String, HashMap<Integer, RecentContactInfo>> recentContactMap) throws Exception {
 		Cursor cursor = null;
 		RecentContactInfo recentContactInfo = null;
 		HashMap<Integer, RecentContactInfo> recentContactInfoMap = null;
 		for (String date : dateList) {
-			sql = "select * from " + RecentContact + " where Date ='" + date
-					+ "'";
+			sql = "select * from " + RecentContact + " where Date ='" + date + "'";
 			try {
 
 				recentContactInfoMap = new HashMap<Integer, RecentContactInfo>();
 				cursor = mDatabase.rawQuery(sql, null);
 				if (cursor.getCount() < 1)
 					break;
-				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-						.moveToNext()) {
+				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 					int uid = cursor.getInt(1);
 					String name = cursor.getString(2);
 					String time = date + " " + cursor.getString(4);
 					int cid = cursor.getInt(5);
 					int count = getUnReadMessageCount(uid);
 					String info = getLastMessage(uid);
-					recentContactInfo = new RecentContactInfo(cid, uid, name,
-							info, time, count);
+					recentContactInfo = new RecentContactInfo(cid, uid, name, info, time, count);
 					recentContactInfoMap.put(uid, recentContactInfo);
 				}
 				recentContactMap.put(date, recentContactInfoMap);
@@ -2282,8 +1987,7 @@ public class IMOStorage {
 			cursor = mDatabase.rawQuery(sql, null);
 			if (cursor.getCount() < 1)
 				return;
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				idList.add(cursor.getInt(0));
 			}
 
@@ -2300,15 +2004,13 @@ public class IMOStorage {
 	private void getDateList(ArrayList<String> dateList) throws Exception {
 		Cursor cursor = null;
 		// 查出所有Date
-		sql = "select distinct Date from " + RecentContact
-				+ " order by Date desc";
+		sql = "select distinct Date from " + RecentContact + " order by Date desc";
 		try {
 			cursor = mDatabase.rawQuery(sql, null);
 
 			if (cursor.getCount() < 1)
 				return;
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				dateList.add(cursor.getString(0));
 			}
 
@@ -2323,10 +2025,8 @@ public class IMOStorage {
 	}
 
 	public int getUnReadMessageCount(int uid) {
-		try{
-			String sql_messageInfo = "select count(*) from " + MessageInfo
-					+ " where FromUid =" + uid + " and IsRead = "
-					+ com.imo.db.entity.MessageInfo.MessageInfo_UnRead;
+		try {
+			String sql_messageInfo = "select count(*) from " + MessageInfo + " where FromUid =" + uid + " and IsRead = " + com.imo.db.entity.MessageInfo.MessageInfo_UnRead;
 			Cursor cursor_messageInfo = null;
 			int count = 0;
 			try {
@@ -2347,14 +2047,13 @@ public class IMOStorage {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return 0;
 	}
 
 	private int getLastMessageRecId(int uid) throws Exception {
 		int max_msgId = -1;
-		sql = "select max(RecId) from " + MessageInfo + " where FromUid ="
-				+ uid + " or ToUid = " + uid;
+		sql = "select max(RecId) from " + MessageInfo + " where FromUid =" + uid + " or ToUid = " + uid;
 
 		Cursor cursor = null;
 		try {
@@ -2376,8 +2075,7 @@ public class IMOStorage {
 	public String getLastMessage(int uid) throws Exception {
 		int max_msgRecId = getLastMessageRecId(uid);
 
-		String sql_messageInfo = "select Message from " + MessageInfo
-				+ " where  RecId =" + max_msgRecId;
+		String sql_messageInfo = "select Message from " + MessageInfo + " where  RecId =" + max_msgRecId;
 		Cursor cursor_messageInfo = null;
 		String message = null;
 		try {
@@ -2399,18 +2097,10 @@ public class IMOStorage {
 
 	// 以下是对DeptInfo表的增删改查操作
 
-	public boolean addDept(Integer cId, Integer dId, String name, Integer pDid,
-			Integer uC, Integer deptUserUC, Integer firstChild,
-			Integer nextSibling, String desp, String fax, String hideDeptList,
-			String addr, String tel, String website, Integer firstChildUser)
-			throws Exception {
+	public boolean addDept(Integer cId, Integer dId, String name, Integer pDid, Integer uC, Integer deptUserUC, Integer firstChild, Integer nextSibling, String desp, String fax, String hideDeptList, String addr, String tel, String website, Integer firstChildUser) throws Exception {
 		if (cId == null || dId == null)
 			return false;
-		sql = "replace into " + DeptInfo + " values (" + cId + "," + dId + ",'"
-				+ name + "'," + pDid + "," + uC + "," + deptUserUC + ","
-				+ firstChild + "," + nextSibling + ",'" + desp + "','" + fax
-				+ "','" + hideDeptList + "','" + addr + "','" + tel + "','"
-				+ website + "'," + firstChildUser + ")";
+		sql = "replace into " + DeptInfo + " values (" + cId + "," + dId + ",'" + name + "'," + pDid + "," + uC + "," + deptUserUC + "," + firstChild + "," + nextSibling + ",'" + desp + "','" + fax + "','" + hideDeptList + "','" + addr + "','" + tel + "','" + website + "'," + firstChildUser + ")";
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -2420,11 +2110,7 @@ public class IMOStorage {
 	}
 
 	public boolean addDept(Dept dept) throws Exception {
-		return addDept(dept.getcId(), dept.getdId(), dept.getName(),
-				dept.getpDid(), dept.getuC(), dept.getDeptUserUC(),
-				dept.getFirstChild(), dept.getNextSibling(), dept.getDesp(),
-				dept.getFax(), dept.getHideDeptList(), dept.getAddr(),
-				dept.getTel(), dept.getWebsite(), dept.getFirstChildUser());
+		return addDept(dept.getcId(), dept.getdId(), dept.getName(), dept.getpDid(), dept.getuC(), dept.getDeptUserUC(), dept.getFirstChild(), dept.getNextSibling(), dept.getDesp(), dept.getFax(), dept.getHideDeptList(), dept.getAddr(), dept.getTel(), dept.getWebsite(), dept.getFirstChildUser());
 	}
 
 	public boolean addDept(ArrayList<Dept> depts) throws Exception {
@@ -2445,8 +2131,7 @@ public class IMOStorage {
 	public boolean deleteDept(Integer cId, Integer dId) throws Exception {
 		if (dId == null || cId == null)
 			return false;
-		sql = "delete from " + DeptInfo + " where " + "Cid = " + cId
-				+ " and Did = " + dId;
+		sql = "delete from " + DeptInfo + " where " + "Cid = " + cId + " and Did = " + dId;
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -2462,17 +2147,9 @@ public class IMOStorage {
 	public boolean updateDept(Dept dept) throws Exception {
 		if (dept.getcId() == null || dept.getdId() == null)
 			return false;
-		sql = "update " + DeptInfo + " set " + "Name='" + dept.getName() + "',"
-				+ "PDid=" + dept.getpDid() + "," + "UC=" + dept.getuC() + ","
-				+ "DeptUserUC=" + dept.getDeptUserUC() + "," + "FirstChild="
-				+ dept.getFirstChild() + "," + "NextSibling="
-				+ dept.getNextSibling() + "," + "Desp='" + dept.getDesp()
-				+ "'," + "Fax='" + dept.getFax() + "'," + "HideDeptList='"
-				+ dept.getHideDeptList() + "'," + "Addr='" + dept.getAddr()
-				+ "'," + "Tel='" + dept.getTel() + "'," + "Website='"
-				+ dept.getWebsite() + "'," + "FirstChildUser="
-				+ dept.getFirstChildUser() + " where " + "Cid = "
-				+ dept.getcId() + " and Did = " + dept.getdId();
+		sql = "update " + DeptInfo + " set " + "Name='" + dept.getName() + "'," + "PDid=" + dept.getpDid() + "," + "UC=" + dept.getuC() + "," + "DeptUserUC=" + dept.getDeptUserUC() + "," + "FirstChild=" + dept.getFirstChild() + "," + "NextSibling=" + dept.getNextSibling() + "," + "Desp='"
+				+ dept.getDesp() + "'," + "Fax='" + dept.getFax() + "'," + "HideDeptList='" + dept.getHideDeptList() + "'," + "Addr='" + dept.getAddr() + "'," + "Tel='" + dept.getTel() + "'," + "Website='" + dept.getWebsite() + "'," + "FirstChildUser=" + dept.getFirstChildUser() + " where "
+				+ "Cid = " + dept.getcId() + " and Did = " + dept.getdId();
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -2482,8 +2159,7 @@ public class IMOStorage {
 	}
 
 	public Dept getDept(Integer cId, Integer dId) throws Exception {
-		sql = "select * from " + DeptInfo + " where " + "Cid=" + cId
-				+ " and Did=" + dId;
+		sql = "select * from " + DeptInfo + " where " + "Cid=" + cId + " and Did=" + dId;
 		Cursor cursor = null;
 		try {
 			cursor = mDatabase.rawQuery(sql, null);
@@ -2516,13 +2192,10 @@ public class IMOStorage {
 
 	// 以下是对UserBaseInfo表的增删改查操作
 
-	public boolean addUser(Integer uId, Integer cId, String corpAccount,
-			String account, String name, Integer gender) throws Exception {
+	public boolean addUser(Integer uId, Integer cId, String corpAccount, String account, String name, Integer gender) throws Exception {
 		if (uId == null)
 			return false;
-		sql = "replace into " + UserBaseInfo + " values (" + uId + "," + cId
-				+ ",'" + corpAccount + "','" + account + "','" + name + "',"
-				+ gender + ")";
+		sql = "replace into " + UserBaseInfo + " values (" + uId + "," + cId + ",'" + corpAccount + "','" + account + "','" + name + "'," + gender + ")";
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -2532,8 +2205,7 @@ public class IMOStorage {
 	}
 
 	public boolean addUser(User user) throws Exception {
-		return addUser(user.getuId(), user.getcId(), user.getCorpAccount(),
-				user.getAccount(), user.getName(), user.getGender());
+		return addUser(user.getuId(), user.getcId(), user.getCorpAccount(), user.getAccount(), user.getName(), user.getGender());
 	}
 
 	public boolean deleteUser(Integer uId) throws Exception {
@@ -2555,11 +2227,7 @@ public class IMOStorage {
 	public boolean updateUser(User user) throws Exception {
 		if (user.getuId() == null)
 			return false;
-		sql = "update " + UserBaseInfo + " set " + "Cid=" + user.getcId() + ","
-				+ "CorpAccount='" + user.getCorpAccount() + "'," + "Account='"
-				+ user.getAccount() + "'," + "Name='" + user.getName() + "',"
-				+ "Gender=" + user.getGender() + " where " + "Uid = "
-				+ user.getuId();
+		sql = "update " + UserBaseInfo + " set " + "Cid=" + user.getcId() + "," + "CorpAccount='" + user.getCorpAccount() + "'," + "Account='" + user.getAccount() + "'," + "Name='" + user.getName() + "'," + "Gender=" + user.getGender() + " where " + "Uid = " + user.getuId();
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -2599,23 +2267,15 @@ public class IMOStorage {
 	 * @return
 	 * @throws Exception
 	 */
-	public ArrayList<Integer[]> addMessages(
-			ArrayList<OfflineMsgItem> offlineMsgItems, int cid, int uid)
-			throws Exception {
+	public ArrayList<Integer[]> addMessages(ArrayList<OfflineMsgItem> offlineMsgItems, int cid, int uid) throws Exception {
 		// ArrayList<Integer[]> arrayList = new ArrayList<Integer[]>();
 		// Set<Integer> set = new HashSet<Integer>();
 		mDatabase.beginTransaction();
 		try {
 			for (int i = offlineMsgItems.size() - 1; i >= 0; i--) {
 				OfflineMsgItem offlineMsgItem = offlineMsgItems.get(i);
-				addMessage(0, uid, "", EngineConst.uId, Globe.myself.getName(),
-						Functions.getDate(offlineMsgItem.getTime() * 1000L),
-						Functions.getTime(offlineMsgItem.getTime() * 1000L),
-						offlineMsgItem.getMsg(),
-						com.imo.db.entity.MessageInfo.MessageInfo_From,
-						offlineMsgItem.getMsgid(),
-						com.imo.db.entity.MessageInfo.MessageInfo_UnRead,
-						com.imo.db.entity.MessageInfo.MessageInfo_UnFailed);
+				addMessage(0, uid, "", EngineConst.uId, Globe.myself.getName(), Functions.getDate(offlineMsgItem.getTime() * 1000L), Functions.getTime(offlineMsgItem.getTime() * 1000L), offlineMsgItem.getMsg(), com.imo.db.entity.MessageInfo.MessageInfo_From, offlineMsgItem.getMsgid(),
+						com.imo.db.entity.MessageInfo.MessageInfo_UnRead, com.imo.db.entity.MessageInfo.MessageInfo_UnFailed);
 			}
 			// for (OfflineMsgItem offlineMsgItem : offlineMsgItems) {
 			// addMessage(0, uid, "", EngineConst.uId, Globe.myself.getName(),
@@ -2639,15 +2299,16 @@ public class IMOStorage {
 		// return dataFilter_arrayList(arrayList, set);
 	}
 
-	private ArrayList<Integer[]> dataFilter_arrayList(
-			ArrayList<Integer[]> arrayList, Set<Integer> set) {
+	private ArrayList<Integer[]> dataFilter_arrayList(ArrayList<Integer[]> arrayList, Set<Integer> set) {
 		Iterator<Integer> iterator1 = set.iterator();
 
 		ArrayList<Integer[]> resultList = new ArrayList<Integer[]>();
 		Iterator<Integer> iterator = set.iterator();
 		while (iterator.hasNext()) {
 			Integer uid = iterator.next();
-			Integer[] result = { 0, 0, 0 };
+			Integer[] result = {
+					0, 0, 0
+			};
 			for (Integer[] temp : arrayList) {
 				if (String.valueOf(temp[1]).equals(String.valueOf(uid))) {
 					if (temp[2] > result[2])
@@ -2660,17 +2321,12 @@ public class IMOStorage {
 		return resultList;
 	}
 
-	public boolean addMessage(int sessionId, int fromUid, String fromName,
-			int toUid, String toName, String date, String time, String text,
-			int type, int msgId, int isRead, int isFailed) throws Exception {
-		sql = "replace into "
-				+ MessageInfo
-				+ " (SessionId,FromUid,FromName,ToUid,ToName,Date,Time,Message,Type,MsgId,IsRead,isFailed)"
-				+ " values (?,?,?,?,?,?,?,?,?,?,?,?)";
+	public boolean addMessage(int sessionId, int fromUid, String fromName, int toUid, String toName, String date, String time, String text, int type, int msgId, int isRead, int isFailed) throws Exception {
+		sql = "replace into " + MessageInfo + " (SessionId,FromUid,FromName,ToUid,ToName,Date,Time,Message,Type,MsgId,IsRead,isFailed)" + " values (?,?,?,?,?,?,?,?,?,?,?,?)";
 		try {
-			mDatabase.execSQL(sql, new Object[] { sessionId, fromUid, fromName,
-					toUid, toName, date, time, text, type, msgId, isRead,
-					isFailed });
+			mDatabase.execSQL(sql, new Object[] {
+					sessionId, fromUid, fromName, toUid, toName, date, time, text, type, msgId, isRead, isFailed
+			});
 		} catch (Exception e) {
 			throw e;
 		}
@@ -2678,18 +2334,13 @@ public class IMOStorage {
 	}
 
 	public boolean addMessage(MessageInfo message) throws Exception {
-		return addMessage(message.getSessionId(), message.getFromUid(),
-				message.getFromName(), message.getToUid(), message.getToName(),
-				message.getDate(), message.getTime(), message.getText(),
-				message.getType(), message.getMsgId(), message.getIsRead(),
-				message.getIsFailed());
+		return addMessage(message.getSessionId(), message.getFromUid(), message.getFromName(), message.getToUid(), message.getToName(), message.getDate(), message.getTime(), message.getText(), message.getType(), message.getMsgId(), message.getIsRead(), message.getIsFailed());
 	}
 
 	public boolean deleteMessage(Integer uId) throws Exception {
 		if (uId == null)
 			return false;
-		sql = "delete from " + MessageInfo + " where " + "ToUid=" + uId
-				+ " or FromUid=" + uId;
+		sql = "delete from " + MessageInfo + " where " + "ToUid=" + uId + " or FromUid=" + uId;
 		try {
 			mDatabase.execSQL(sql);
 		} catch (Exception e) {
@@ -2704,8 +2355,7 @@ public class IMOStorage {
 	// }
 	//
 	public int getMessageSum(Integer uId) throws Exception {
-		sql = "select count(ToUid) from " + MessageInfo + " where " + "ToUid="
-				+ uId + " or FromUid=" + uId;
+		sql = "select count(ToUid) from " + MessageInfo + " where " + "ToUid=" + uId + " or FromUid=" + uId;
 		Cursor cursor = null;
 		try {
 			cursor = mDatabase.rawQuery(sql, null);
@@ -2725,23 +2375,20 @@ public class IMOStorage {
 	 * 最多返回count条
 	 * 
 	 * @param uId
-	 *            发送者或者接收者的UID
+	 *        发送者或者接收者的UID
 	 * @param index
-	 *            从index开始取
+	 *        从index开始取
 	 * @return
 	 * @throws Exception
 	 */
-	public ArrayList<MessageInfo> getMessage(Integer uId, int index, int count)
-			throws Exception {
-		sql = "select * from " + MessageInfo + " where " + "ToUid=" + uId
-				+ " or FromUid=" + uId +" order by Date,Time"+ " limit " + index + "," + count;
+	public ArrayList<MessageInfo> getMessage(Integer uId, int index, int count) throws Exception {
+		sql = "select * from " + MessageInfo + " where " + "ToUid=" + uId + " or FromUid=" + uId + " order by Date,Time" + " limit " + index + "," + count;
 		Cursor cursor = null;
 		try {
 			cursor = mDatabase.rawQuery(sql, null);
 			ArrayList<MessageInfo> messages = new ArrayList<MessageInfo>();
 			MessageInfo message = null;
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				message = new MessageInfo();
 				message.setFromUid(cursor.getInt(2));
 				message.setFromName(cursor.getString(3));
@@ -2767,18 +2414,14 @@ public class IMOStorage {
 	}
 
 	public void updateMessage(int uid) {
-		sql = "update " + MessageInfo + " set " + "IsRead="
-				+ com.imo.db.entity.MessageInfo.MessageInfo_Readed + " where "
-				+ "FromUid = " + uid;
+		sql = "update " + MessageInfo + " set " + "IsRead=" + com.imo.db.entity.MessageInfo.MessageInfo_Readed + " where " + "FromUid = " + uid;
 		try {
 			mDatabase.execSQL(sql);
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 
 	}
 
-	public void getInnerGroupInfo(
-			Map<Integer, InnerContactorItem> innerGroupIdMap) throws Exception {
+	public void getInnerGroupInfo(Map<Integer, InnerContactorItem> innerGroupIdMap) throws Exception {
 		sql = "select * from " + InnerGroupInfo;
 		Cursor cursor = null;
 		try {
@@ -2787,11 +2430,9 @@ public class IMOStorage {
 			if (count < 1)
 				return;
 			InnerContactorItem innerContactorItem = null;
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				int gid = cursor.getInt(0);
-				innerContactorItem = new InnerContactorItem(gid,
-						cursor.getString(1));
+				innerContactorItem = new InnerContactorItem(gid, cursor.getString(1));
 				innerGroupIdMap.put(gid, innerContactorItem);
 			}
 		} catch (Exception e) {
@@ -2804,8 +2445,7 @@ public class IMOStorage {
 
 	}
 
-	public void getOuterGroupInfo(
-			Map<Integer, OuterContactorItem> outerGroupIdMap) throws Exception {
+	public void getOuterGroupInfo(Map<Integer, OuterContactorItem> outerGroupIdMap) throws Exception {
 		sql = "select * from " + OuterGroupInfo;
 		Cursor cursor = null;
 		try {
@@ -2814,8 +2454,7 @@ public class IMOStorage {
 			if (count < 1)
 				return;
 			OuterContactorItem outerGroup = null;
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				int gid = cursor.getInt(0);
 				outerGroup = new OuterContactorItem(gid, cursor.getString(1));
 				outerGroupIdMap.put(gid, outerGroup);
@@ -2830,23 +2469,21 @@ public class IMOStorage {
 
 	}
 
-	public void getAllInnerContactListInfo(
-			Map<Integer, ArrayList<Integer>> innerGroupContactMap)
-			throws Exception {
+	public void getAllInnerContactListInfo(Map<Integer, ArrayList<Integer>> innerGroupContactMap) throws Exception {
 		int[] gids = getAllInnerContactGid();
 		if (gids == null)
 			return;
 
-		sql = "select  Uid  from " + InnerContactListInfo + " where "
-				+ "Gid = ?";
+		sql = "select  Uid  from " + InnerContactListInfo + " where " + "Gid = ?";
 		Cursor cursor = null;
 		ArrayList<Integer> uids = null;
 		for (int i = 0; i < gids.length; i++) {
 			uids = new ArrayList<Integer>();
 			try {
-				cursor = mDatabase.rawQuery(sql, new String[] { gids[i] + "" });
-				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-						.moveToNext()) {
+				cursor = mDatabase.rawQuery(sql, new String[] {
+					gids[i] + ""
+				});
+				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 					uids.add(cursor.getInt(0));
 				}
 				innerGroupContactMap.put(gids[i], uids);
@@ -2860,11 +2497,7 @@ public class IMOStorage {
 		}
 	}
 
-	public void getAllOuterContactListInfo(
-			Map<Integer, ArrayList<OuterContactItem>> outerGroupContactMap,
-			Map<Integer, String> outerContactCorpMap,
-			Map<Integer, OuterContactBasicInfo> outerContactInfoMap)
-			throws Exception {
+	public void getAllOuterContactListInfo(Map<Integer, ArrayList<OuterContactItem>> outerGroupContactMap, Map<Integer, String> outerContactCorpMap, Map<Integer, OuterContactBasicInfo> outerContactInfoMap) throws Exception {
 		int[] gids = getAllOuterContactGid();
 		if (gids == null)
 			return;
@@ -2876,21 +2509,14 @@ public class IMOStorage {
 
 	}
 
-	private void getOuterContactInfo(
-			Map<Integer, OuterContactBasicInfo> outerContactInfoMap)
-			throws Exception {
+	private void getOuterContactInfo(Map<Integer, OuterContactBasicInfo> outerContactInfoMap) throws Exception {
 		sql = "select  *  from " + OuterContactInfo;
 		Cursor cursor = null;
 		try {
 			cursor = mDatabase.rawQuery(sql, null);
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				int uid = cursor.getInt(1);
-				outerContactInfoMap.put(
-						uid,
-						new OuterContactBasicInfo(cursor.getInt(0), uid, cursor
-								.getString(2), cursor.getString(3), cursor
-								.getString(4), cursor.getInt(5)));
+				outerContactInfoMap.put(uid, new OuterContactBasicInfo(cursor.getInt(0), uid, cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5)));
 			}
 		} catch (Exception e) {
 			throw e;
@@ -2902,14 +2528,12 @@ public class IMOStorage {
 
 	}
 
-	private void getOuterContactCorpInfo(
-			Map<Integer, String> outerContactCorpMap) throws Exception {
+	private void getOuterContactCorpInfo(Map<Integer, String> outerContactCorpMap) throws Exception {
 		sql = "select  *  from " + OuterCorpInfo;
 		Cursor cursor = null;
 		try {
 			cursor = mDatabase.rawQuery(sql, null);
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				outerContactCorpMap.put(cursor.getInt(0), cursor.getString(1));
 			}
 		} catch (Exception e) {
@@ -2921,22 +2545,18 @@ public class IMOStorage {
 		}
 	}
 
-	private void getOuterContactListInfoByGid(
-			Map<Integer, ArrayList<OuterContactItem>> outerGroupContactMap,
-			int[] gids) throws Exception {
-		sql = "select  *  from " + ExternalContactListInfo + " where "
-				+ "Gid = ?";
+	private void getOuterContactListInfoByGid(Map<Integer, ArrayList<OuterContactItem>> outerGroupContactMap, int[] gids) throws Exception {
+		sql = "select  *  from " + ExternalContactListInfo + " where " + "Gid = ?";
 		Cursor cursor = null;
 		ArrayList<OuterContactItem> outerContactItems = null;
 		for (int i = 0; i < gids.length; i++) {
 			outerContactItems = new ArrayList<OuterContactItem>();
 			try {
-				cursor = mDatabase.rawQuery(sql, new String[] { gids[i] + "" });
-				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-						.moveToNext()) {
-					outerContactItems.add(new OuterContactItem(
-							cursor.getInt(1), cursor.getInt(2), cursor
-									.getInt(0), cursor.getInt(3)));
+				cursor = mDatabase.rawQuery(sql, new String[] {
+					gids[i] + ""
+				});
+				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+					outerContactItems.add(new OuterContactItem(cursor.getInt(1), cursor.getInt(2), cursor.getInt(0), cursor.getInt(3)));
 				}
 				outerGroupContactMap.put(gids[i], outerContactItems);
 			} catch (Exception e) {
@@ -2959,8 +2579,7 @@ public class IMOStorage {
 				return null;
 			int[] gids = new int[count];
 			int i = 0;
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				gids[i] = cursor.getInt(0);
 				i++;
 			}
@@ -2985,8 +2604,7 @@ public class IMOStorage {
 				return null;
 			int[] gids = new int[count];
 			int i = 0;
-			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-					.moveToNext()) {
+			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 				gids[i] = cursor.getInt(0);
 				i++;
 			}
@@ -3001,8 +2619,7 @@ public class IMOStorage {
 		return null;
 	}
 
-	public void putInnerGroupInfo(
-			Map<Integer, InnerContactorItem> innerGroupIdMap) throws Exception {
+	public void putInnerGroupInfo(Map<Integer, InnerContactorItem> innerGroupIdMap) throws Exception {
 		if (innerGroupIdMap == null)
 			return;
 		sql = "delete from " + InnerGroupInfo;
@@ -3013,17 +2630,16 @@ public class IMOStorage {
 			Integer key = it.next();
 			InnerContactorItem innerContactorItem = innerGroupIdMap.get(key);
 			try {
-				mDatabase.execSQL(sql,
-						new Object[] { innerContactorItem.getGroupID(),
-								innerContactorItem.getGroupName() });
+				mDatabase.execSQL(sql, new Object[] {
+						innerContactorItem.getGroupID(), innerContactorItem.getGroupName()
+				});
 			} catch (Exception e) {
 				throw e;
 			}
 		}
 	}
 
-	public void putOuterGroupInfo(
-			Map<Integer, OuterContactorItem> outerGroupIdMap) throws Exception {
+	public void putOuterGroupInfo(Map<Integer, OuterContactorItem> outerGroupIdMap) throws Exception {
 		if (outerGroupIdMap == null)
 			return;
 		sql = "delete from " + OuterGroupInfo;
@@ -3034,17 +2650,16 @@ public class IMOStorage {
 			Integer key = it.next();
 			OuterContactorItem outerContactorItem = outerGroupIdMap.get(key);
 			try {
-				mDatabase.execSQL(sql,
-						new Object[] { outerContactorItem.getGroupID(),
-								outerContactorItem.getGroupName() });
+				mDatabase.execSQL(sql, new Object[] {
+						outerContactorItem.getGroupID(), outerContactorItem.getGroupName()
+				});
 			} catch (Exception e) {
 				throw e;
 			}
 		}
 	}
 
-	public void putOuterCorpInfo(Map<Integer, String> outerContactCorpMap)
-			throws Exception {
+	public void putOuterCorpInfo(Map<Integer, String> outerContactCorpMap) throws Exception {
 		if (outerContactCorpMap == null)
 			return;
 		sql = "delete from " + OuterCorpInfo;
@@ -3054,17 +2669,16 @@ public class IMOStorage {
 		for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 			Integer key = it.next();
 			try {
-				mDatabase.execSQL(sql,
-						new Object[] { key, outerContactCorpMap.get(key) });
+				mDatabase.execSQL(sql, new Object[] {
+						key, outerContactCorpMap.get(key)
+				});
 			} catch (Exception e) {
 				throw e;
 			}
 		}
 	}
 
-	public void putOuterContactBasicInfo(
-			Map<Integer, OuterContactBasicInfo> outerContactInfoMap)
-			throws Exception {
+	public void putOuterContactBasicInfo(Map<Integer, OuterContactBasicInfo> outerContactInfoMap) throws Exception {
 		if (outerContactInfoMap == null)
 			return;
 		sql = "delete from " + OuterContactInfo;
@@ -3073,33 +2687,20 @@ public class IMOStorage {
 		Set<Integer> keys = outerContactInfoMap.keySet();
 		for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 			Integer key = it.next();
-			OuterContactBasicInfo outerContactBasicInfo = outerContactInfoMap
-					.get(key);
+			OuterContactBasicInfo outerContactBasicInfo = outerContactInfoMap.get(key);
 			try {
-				mDatabase
-						.execSQL(
-								sql,
-								new Object[] {
-										outerContactBasicInfo.getCid(),
-										outerContactBasicInfo.getUid(),
-										outerContactBasicInfo.getCorpAccount(),
-										outerContactBasicInfo.getUserAccount(),
-										outerContactBasicInfo.getName(),
-										outerContactBasicInfo.getGender(),
-										Functions
-												.getChinessFirstSpellInstance()
-												.GetChineseSpell(
-														outerContactBasicInfo
-																.getName()), });
+				mDatabase.execSQL(sql,
+						new Object[] {
+								outerContactBasicInfo.getCid(), outerContactBasicInfo.getUid(), outerContactBasicInfo.getCorpAccount(), outerContactBasicInfo.getUserAccount(), outerContactBasicInfo.getName(), outerContactBasicInfo.getGender(),
+								Functions.getChinessFirstSpellInstance().GetChineseSpell(outerContactBasicInfo.getName()),
+						});
 			} catch (Exception e) {
 				throw e;
 			}
 		}
 	}
 
-	public void putInnerContactListInfo(
-			Map<Integer, ArrayList<Integer>> innerGroupContactMap)
-			throws Exception {
+	public void putInnerContactListInfo(Map<Integer, ArrayList<Integer>> innerGroupContactMap) throws Exception {
 		if (innerGroupContactMap == null)
 			return;
 		sql = "delete from " + InnerContactListInfo;
@@ -3111,7 +2712,9 @@ public class IMOStorage {
 			ArrayList<Integer> uids = innerGroupContactMap.get(key);
 			for (int uid : uids) {
 				try {
-					mDatabase.execSQL(sql, new Object[] { key, 0, uid, 0 });
+					mDatabase.execSQL(sql, new Object[] {
+							key, 0, uid, 0
+					});
 				} catch (Exception e) {
 					throw e;
 				}
@@ -3119,9 +2722,7 @@ public class IMOStorage {
 		}
 	}
 
-	public void putOuterContactListInfo(
-			Map<Integer, ArrayList<OuterContactItem>> outerGroupContactMap)
-			throws Exception {
+	public void putOuterContactListInfo(Map<Integer, ArrayList<OuterContactItem>> outerGroupContactMap) throws Exception {
 		if (outerGroupContactMap == null)
 			return;
 
@@ -3132,25 +2733,22 @@ public class IMOStorage {
 		Set<Integer> keys = outerGroupContactMap.keySet();
 		for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 			Integer key = it.next();
-			ArrayList<OuterContactItem> outerContactItems = outerGroupContactMap
-					.get(key);
+			ArrayList<OuterContactItem> outerContactItems = outerGroupContactMap.get(key);
 			for (OuterContactItem outerContactItem : outerContactItems) {
 				try {
-					mDatabase.execSQL(
-							sql,
-							new Object[] { outerContactItem.getGroupId(),
-									outerContactItem.getCid(),
-									outerContactItem.getUid(),
-									outerContactItem.getFlag() });
+					mDatabase.execSQL(sql, new Object[] {
+							outerContactItem.getGroupId(), outerContactItem.getCid(), outerContactItem.getUid(), outerContactItem.getFlag()
+					});
 				} catch (Exception e) {
 					throw e;
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 存放所有联系人信息，包括联系人组信息。由于是重构，所以参数列表很长。
+	 * 
 	 * @param innerGroupInfoNeedUpdate
 	 * @param innerContactNeedUpdate
 	 * @param outerGroupInfoNeedUpdate
@@ -3163,15 +2761,8 @@ public class IMOStorage {
 	 * @param outerContactCorpMap
 	 * @throws Exception
 	 */
-	public void putContactAndGroupInfo(boolean innerGroupInfoNeedUpdate,
-			boolean innerContactNeedUpdate, boolean outerGroupInfoNeedUpdate,
-			boolean outerContactNeedUpdate,
-			HashMap<Integer, InnerContactorItem> innerGroupIdMap,
-			HashMap<Integer, ArrayList<Integer>> innerGroupContactMap,
-			HashMap<Integer, OuterContactorItem> outerGroupIdMap,
-			HashMap<Integer, ArrayList<OuterContactItem>> outerGroupContactMap,
-			HashMap<Integer, OuterContactBasicInfo> outerContactInfoMap,
-			HashMap<Integer, String> outerContactCorpMap) throws Exception {
+	public void putContactAndGroupInfo(boolean innerGroupInfoNeedUpdate, boolean innerContactNeedUpdate, boolean outerGroupInfoNeedUpdate, boolean outerContactNeedUpdate, HashMap<Integer, InnerContactorItem> innerGroupIdMap, HashMap<Integer, ArrayList<Integer>> innerGroupContactMap,
+			HashMap<Integer, OuterContactorItem> outerGroupIdMap, HashMap<Integer, ArrayList<OuterContactItem>> outerGroupContactMap, HashMap<Integer, OuterContactBasicInfo> outerContactInfoMap, HashMap<Integer, String> outerContactCorpMap) throws Exception {
 
 		mDatabase.beginTransaction();
 		try {
