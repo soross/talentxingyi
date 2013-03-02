@@ -6,27 +6,24 @@ import android.widget.ViewFlipper;
 
 /**
  * »¬ÆÁ
- * 
- * @author CaixiaoLong
- *
  */
 public class CustomFlipper extends ViewFlipper {
 
-		public CustomFlipper(Context context) {
-			super(context);
-		}
-
-		public CustomFlipper(Context context, AttributeSet attrs) {
-			super(context, attrs);
-		}
-
-		@Override
-		protected void onDetachedFromWindow() {
-			try {
-				super.onDetachedFromWindow();
-			} catch (IllegalArgumentException e) {
-				stopFlipping();
-			}
-		}
-		
+	public CustomFlipper(Context context) {
+		super(context);
 	}
+
+	public CustomFlipper(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
+
+	@Override
+	protected void onDetachedFromWindow() {
+		try {
+			super.onDetachedFromWindow();
+		} catch (IllegalArgumentException e) {
+			stopFlipping();
+		}
+	}
+
+}
