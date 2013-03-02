@@ -6,8 +6,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
@@ -24,9 +22,6 @@ import com.imo.view.TitleBar;
 
 /**
  * 非网络通信Activity抽象基础类，实现界面的更新,封装回退逻辑。
- * 
- * @author CaixiaoLong
- * 
  */
 public abstract class AbsBaseActivity extends Activity {
 
@@ -38,9 +33,9 @@ public abstract class AbsBaseActivity extends Activity {
 
 	protected BottomBar mBottomBar;
 
-//	protected Handler mParentHandler;
+	// protected Handler mParentHandler;
 
-//	protected Message msg;
+	// protected Message msg;
 
 	protected Resources resources;
 
@@ -54,16 +49,17 @@ public abstract class AbsBaseActivity extends Activity {
 
 	private LinearLayout baseLayout;
 
-	protected String[] bottomBarName = { "对话", "组织结构", "联系人", "群组" };
+	protected String[] bottomBarName = {
+			"对话", "组织结构", "联系人", "群组"
+	};
 
 	protected int[] bottomBarImgResIdSelected = {
-			R.drawable.menu_dialogue_selected,
-			R.drawable.menu_organize_selected,
-			R.drawable.menu_contact_selected, R.drawable.menu_group_selected };
+			R.drawable.menu_dialogue_selected, R.drawable.menu_organize_selected, R.drawable.menu_contact_selected, R.drawable.menu_group_selected
+	};
 
-	protected int[] bottomBarImgResId = { R.drawable.menu_dialogue,
-			R.drawable.menu_organize, R.drawable.menu_contact,
-			R.drawable.menu_group };
+	protected int[] bottomBarImgResId = {
+			R.drawable.menu_dialogue, R.drawable.menu_organize, R.drawable.menu_contact, R.drawable.menu_group
+	};
 
 	@Override
 	protected void onStart() {
@@ -86,7 +82,7 @@ public abstract class AbsBaseActivity extends Activity {
 
 		initBaseData();
 
-//		handlerMessage();
+		// handlerMessage();
 
 		installViews();
 
@@ -135,8 +131,7 @@ public abstract class AbsBaseActivity extends Activity {
 	private void registerBottomBarEvent() {
 
 		// /init bottombar
-		mBottomBar.setBottomBar(bottomBarImgResId, bottomBarImgResIdSelected,
-				new int[4]);
+		mBottomBar.setBottomBar(bottomBarImgResId, bottomBarImgResIdSelected, new int[4]);
 	}
 
 	@Override
@@ -152,7 +147,7 @@ public abstract class AbsBaseActivity extends Activity {
 		super.onStop();
 		Globe.showActivityCount--;
 		LogFactory.d("冯小卫", "onStop------------------>");
-		if (Globe.showActivityCount == 0&&!mGlobal.isAppExit()) {
+		if (Globe.showActivityCount == 0 && !mGlobal.isAppExit()) {
 			if (needSendRecoverNotice()) {
 				mGlobal.hasRunInBackground = true;// //标识未后台运行
 				NoticeManager.updateRecoverAppNotice(notificationManager);
@@ -190,25 +185,25 @@ public abstract class AbsBaseActivity extends Activity {
 		mGlobal.clearAllNotice();
 	}
 
-//	protected void handlerMessage() {
-//		mParentHandler = new Handler() {
-//			@Override
-//			public void handleMessage(Message msg) {
-//				super.handleMessage(msg);
-//
-//				refresh(msg);
-//			}
-//
-//		};
-//
-////		msg = new Message();
-//	}
+	// protected void handlerMessage() {
+	// mParentHandler = new Handler() {
+	// @Override
+	// public void handleMessage(Message msg) {
+	// super.handleMessage(msg);
+	//
+	// refresh(msg);
+	// }
+	//
+	// };
+	//
+	// // msg = new Message();
+	// }
 
-//	protected void sendMessage(Object obj) {
-//		msg = new Message();
-//		msg.obj = obj;
-//		mParentHandler.sendMessage(msg);
-//	}
+	// protected void sendMessage(Object obj) {
+	// msg = new Message();
+	// msg.obj = obj;
+	// mParentHandler.sendMessage(msg);
+	// }
 
 	protected boolean needObserver() {
 		return true;
