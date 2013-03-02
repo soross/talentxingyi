@@ -1,44 +1,9 @@
 package com.imo.db;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.imo.db.entity.Dept;
-import com.imo.db.entity.DeptUser;
-import com.imo.db.entity.ExternalContactList;
-import com.imo.db.entity.ExternalContactorUC;
-import com.imo.db.entity.ExternalGroupUc;
-import com.imo.db.entity.InnerContactList;
-import com.imo.db.entity.InnerContactorUC;
-import com.imo.db.entity.InnerGroup;
-import com.imo.db.entity.InnerGroupUc;
-import com.imo.db.entity.MessageInfo;
-import com.imo.db.entity.OuterGroup;
-import com.imo.db.entity.RecentContactor;
-import com.imo.db.entity.User;
-import com.imo.db.sql.IMOStorage;
-import com.imo.global.IMOApp;
-import com.imo.module.contact.OuterContactItem;
-import com.imo.module.dialogue.recent.RecentContactInfo;
-import com.imo.network.net.EngineConst;
-import com.imo.network.packages.DeptMaskItem;
-import com.imo.network.packages.EmployeeInfoItem;
-import com.imo.network.packages.GetAllEmployeesInfoInPacket;
-import com.imo.network.packages.InnerContactorItem;
-import com.imo.network.packages.OfflineMsgItem;
-import com.imo.network.packages.OuterContactorItem;
-import com.imo.util.Functions;
-
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
+
+import com.imo.db.sql.IMOStorage;
 
 public class DemoActivity extends Activity {
 
@@ -57,76 +22,84 @@ public class DemoActivity extends Activity {
 		// ********************************
 
 		try {
-//			Map<Integer, InnerContactorItem> innerGroupIdMap = new HashMap<Integer, InnerContactorItem>();
-//			innerGroupIdMap.put(1, new InnerContactorItem(1, "组1"));
-//			innerGroupIdMap.put(2, new InnerContactorItem(2, "组2"));
-//			innerGroupIdMap.put(3, new InnerContactorItem(3, "组3"));
-//			innerGroupIdMap.put(4, new InnerContactorItem(4, "组4"));
-//			innerGroupIdMap.put(5, new InnerContactorItem(5, "组5"));
-//			imoStorage.putInnerGroupInfo(innerGroupIdMap);
-//			
-//			Map<Integer, OuterContactorItem> outerGroupIdMap = new HashMap<Integer, OuterContactorItem>();
-//			outerGroupIdMap.put(1, new OuterContactorItem(1, "外组1"));
-//			outerGroupIdMap.put(2, new OuterContactorItem(2, "外组2"));
-//			outerGroupIdMap.put(3, new OuterContactorItem(3, "外组3"));
-//			outerGroupIdMap.put(4, new OuterContactorItem(4, "外组4"));
-//			imoStorage.putOuterGroupInfo(outerGroupIdMap);
-//			
-//			
-//			Map<Integer, ArrayList<Integer>> innerGroupContactMap = new HashMap<Integer, ArrayList<Integer>>();
-//			ArrayList<Integer> uids= new ArrayList<Integer>();
-//			uids.add(100);
-//			uids.add(101);
-//			uids.add(102);
-//			innerGroupContactMap.put(1, uids);
-//			
-//			ArrayList<Integer> uids1= new ArrayList<Integer>();
-//			uids1.add(200);
-//			uids1.add(201);
-//			uids1.add(202);
-//			innerGroupContactMap.put(2, uids1);
-//			
-//			ArrayList<Integer> uids2= new ArrayList<Integer>();
-//			uids2.add(300);
-//			uids2.add(301);
-//			uids2.add(302);
-//			innerGroupContactMap.put(3, uids2);
-//			imoStorage.putInnerContactListInfo(innerGroupContactMap);
-//			
-//			
-//			
-//			Map<Integer, ArrayList<OuterContactItem>> outerGroupContactMap = new HashMap<Integer, ArrayList<OuterContactItem>>();
-//			ArrayList<OuterContactItem> outerContactItems = new ArrayList<OuterContactItem>();
-//			outerContactItems.add(new OuterContactItem(0, 1000, 1, 0));
-//			outerContactItems.add(new OuterContactItem(0, 1001, 1, 0));
-//			outerGroupContactMap.put(1, outerContactItems);
-//			
-//			ArrayList<OuterContactItem> outerContactItems1 = new ArrayList<OuterContactItem>();
-//			outerContactItems1.add(new OuterContactItem(0, 2000, 2, 0));
-//			outerContactItems1.add(new OuterContactItem(0, 2001, 2, 0));
-//			outerGroupContactMap.put(2, outerContactItems1);
-//
-//			ArrayList<OuterContactItem> outerContactItems2 = new ArrayList<OuterContactItem>();
-//			outerContactItems2.add(new OuterContactItem(0, 3000, 3, 0));
-//			outerContactItems2.add(new OuterContactItem(0, 3001, 3, 0));
-//			outerGroupContactMap.put(3, outerContactItems2);
-//			imoStorage.putOuterContactListInfo(outerGroupContactMap);
-			
-			
+			// Map<Integer, InnerContactorItem> innerGroupIdMap = new
+			// HashMap<Integer, InnerContactorItem>();
+			// innerGroupIdMap.put(1, new InnerContactorItem(1, "组1"));
+			// innerGroupIdMap.put(2, new InnerContactorItem(2, "组2"));
+			// innerGroupIdMap.put(3, new InnerContactorItem(3, "组3"));
+			// innerGroupIdMap.put(4, new InnerContactorItem(4, "组4"));
+			// innerGroupIdMap.put(5, new InnerContactorItem(5, "组5"));
+			// imoStorage.putInnerGroupInfo(innerGroupIdMap);
+			//
+			// Map<Integer, OuterContactorItem> outerGroupIdMap = new
+			// HashMap<Integer, OuterContactorItem>();
+			// outerGroupIdMap.put(1, new OuterContactorItem(1, "外组1"));
+			// outerGroupIdMap.put(2, new OuterContactorItem(2, "外组2"));
+			// outerGroupIdMap.put(3, new OuterContactorItem(3, "外组3"));
+			// outerGroupIdMap.put(4, new OuterContactorItem(4, "外组4"));
+			// imoStorage.putOuterGroupInfo(outerGroupIdMap);
+			//
+			//
+			// Map<Integer, ArrayList<Integer>> innerGroupContactMap = new
+			// HashMap<Integer, ArrayList<Integer>>();
+			// ArrayList<Integer> uids= new ArrayList<Integer>();
+			// uids.add(100);
+			// uids.add(101);
+			// uids.add(102);
+			// innerGroupContactMap.put(1, uids);
+			//
+			// ArrayList<Integer> uids1= new ArrayList<Integer>();
+			// uids1.add(200);
+			// uids1.add(201);
+			// uids1.add(202);
+			// innerGroupContactMap.put(2, uids1);
+			//
+			// ArrayList<Integer> uids2= new ArrayList<Integer>();
+			// uids2.add(300);
+			// uids2.add(301);
+			// uids2.add(302);
+			// innerGroupContactMap.put(3, uids2);
+			// imoStorage.putInnerContactListInfo(innerGroupContactMap);
+			//
+			//
+			//
+			// Map<Integer, ArrayList<OuterContactItem>> outerGroupContactMap =
+			// new HashMap<Integer, ArrayList<OuterContactItem>>();
+			// ArrayList<OuterContactItem> outerContactItems = new
+			// ArrayList<OuterContactItem>();
+			// outerContactItems.add(new OuterContactItem(0, 1000, 1, 0));
+			// outerContactItems.add(new OuterContactItem(0, 1001, 1, 0));
+			// outerGroupContactMap.put(1, outerContactItems);
+			//
+			// ArrayList<OuterContactItem> outerContactItems1 = new
+			// ArrayList<OuterContactItem>();
+			// outerContactItems1.add(new OuterContactItem(0, 2000, 2, 0));
+			// outerContactItems1.add(new OuterContactItem(0, 2001, 2, 0));
+			// outerGroupContactMap.put(2, outerContactItems1);
+			//
+			// ArrayList<OuterContactItem> outerContactItems2 = new
+			// ArrayList<OuterContactItem>();
+			// outerContactItems2.add(new OuterContactItem(0, 3000, 3, 0));
+			// outerContactItems2.add(new OuterContactItem(0, 3001, 3, 0));
+			// outerGroupContactMap.put(3, outerContactItems2);
+			// imoStorage.putOuterContactListInfo(outerGroupContactMap);
 
-//			Map<Integer, ArrayList<Integer>> innerGroupContactMap = new HashMap<Integer, ArrayList<Integer>>();
-//			imoStorage.getAllInnerContactListInfo(innerGroupContactMap);
-//			
-//			Map<Integer, InnerContactorItem> innerGroupIdMap = new HashMap<Integer, InnerContactorItem>();
-//			imoStorage.getInnerGroupInfo(innerGroupIdMap);
-//			
-//			Map<Integer, ArrayList<OuterContactItem>> outerGroupContactMap = new HashMap<Integer, ArrayList<OuterContactItem>>();
-//			imoStorage.getAllOuterContactListInfo(outerGroupContactMap);
-//			
-//			Map<Integer, OuterContactorItem> outerGroupIdMap = new HashMap<Integer, OuterContactorItem>();
-//			imoStorage.getOuterGroupInfo(outerGroupIdMap);
+			// Map<Integer, ArrayList<Integer>> innerGroupContactMap = new
+			// HashMap<Integer, ArrayList<Integer>>();
+			// imoStorage.getAllInnerContactListInfo(innerGroupContactMap);
+			//
+			// Map<Integer, InnerContactorItem> innerGroupIdMap = new
+			// HashMap<Integer, InnerContactorItem>();
+			// imoStorage.getInnerGroupInfo(innerGroupIdMap);
+			//
+			// Map<Integer, ArrayList<OuterContactItem>> outerGroupContactMap =
+			// new HashMap<Integer, ArrayList<OuterContactItem>>();
+			// imoStorage.getAllOuterContactListInfo(outerGroupContactMap);
+			//
+			// Map<Integer, OuterContactorItem> outerGroupIdMap = new
+			// HashMap<Integer, OuterContactorItem>();
+			// imoStorage.getOuterGroupInfo(outerGroupIdMap);
 
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
