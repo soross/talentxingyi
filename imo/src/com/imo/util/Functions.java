@@ -8,15 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +22,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -54,12 +45,12 @@ public class Functions {
 		return false;
 	}
 
-//	public static boolean isMobileNO(String mobiles) {
-//		Pattern p = Pattern
-//				.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
-//		Matcher m = p.matcher(mobiles);
-//		return m.matches();
-//	}
+	// public static boolean isMobileNO(String mobiles) {
+	// Pattern p = Pattern
+	// .compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+	// Matcher m = p.matcher(mobiles);
+	// return m.matches();
+	// }
 
 	private static GetChinessFirstSpell getChinessFirstSpell = null;
 
@@ -79,15 +70,11 @@ public class Functions {
 	}
 
 	public static String buildPersonPicUrl(int cid, int uid) {
-		return "http://" + Globe.ips[0] + ":" + Globe.ports[0]
-				+ "/corpmgr/Smart/UI/Imo_DownLoadUI.php?cid=" + cid + "&uid="
-				+ uid + "&type=1&time=0";
+		return "http://" + Globe.ips[0] + ":" + Globe.ports[0] + "/corpmgr/Smart/UI/Imo_DownLoadUI.php?cid=" + cid + "&uid=" + uid + "&type=1&time=0";
 	}
 
 	public static String buildCorpLogoUrl(int cid) {
-		return "http://" + Globe.ips[0] + ":" + Globe.ports[0]
-				+ "/corpmgr/Smart/UI/Imo_DownLoadUI.php?cid=" + cid
-				+ "&uid=0&type=2&time=0";
+		return "http://" + Globe.ips[0] + ":" + Globe.ports[0] + "/corpmgr/Smart/UI/Imo_DownLoadUI.php?cid=" + cid + "&uid=0&type=2&time=0";
 	}
 
 	// public static byte[] http_get(String url) throws Exception {
@@ -107,8 +94,7 @@ public class Functions {
 
 	public static byte[] http_get(String path) throws Exception {
 		URL url = new URL(path);
-		HttpURLConnection httpURLconnection = (HttpURLConnection) url
-				.openConnection();
+		HttpURLConnection httpURLconnection = (HttpURLConnection) url.openConnection();
 		httpURLconnection.setRequestMethod("GET");
 		httpURLconnection.setReadTimeout(5 * 1000);
 		InputStream in = null;
@@ -135,15 +121,13 @@ public class Functions {
 		return outputStream.toByteArray();
 	}
 
-	private static SimpleDateFormat timeFormatter = new SimpleDateFormat(
-			"HH:mm:ss");
+	private static SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 
 	public static String getTime() {
 		return timeFormatter.format(new Date());
 	}
 
-	private static SimpleDateFormat timeNoSecondFormatter = new SimpleDateFormat(
-			"HH:mm");
+	private static SimpleDateFormat timeNoSecondFormatter = new SimpleDateFormat("HH:mm");
 
 	public static String getTimeNoSecond() {
 		return timeNoSecondFormatter.format(new Date());
@@ -153,8 +137,7 @@ public class Functions {
 		return timeFormatter.format(new Date(time));
 	}
 
-	private static SimpleDateFormat dateFormatter = new SimpleDateFormat(
-			"yyyy-MM-dd");
+	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static String getDate() {
 		return dateFormatter.format(new Date());
@@ -164,8 +147,7 @@ public class Functions {
 		return dateFormatter.format(new Date(time));
 	}
 
-	private static SimpleDateFormat dateAndtimeFormatter = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss");
+	private static SimpleDateFormat dateAndtimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public static String getFullTime() {
 		return dateAndtimeFormatter.format(new Date());
@@ -175,9 +157,9 @@ public class Functions {
 	 * 字符串转换成日期 如果转换格式为空，则利用默认格式进行转换操作
 	 * 
 	 * @param str
-	 *            字符串
+	 *        字符串
 	 * @param format
-	 *            日期格式
+	 *        日期格式
 	 * @return 日期
 	 * @throws java.text.ParseException
 	 */
@@ -186,12 +168,10 @@ public class Functions {
 	}
 
 	public static String getCurrentActivity() {
-		ActivityManager am = (ActivityManager) IMOApp.getApp()
-				.getSystemService(Context.ACTIVITY_SERVICE);
+		ActivityManager am = (ActivityManager) IMOApp.getApp().getSystemService(Context.ACTIVITY_SERVICE);
 		ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
 		String cn_name = cn.getClassName();
-		return cn_name
-				.substring(cn_name.lastIndexOf(".") + 1, cn_name.length());
+		return cn_name.substring(cn_name.lastIndexOf(".") + 1, cn_name.length());
 	}
 
 	public static void backToDesk(Activity activity) {
@@ -207,17 +187,14 @@ public class Functions {
 	}
 
 	public static boolean isWifi() {
-		ConnectivityManager conMan = (ConnectivityManager) IMOApp.getApp()
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-				.getState();
+		ConnectivityManager conMan = (ConnectivityManager) IMOApp.getApp().getSystemService(Context.CONNECTIVITY_SERVICE);
+		State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
 		if ("CONNECTED".equalsIgnoreCase(wifi.toString()))
 			return true;
 		return false;
 	}
 
-	private static Vibrator vibrator = (Vibrator) IMOApp.getApp()
-			.getSystemService(Service.VIBRATOR_SERVICE);
+	private static Vibrator vibrator = (Vibrator) IMOApp.getApp().getSystemService(Service.VIBRATOR_SERVICE);
 	private static long pattern = 300;
 
 	private static SoundPool soundPool;
@@ -238,8 +215,7 @@ public class Functions {
 
 	private static int getVolume() {
 		int result = -1;
-		AudioManager audioManager = (AudioManager) IMOApp.getApp()
-				.getSystemService(Context.AUDIO_SERVICE);
+		AudioManager audioManager = (AudioManager) IMOApp.getApp().getSystemService(Context.AUDIO_SERVICE);
 		result = audioManager.getStreamVolume(AudioManager.STREAM_RING);
 		return result;
 	}
@@ -247,8 +223,8 @@ public class Functions {
 	public static void msgNotification() {
 		if (Globe.is_shock)
 			vibrator.vibrate(pattern);
-		if (Globe.is_sound){
-			if(soundPool == null)
+		if (Globe.is_sound) {
+			if (soundPool == null)
 				initSoundPool();
 			ring();
 		}
@@ -256,8 +232,7 @@ public class Functions {
 
 	// 获得系统可用内存信息
 	public static String getSystemAvaialbeMemorySize() {
-		ActivityManager mActivityManager = (ActivityManager) IMOApp.getApp()
-				.getSystemService(Context.ACTIVITY_SERVICE);
+		ActivityManager mActivityManager = (ActivityManager) IMOApp.getApp().getSystemService(Context.ACTIVITY_SERVICE);
 		// 获得MemoryInfo对象
 		MemoryInfo memoryInfo = new MemoryInfo();
 		// 获得系统可用内存，保存在MemoryInfo对象上
@@ -274,8 +249,7 @@ public class Functions {
 	}
 
 	public static boolean isImeShow() {
-		InputMethodManager imm = (InputMethodManager) IMOApp.getApp()
-				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager imm = (InputMethodManager) IMOApp.getApp().getSystemService(Context.INPUT_METHOD_SERVICE);
 		return imm.isActive();
 	}
 
@@ -324,8 +298,7 @@ public class Functions {
 		Matrix matrix = new Matrix();
 		matrix.postScale(scale, scale);
 		// 得到新的图片
-		Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix,
-				true);
+		Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
 		return newbm;
 	}
 
@@ -354,8 +327,7 @@ public class Functions {
 		} else if (phone.length() != 11) {
 			return phone;
 		} else {
-			return phone.substring(0, 3) + "-" + phone.substring(3, 7) + "-"
-					+ phone.substring(7);
+			return phone.substring(0, 3) + "-" + phone.substring(3, 7) + "-" + phone.substring(7);
 		}
 	}
 
@@ -364,8 +336,7 @@ public class Functions {
 		intent.setAction("android.intent.action.VIEW");
 		Uri content_uri_browsers = Uri.parse(url);
 		intent.setData(content_uri_browsers);
-		intent.setClassName("com.android.browser",
-				"com.android.browser.BrowserActivity");
+		intent.setClassName("com.android.browser", "com.android.browser.BrowserActivity");
 		activity.startActivity(intent);
 	}
 }

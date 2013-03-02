@@ -12,9 +12,6 @@ import com.imo.global.IMOApp;
 
 /**
  * 系统信息管理
- * 
- * @author CaixiaoLong
- * 
  */
 public class SystemInfoManager {
 
@@ -46,74 +43,70 @@ public class SystemInfoManager {
 			return 1;
 		}
 	}
-	
-	
+
 	/**
 	 * 获得大版本号
 	 * 
 	 * @return
 	 */
-	public byte getVersion(){
-		
+	public byte getVersion() {
+
 		byte versionNO = 1;
 		String version = "1";
-		
+
 		PackageManager packageManager = IMOApp.getApp().getPackageManager();
 		PackageInfo packInfo;
 		try {
-			packInfo = packageManager.getPackageInfo(IMOApp.getApp().getPackageName(),0);
-			version =  packInfo.versionName;
+			packInfo = packageManager.getPackageInfo(IMOApp.getApp().getPackageName(), 0);
+			version = packInfo.versionName;
 			versionNO = Byte.parseByte(version);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
 		return versionNO;
 	}
-	
-	
+
 	/**
 	 * 获得小版本Build
 	 * 
 	 * @return
 	 */
-	public short getBuild(){
-		
+	public short getBuild() {
+
 		short build = 1000;
 		PackageManager packageManager = IMOApp.getApp().getPackageManager();
 		PackageInfo packInfo;
 		try {
-			packInfo = packageManager.getPackageInfo(IMOApp.getApp().getPackageName(),0);
-			build =  (short) packInfo.versionCode;
+			packInfo = packageManager.getPackageInfo(IMOApp.getApp().getPackageName(), 0);
+			build = (short) packInfo.versionCode;
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
 		return build;
 	}
-	
-//	public byte getBuild(){
-//		
-//		byte code = 1;
-//		PackageManager packageManager = IMOApp.getApp().getPackageManager();
-//		PackageInfo packInfo;
-//		try {
-//			packInfo = packageManager.getPackageInfo(IMOApp.getApp().getPackageName(),0);
-//			code = (byte) packInfo.versionCode;
-//		} catch (NameNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//		return code;
-//	}
-	
+
+	// public byte getBuild(){
+	//
+	// byte code = 1;
+	// PackageManager packageManager = IMOApp.getApp().getPackageManager();
+	// PackageInfo packInfo;
+	// try {
+	// packInfo =
+	// packageManager.getPackageInfo(IMOApp.getApp().getPackageName(),0);
+	// code = (byte) packInfo.versionCode;
+	// } catch (NameNotFoundException e) {
+	// e.printStackTrace();
+	// }
+	// return code;
+	// }
+
 	public static void hideKeyBoard(Activity activity) {
 
-		InputMethodManager imm = (InputMethodManager) activity
-				.getSystemService(Context.INPUT_METHOD_SERVICE);
-//		imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
-//				InputMethodManager.HIDE_NOT_ALWAYS);
-		imm.hideSoftInputFromWindow( activity.getCurrentFocus().getWindowToken(),
-				InputMethodManager.HIDE_NOT_ALWAYS);
-		imm.hideSoftInputFromInputMethod(activity.getCurrentFocus().getWindowToken(),
-				InputMethodManager.HIDE_NOT_ALWAYS);
+		InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		// imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
+		// InputMethodManager.HIDE_NOT_ALWAYS);
+		imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		imm.hideSoftInputFromInputMethod(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 }

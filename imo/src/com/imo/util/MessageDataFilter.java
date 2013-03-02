@@ -13,19 +13,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.imo.global.IMOApp;
-import com.imo.module.dialogue.Emotion;
-import com.imo.network.Encrypt.RegexItem;
-
-import android.R.integer;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 
+import com.imo.global.IMOApp;
+import com.imo.module.dialogue.Emotion;
+import com.imo.network.Encrypt.RegexItem;
+
 public class MessageDataFilter {
 
 	private static ImageGetter imageGetter = new ImageGetter() {
-
 		@Override
 		public Drawable getDrawable(String source) {
 			int id = Integer.parseInt(source);
@@ -42,8 +40,7 @@ public class MessageDataFilter {
 	 * @return
 	 * @throws JSONException
 	 */
-	public static CharSequence jsonToCharSequence(JSONObject message)
-			throws JSONException {
+	public static CharSequence jsonToCharSequence(JSONObject message) throws JSONException {
 		StringBuffer buffer = new StringBuffer();
 		JSONArray dataArray = (JSONArray) message.get("dt");
 		// JSONObject dataValue = (JSONObject) message.get("dt");
@@ -56,9 +53,7 @@ public class MessageDataFilter {
 				String key = iterator.next();
 				if ("txt".equals(key)) {
 					valueItem = new JSONObject(item.getString("txt"));
-					buffer.append(valueItem.getString("v")
-							.replaceAll(" ", "&nbsp;").replaceAll("<", "&lt ")
-							.replaceAll(">", " &gt "));
+					buffer.append(valueItem.getString("v").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt ").replaceAll(">", " &gt "));
 				} else if ("fmt".equals(key)) {
 					valueItem = new JSONObject(item.getString("fmt"));
 					String temp = valueItem.getString("v");
@@ -73,9 +68,7 @@ public class MessageDataFilter {
 						String name = "{[" + index + "]}";
 						for (int j = 0; j < Functions.getEmotion().emotion_indexs.length; j++) {
 							if (name.equals(Functions.getEmotion().emotion_indexs[j])) {
-								buffer.append("<img src='"
-										+ Functions.getEmotion().emotion_ids[j]
-										+ "'/>");
+								buffer.append("<img src='" + Functions.getEmotion().emotion_ids[j] + "'/>");
 								break;
 							}
 						}
@@ -98,8 +91,7 @@ public class MessageDataFilter {
 	 * @return
 	 * @throws JSONException
 	 */
-	public static CharSequence jsonToCharSequenceForUrl(JSONObject message)
-			throws JSONException {
+	public static CharSequence jsonToCharSequenceForUrl(JSONObject message) throws JSONException {
 		StringBuffer buffer = new StringBuffer();
 		JSONArray dataArray = (JSONArray) message.get("dt");
 		// JSONObject dataValue = (JSONObject) message.get("dt");
@@ -112,9 +104,7 @@ public class MessageDataFilter {
 				String key = iterator.next();
 				if ("txt".equals(key)) {
 					valueItem = new JSONObject(item.getString("txt"));
-					buffer.append(valueItem.getString("v")
-							.replaceAll(" ", "&nbsp;").replaceAll("<", "&lt ")
-							.replaceAll(">", " &gt "));
+					buffer.append(valueItem.getString("v").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt ").replaceAll(">", " &gt "));
 				} else if ("fmt".equals(key)) {
 					valueItem = new JSONObject(item.getString("fmt"));
 					String temp = valueItem.getString("v");
@@ -129,9 +119,7 @@ public class MessageDataFilter {
 						String name = "{[" + index + "]}";
 						for (int j = 0; j < Functions.getEmotion().emotion_indexs.length; j++) {
 							if (name.equals(Functions.getEmotion().emotion_indexs[j])) {
-								buffer.append("<img src='"
-										+ Functions.getEmotion().emotion_ids[j]
-										+ "'/>");
+								buffer.append("<img src='" + Functions.getEmotion().emotion_ids[j] + "'/>");
 								break;
 							}
 						}
@@ -154,9 +142,8 @@ public class MessageDataFilter {
 	 * @return
 	 * @throws JSONException
 	 */
-	public static CharSequence jsonToText(JSONObject message)
-			throws JSONException {
-		
+	public static CharSequence jsonToText(JSONObject message) throws JSONException {
+
 		StringBuffer buffer = new StringBuffer();
 		JSONArray dataArray = (JSONArray) message.get("dt");
 		for (int i = 0; i < dataArray.length(); i++) {
@@ -167,8 +154,7 @@ public class MessageDataFilter {
 				String key = iterator.next();
 				if ("txt".equals(key)) {
 					valueItem = new JSONObject(item.getString("txt"));
-					buffer.append(valueItem.getString("v")
-							.replaceAll("<", "&lt ").replaceAll(">", " &gt "));
+					buffer.append(valueItem.getString("v").replaceAll("<", "&lt ").replaceAll(">", " &gt "));
 				} else if ("fmt".equals(key)) {
 					valueItem = new JSONObject(item.getString("fmt"));
 					String temp = valueItem.getString("v");
@@ -210,8 +196,7 @@ public class MessageDataFilter {
 		}
 	};
 
-	public static JSONArray AnalyseStr2Json(String aOriginStr)
-			throws JSONException {
+	public static JSONArray AnalyseStr2Json(String aOriginStr) throws JSONException {
 
 		try {
 			ArrayList<JSONObject> jsonCollection = new ArrayList<JSONObject>();
@@ -244,8 +229,7 @@ public class MessageDataFilter {
 				if (0 == i) {
 					textStr = aOriginStr.substring(0, tempItem.getStart());
 				} else {
-					textStr = aOriginStr.substring(itemArrayList.get(i - 1)
-							.getEnd(), itemArrayList.get(i).getStart());
+					textStr = aOriginStr.substring(itemArrayList.get(i - 1).getEnd(), itemArrayList.get(i).getStart());
 				}
 
 				JSONObject sepcialJsonObj = new JSONObject();
@@ -257,8 +241,7 @@ public class MessageDataFilter {
 					String mailString = "";
 					// System.out.println("---------");
 					if (temp.lastIndexOf(" ") > -1) {
-						txtString = temp
-								.substring(0, temp.lastIndexOf(" ") + 1);
+						txtString = temp.substring(0, temp.lastIndexOf(" ") + 1);
 						mailString = temp.substring(temp.lastIndexOf(" ") + 1);
 						System.out.println(txtString);
 						System.out.println(mailString);
@@ -272,14 +255,12 @@ public class MessageDataFilter {
 						txtJsonObj.put("txt", subTextJsonObj);
 						jsonCollection.add(txtJsonObj);
 
-						subLinkJsonObj.put("v",
-								mailString + tempItem.getContent());
+						subLinkJsonObj.put("v", mailString + tempItem.getContent());
 						sepcialJsonObj.put("lnk", subLinkJsonObj);
 						jsonCollection.add(sepcialJsonObj);
 
 					} else {
-						subLinkJsonObj
-								.put("v", textStr + tempItem.getContent());
+						subLinkJsonObj.put("v", textStr + tempItem.getContent());
 						sepcialJsonObj.put("lnk", subLinkJsonObj);
 						jsonCollection.add(sepcialJsonObj);
 					}
@@ -306,8 +287,7 @@ public class MessageDataFilter {
 
 						int imageStart = tempItem.getContent().indexOf("[");
 						int imageEnd = tempItem.getContent().indexOf("]");
-						subImageJsonObj.put("v", tempItem.getContent()
-								.substring(imageStart + 1, imageEnd) + ".gif");
+						subImageJsonObj.put("v", tempItem.getContent().substring(imageStart + 1, imageEnd) + ".gif");
 						sepcialJsonObj.put("img", subImageJsonObj);
 					} else if (newlineItemType == tempItem.getItemType()) {
 						JSONObject subNewLineJsonObj = new JSONObject();
@@ -318,8 +298,7 @@ public class MessageDataFilter {
 
 					// 最后的文本数据做特殊处理
 					if (i == itemArrayList.size() - 1) {
-						String temp = aOriginStr.substring(itemArrayList.get(i)
-								.getEnd());
+						String temp = aOriginStr.substring(itemArrayList.get(i).getEnd());
 						JSONObject txtJsonObj = new JSONObject();
 						JSONObject subTextJsonObj = new JSONObject();
 
@@ -351,8 +330,7 @@ public class MessageDataFilter {
 			String patternString = "(http://|ftp://|https:|svn://)?(([a-zA-Z0-9]+)(\\.))?([a-zA-Z0-9]+)(\\.)((org)|(cn)|(com)|(net)|(edu)|(gov))([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?";
 			// String patternString =
 			// "(http://|ftp://|https:|svn://)?(([a-zA-Z0-9]+)(\\.))?([a-zA-Z0-9]+)([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?(\\.)((org)|(cn)|(com)|(net)|(edu)|(gov))";
-			Pattern pattern = Pattern.compile(patternString,
-					Pattern.CASE_INSENSITIVE);
+			Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
 			Matcher matcher = pattern.matcher(aOriginStr);
 
 			while (matcher.find()) {
@@ -361,8 +339,7 @@ public class MessageDataFilter {
 				System.out.println("start--" + start);
 				System.out.println("end--" + end);
 				String match = aOriginStr.substring(start, end);
-				RegexItem hrefItem = new RegexItem(start, end, match,
-						linkItemType);
+				RegexItem hrefItem = new RegexItem(start, end, match, linkItemType);
 				itemArrayList.add(hrefItem);
 			}
 		} catch (PatternSyntaxException e) {
@@ -376,16 +353,14 @@ public class MessageDataFilter {
 		try {
 			// search for all occurrences of pattern
 			String patternString = "\\{\\[\\d+\\]\\}";
-			Pattern pattern = Pattern.compile(patternString,
-					Pattern.CASE_INSENSITIVE);
+			Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
 			Matcher matcher = pattern.matcher(aOriginStr);
 
 			while (matcher.find()) {
 				int start = matcher.start();
 				int end = matcher.end();
 				String match = aOriginStr.substring(start, end);
-				RegexItem imageItem = new RegexItem(start, end, match,
-						imageItemType);
+				RegexItem imageItem = new RegexItem(start, end, match, imageItemType);
 				itemArrayList.add(imageItem);
 			}
 		} catch (PatternSyntaxException e) {
@@ -398,16 +373,14 @@ public class MessageDataFilter {
 		try {
 			// search for all occurrences of pattern
 			String patternString = "\t|\r\n|\n";
-			Pattern pattern = Pattern.compile(patternString,
-					Pattern.CASE_INSENSITIVE);
+			Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
 			Matcher matcher = pattern.matcher(aOriginStr);
 
 			while (matcher.find()) {
 				int start = matcher.start();
 				int end = matcher.end();
 				String match = aOriginStr.substring(start, end);
-				RegexItem imageItem = new RegexItem(start, end, match,
-						newlineItemType);
+				RegexItem imageItem = new RegexItem(start, end, match, newlineItemType);
 				itemArrayList.add(imageItem);
 			}
 		} catch (PatternSyntaxException e) {
@@ -416,8 +389,7 @@ public class MessageDataFilter {
 		}
 	}
 
-	public static JSONObject buildMessage(JSONArray data, int type)
-			throws JSONException {
+	public static JSONObject buildMessage(JSONArray data, int type) throws JSONException {
 		JSONObject message = new JSONObject();
 		message.put("ver", "6.0");
 		message.put("app", "mob-a");
@@ -458,18 +430,25 @@ public class MessageDataFilter {
 		for (int i = 0; i < chars.length; i++) {
 			if (chars[i] == '/') {
 				if (i < chars.length - 1)
-					tmp1 = new String(new char[] { chars[i + 1] });
+					tmp1 = new String(new char[] {
+						chars[i + 1]
+					});
 				if (i < chars.length - 2)
-					tmp2 = new String(new char[] { chars[i + 1], chars[i + 2] });
+					tmp2 = new String(new char[] {
+							chars[i + 1], chars[i + 2]
+					});
 				if (i < chars.length - 3)
-					tmp3 = new String(new char[] { chars[i + 1], chars[i + 2],
-							chars[i + 3] });
+					tmp3 = new String(new char[] {
+							chars[i + 1], chars[i + 2], chars[i + 3]
+					});
 				if (i < chars.length - 4)
-					tmp4 = new String(new char[] { chars[i + 1], chars[i + 2],
-							chars[i + 3], chars[i + 4] });
+					tmp4 = new String(new char[] {
+							chars[i + 1], chars[i + 2], chars[i + 3], chars[i + 4]
+					});
 				if (i < chars.length - 5)
-					tmp5 = new String(new char[] { chars[i + 1], chars[i + 2],
-							chars[i + 3], chars[i + 4], chars[i + 5] });
+					tmp5 = new String(new char[] {
+							chars[i + 1], chars[i + 2], chars[i + 3], chars[i + 4], chars[i + 5]
+					});
 				for (int j = 0; j < emotion.emotion_texts.length; j++) {
 					if (tmp5 != null && tmp5.equals(emotion.emotion_texts[j])) {
 						buffer.append(emotion.emotion_indexs[j]);

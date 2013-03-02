@@ -27,21 +27,20 @@ import android.widget.ProgressBar;
 import com.imo.R;
 import com.imo.global.IMOApp;
 import com.imo.module.config.SystemSetActivity;
-import com.imo.module.login.LoginActivity;
 import com.imo.module.welcome.WelcomeActivity;
 
 public class UpdateManager {
-	
+
 	private static final String TAG = "UpdateManager";
-	
+
 	/* 下载中 */
 	private static final int DOWNLOAD = 1;
 	/* 下载结束 */
 	private static final int DOWNLOAD_FINISH = 2;
-	
-//	/* 保存解析的XML信息 */
-//	HashMap<String, String> mHashMap;
-	
+
+	// /* 保存解析的XML信息 */
+	// HashMap<String, String> mHashMap;
+
 	/* 下载保存路径 */
 	private String mSavePath;
 	/* 记录进度条数量 */
@@ -55,27 +54,27 @@ public class UpdateManager {
 	private Dialog mDownloadDialog;
 
 	private Handler mHandler = new Handler() {
-		
+
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			// 正在下载
-			case DOWNLOAD:
-				// 设置进度条位置
-				mProgress.setProgress(progress);
-				break;
-			case DOWNLOAD_FINISH:
-				// 安装文件
-				installApk();
-				break;
-			default:
-				break;
+				case DOWNLOAD:
+					// 设置进度条位置
+					mProgress.setProgress(progress);
+					break;
+				case DOWNLOAD_FINISH:
+					// 安装文件
+					installApk();
+					break;
+				default:
+					break;
 			}
 		};
 	};
-	
+
 	private String downloadURL = "";
 
-	public UpdateManager(Context context,String downloadURL) {
+	public UpdateManager(Context context, String downloadURL) {
 		this.mContext = context;
 		this.downloadURL = downloadURL;
 	}
@@ -100,54 +99,51 @@ public class UpdateManager {
 	 * 显示软件更新对话框
 	 */
 	public void showNoticeDialog() {
-		
+
 		LogFactory.d(TAG, "-------------------->showNoticeDialog");
-		LogFactory.d(TAG, "-------------------->downloadURL="+ downloadURL);
-		
+		LogFactory.d(TAG, "-------------------->downloadURL=" + downloadURL);
+
 		// 构造对话框
 		AlertDialog.Builder builder = new Builder(mContext);
 		builder.setTitle(R.string.soft_update_title);
 		builder.setMessage(R.string.soft_update_info);
-		
+
 		// 更新
-		builder.setPositiveButton(R.string.soft_update_updatebtn,
-				new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						// 显示下载对话框
-						showDownloadDialog();
-					}
-				});
+		builder.setPositiveButton(R.string.soft_update_updatebtn, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				// 显示下载对话框
+				showDownloadDialog();
+			}
+		});
 		if (IMOApp.getApp().mLastActivity instanceof SystemSetActivity) {
 			// 稍后更新
-			builder.setNegativeButton(R.string.soft_update_later,
-					new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
-		}else{
+			builder.setNegativeButton(R.string.soft_update_later, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+		} else {
 			// 放弃更新
-			builder.setNegativeButton(R.string.soft_update_cancel,
-					new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-							IMOApp.getApp().setAppExit(true);
-							Functions.backToDesk(IMOApp.getApp().mLastActivity);
-							IMOApp.getApp().exitApp();
-						}
-					});
+			builder.setNegativeButton(R.string.soft_update_cancel, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					IMOApp.getApp().setAppExit(true);
+					Functions.backToDesk(IMOApp.getApp().mLastActivity);
+					IMOApp.getApp().exitApp();
+				}
+			});
 		}
-		
+
 		Dialog noticeDialog = builder.create();
 		noticeDialog.setCancelable(false);
 		noticeDialog.show();
-		
+
 		noticeDialog.setOnDismissListener(new OnDismissListener() {
-			
+
 			@Override
 			public void onDismiss(DialogInterface dialog) {
 				if (mContext instanceof SystemSetActivity) {
@@ -161,15 +157,14 @@ public class UpdateManager {
 	 * 显示软件下载对话框
 	 */
 	private void showDownloadDialog() {
-		
+
 		if (!sdCardCheck()) {
-			DialogFactory.alertDialog(mContext,
-					mContext.getString(R.string.warn),
-					mContext.getString(R.string.no_sdcard_tip),
-					new String[] { "确定" }, null).show();
+			DialogFactory.alertDialog(mContext, mContext.getString(R.string.warn), mContext.getString(R.string.no_sdcard_tip), new String[] {
+				"确定"
+			}, null).show();
 			return;
 		};
-		
+
 		// 构造软件下载对话框
 		AlertDialog.Builder builder = new Builder(mContext);
 		builder.setTitle(R.string.soft_updating);
@@ -179,19 +174,18 @@ public class UpdateManager {
 		mProgress = (ProgressBar) v.findViewById(R.id.update_progress);
 		builder.setView(v);
 		// 取消更新
-		builder.setNegativeButton(R.string.soft_update_cancel,
-				new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						// 设置取消状态
-						isCancelUpdate = true;
-						
-						if (mContext instanceof WelcomeActivity) {
-							IMOApp.getApp().turn2LoginForLogout();
-						}
-					}
-				});
+		builder.setNegativeButton(R.string.soft_update_cancel, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				// 设置取消状态
+				isCancelUpdate = true;
+
+				if (mContext instanceof WelcomeActivity) {
+					IMOApp.getApp().turn2LoginForLogout();
+				}
+			}
+		});
 		mDownloadDialog = builder.create();
 		mDownloadDialog.setCancelable(false);
 		mDownloadDialog.show();
@@ -206,8 +200,8 @@ public class UpdateManager {
 		// 启动新线程下载软件
 		new DownloadApkThread().start();
 	}
-	
-	private boolean sdCardCheck(){
+
+	private boolean sdCardCheck() {
 		boolean hasSDCard = false;
 		// 判断SD卡是否存在，并且是否具有读写权限
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -224,11 +218,9 @@ public class UpdateManager {
 		public void run() {
 			try {
 				// 判断SD卡是否存在，并且是否具有读写权限
-				if (Environment.getExternalStorageState().equals(
-						Environment.MEDIA_MOUNTED)) {
+				if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 					// 获得存储卡的路径
-					String sdpath = Environment.getExternalStorageDirectory()
-							+ "/";
+					String sdpath = Environment.getExternalStorageDirectory() + "/";
 					mSavePath = sdpath + "download";
 					URL url = new URL(downloadURL);
 					// 创建连接
@@ -245,11 +237,11 @@ public class UpdateManager {
 						file.mkdir();
 					}
 					File apkFile = new File(mSavePath, APKNAME);
-					
+
 					if (apkFile.exists()) {
 						apkFile.delete();
 					}
-					
+
 					FileOutputStream fos = new FileOutputStream(apkFile);
 					int count = 0;
 					// 缓存
@@ -283,8 +275,8 @@ public class UpdateManager {
 		}
 	};
 
-	
 	private String APKNAME = "imo.apk";
+
 	/**
 	 * 安装APK文件
 	 */
@@ -295,8 +287,7 @@ public class UpdateManager {
 		}
 		// 通过Intent安装APK文件
 		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setDataAndType(Uri.parse("file://" + apkfile.toString()),
-				"application/vnd.android.package-archive");
+		intent.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
 		mContext.startActivity(intent);
 	}
 }
