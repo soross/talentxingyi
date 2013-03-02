@@ -1,17 +1,20 @@
 package com.imo.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import android.content.Context;
 import android.os.Environment;
 
-import java.io.*;
-
 public class IOUtil {
 	/* 是否存在SD卡 */
-	public static boolean isRemovedSDCard = Environment
-			.getExternalStorageState().equals(Environment.MEDIA_REMOVED);// MEDIA_MOUNTED:已经挂载并且拥有可读可写权限
+	public static boolean isRemovedSDCard = Environment.getExternalStorageState().equals(Environment.MEDIA_REMOVED);// MEDIA_MOUNTED:已经挂载并且拥有可读可写权限
 	/* SDCard存储路径 */
-	public static String sdCardPath = Environment.getExternalStorageDirectory()
-			.getPath() + File.separator + "imo";
+	public static String sdCardPath = Environment.getExternalStorageDirectory().getPath() + File.separator + "imo";
 
 	/**
 	 * 创建文件
@@ -59,13 +62,12 @@ public class IOUtil {
 	 * 把文件保存到SDCard中
 	 * 
 	 * @param filename
-	 *            文件名称
+	 *        文件名称
 	 * @param content
-	 *            文件内容
+	 *        文件内容
 	 * @throws Exception
 	 */
-	public static boolean saveToSDCard(String filename, byte[] content)
-			throws Exception {
+	public static boolean saveToSDCard(String filename, byte[] content) throws Exception {
 		File file = new File(sdCardPath, filename);
 		file = createFile(file);
 		if (file == null || !file.exists()) {
@@ -81,20 +83,18 @@ public class IOUtil {
 	 * 以私有文件保存内容，保存到手机自带存储
 	 * 
 	 * @param filename
-	 *            文件名称
+	 *        文件名称
 	 * @param content
-	 *            文件内容
+	 *        文件内容
 	 * @param mode
-	 *            文件操作模式[Context.MODE_APPEND,Context.MODE_PRIVATE,Context.
-	 *            MODE_WORLD_READABLE,Context.MODE_WORLD_WRITEABLE]
+	 *        文件操作模式[Context.MODE_APPEND,Context.MODE_PRIVATE,Context.
+	 *        MODE_WORLD_READABLE,Context.MODE_WORLD_WRITEABLE]
 	 * @throws Exception
 	 */
-	public static void saveToPhone(String filename, byte[] content,
-			Context context, int mode) throws Exception {
+	public static void saveToPhone(String filename, byte[] content, Context context, int mode) throws Exception {
 		File file = new File(context.getFilesDir(), filename);
 		createFile(file);
-		FileOutputStream outStream = context.openFileOutput(file.getName(),
-				mode);
+		FileOutputStream outStream = context.openFileOutput(file.getName(), mode);
 		outStream.write(content);
 		outStream.close();
 	}
@@ -103,12 +103,11 @@ public class IOUtil {
 	 * 读取手机自带存储设备上的文件内容 实现方式是先把文件读取到内存，然后由内存输出，如果是读取大型文件，此方法还需要优化
 	 * 
 	 * @param filename
-	 *            文件名称
+	 *        文件名称
 	 * @return
 	 * @throws Exception
 	 */
-	public static byte[] readFileFromPhone(String filename, Context context)
-			throws Exception {
+	public static byte[] readFileFromPhone(String filename, Context context) throws Exception {
 		File file = new File(context.getFilesDir(), filename);
 		// createFile(file);
 		FileInputStream inStream = context.openFileInput(file.getName());
@@ -154,8 +153,7 @@ public class IOUtil {
 	 * @param mode
 	 * @throws Exception
 	 */
-	public static void saveFile(String filename, byte[] content,
-			Context context, int mode) throws Exception {
+	public static void saveFile(String filename, byte[] content, Context context, int mode) throws Exception {
 		if (isRemovedSDCard) {
 			saveToPhone(filename, content, context, mode);
 		} else {
@@ -170,7 +168,7 @@ public class IOUtil {
 	 * 删除文件 删除目录下的全部文件和目录
 	 * 
 	 * @param path
-	 *            文件或目录名
+	 *        文件或目录名
 	 */
 	public static void deleteAll(File path) {
 		if (!path.exists())

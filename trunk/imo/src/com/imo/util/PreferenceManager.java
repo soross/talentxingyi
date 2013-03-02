@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -21,9 +20,6 @@ import com.imo.global.IMOApp;
 
 /**
  * SharedPreference封装
- * 
- * @author CaixiaoLong
- * 
  */
 public class PreferenceManager {
 
@@ -35,7 +31,7 @@ public class PreferenceManager {
 	 * @return
 	 */
 	public static Map<String, ?> getAll(Context context, String fileName) {
-		SharedPreferences sp = context.getSharedPreferences(fileName,Context.MODE_APPEND);
+		SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_APPEND);
 		return sp.getAll();
 	}
 
@@ -43,145 +39,98 @@ public class PreferenceManager {
 	 * 在指定的文件中保存数据
 	 * 
 	 * @param fileName
-	 *            文件名称
+	 *        文件名称
 	 * @param objs
-	 *            数组{key,value}
+	 *        数组{key,value}
 	 */
 	public static void save(String fileName, Object[] objs) {
 		try {
-			SharedPreferences sp = IMOApp.getApp().getSharedPreferences(fileName,Context.MODE_APPEND);
+			SharedPreferences sp = IMOApp.getApp().getSharedPreferences(fileName, Context.MODE_APPEND);
 			Editor editor = sp.edit();
 			if (objs[1] instanceof String) {
 				editor.putString(objs[0].toString(), objs[1].toString());
 			} else if (objs[1] instanceof Integer) {
-				editor.putInt(objs[0].toString(),Integer.parseInt(objs[1].toString()));
+				editor.putInt(objs[0].toString(), Integer.parseInt(objs[1].toString()));
 			} else if (objs[1] instanceof Long) {
-				editor.putLong(objs[0].toString(),Long.parseLong((objs[1].toString())));
+				editor.putLong(objs[0].toString(), Long.parseLong((objs[1].toString())));
 			} else if (objs[1] instanceof Float) {
-				editor.putFloat(objs[0].toString(),Float.parseFloat((objs[1].toString())));
+				editor.putFloat(objs[0].toString(), Float.parseFloat((objs[1].toString())));
 			} else if (objs[1] instanceof Boolean) {
-				editor.putBoolean(objs[0].toString(),Boolean.parseBoolean((objs[1].toString())));
+				editor.putBoolean(objs[0].toString(), Boolean.parseBoolean((objs[1].toString())));
 			}
 			editor.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		/*
-		if(objs[1] instanceof String)
-		{
-			put(fileName,(String)objs[0],((String)objs[1]).getBytes());
-		}
-		else if(objs[1] instanceof Integer)
-		{
-			byte[] bytes = ByteBuffer.allocate(4).putInt((Integer)objs[1]).array();
-			
-			put(fileName,objs[0].toString(),bytes);
-		}
-		else if (objs[1] instanceof Long) {
-			byte[] bytes = ByteBuffer.allocate(8).putInt((Integer)objs[1]).array();
-			
-			put(fileName,objs[0].toString(),bytes);
-		} else if (objs[1] instanceof Float) {
-			byte[] bytes = ByteBuffer.allocate(4).putInt((Integer)objs[1]).array();
-			
-			put(fileName,objs[0].toString(),bytes);
-		} else if (objs[1] instanceof Boolean) {
-			byte[] bytes = ByteBuffer.allocate(1).putInt((Integer)objs[1]).array();
-			
-			put(fileName,objs[0].toString(),bytes);
-		}
-		**/
+		 * if(objs[1] instanceof String) {
+		 * put(fileName,(String)objs[0],((String)objs[1]).getBytes()); } else
+		 * if(objs[1] instanceof Integer) { byte[] bytes =
+		 * ByteBuffer.allocate(4).putInt((Integer)objs[1]).array();
+		 * put(fileName,objs[0].toString(),bytes); } else if (objs[1] instanceof
+		 * Long) { byte[] bytes =
+		 * ByteBuffer.allocate(8).putInt((Integer)objs[1]).array();
+		 * put(fileName,objs[0].toString(),bytes); } else if (objs[1] instanceof
+		 * Float) { byte[] bytes =
+		 * ByteBuffer.allocate(4).putInt((Integer)objs[1]).array();
+		 * put(fileName,objs[0].toString(),bytes); } else if (objs[1] instanceof
+		 * Boolean) { byte[] bytes =
+		 * ByteBuffer.allocate(1).putInt((Integer)objs[1]).array();
+		 * put(fileName,objs[0].toString(),bytes); }
+		 */
 	}
 
 	/**
 	 * 在指定的文件中读取数据
 	 * 
 	 * @param fileName
-	 *            文件名称
+	 *        文件名称
 	 * @param objs
-	 *            数组{key,defaultValue}
+	 *        数组{key,defaultValue}
 	 */
 	public static Object get(String fileName, Object[] objs) {
 		try {
-			SharedPreferences sp = IMOApp.getApp().getSharedPreferences(fileName,Context.MODE_APPEND);
+			SharedPreferences sp = IMOApp.getApp().getSharedPreferences(fileName, Context.MODE_APPEND);
 			if (objs[1] instanceof String) {
 				return sp.getString(objs[0].toString(), objs[1].toString());
 			} else if (objs[1] instanceof Integer) {
-				return sp.getInt(objs[0].toString(),Integer.parseInt(objs[1].toString()));
+				return sp.getInt(objs[0].toString(), Integer.parseInt(objs[1].toString()));
 			} else if (objs[1] instanceof Long) {
-				return sp.getLong(objs[0].toString(),Long.parseLong((objs[1].toString())));
+				return sp.getLong(objs[0].toString(), Long.parseLong((objs[1].toString())));
 			} else if (objs[1] instanceof Float) {
-				return sp.getFloat(objs[0].toString(),Float.parseFloat((objs[1].toString())));
+				return sp.getFloat(objs[0].toString(), Float.parseFloat((objs[1].toString())));
 			} else if (objs[1] instanceof Boolean) {
-				return sp.getBoolean(objs[0].toString(),Boolean.parseBoolean((objs[1].toString())));
+				return sp.getBoolean(objs[0].toString(), Boolean.parseBoolean((objs[1].toString())));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		/*
-		if (objs[1] instanceof String) {
-			byte[] temp = getByteArray(fileName,(String)objs[0]);
-			if( null !=  temp )
-			{
-				return new String(getByteArray(fileName,(String)objs[0]));	
-			}
-			else
-			{
-				return objs[1];
-			}
-		} else if (objs[1] instanceof Integer) {
-			ByteBuffer buf = ByteBuffer.allocate(4);
-			byte[] temp = getByteArray(fileName,objs[0].toString());
-			if( null != temp )
-			{
-				return buf.put(temp).getInt();
-			}
-			else
-			{
-				return objs[1];
-			}
-		} else if (objs[1] instanceof Long) {
-			ByteBuffer buf = ByteBuffer.allocate(8);
-			byte[] temp = getByteArray(fileName,objs[0].toString());
-			if( null != temp )
-			{
-				return buf.put(temp).getLong();	
-			}
-			else
-			{
-				return objs[1];
-			}
-		} else if (objs[1] instanceof Float) {
-			ByteBuffer buf = ByteBuffer.allocate(4);
-			byte[] temp = getByteArray(fileName,objs[0].toString());
-			if( null != temp )
-			{
-				return buf.put(temp).getFloat();
-			}
-			else
-			{
-				return objs[1];
-			}
-		} else if (objs[1] instanceof Boolean) {
-			ByteBuffer buf = ByteBuffer.allocate(1);
-			byte[] temp = getByteArray(fileName,objs[0].toString());
-			if( null != temp )
-			{
-				return buf.put(temp).get();
-			}
-			else
-			{
-				return objs[1];
-			}
-		}
-		**/
+		 * if (objs[1] instanceof String) { byte[] temp =
+		 * getByteArray(fileName,(String)objs[0]); if( null != temp ) { return
+		 * new String(getByteArray(fileName,(String)objs[0])); } else { return
+		 * objs[1]; } } else if (objs[1] instanceof Integer) { ByteBuffer buf =
+		 * ByteBuffer.allocate(4); byte[] temp =
+		 * getByteArray(fileName,objs[0].toString()); if( null != temp ) {
+		 * return buf.put(temp).getInt(); } else { return objs[1]; } } else if
+		 * (objs[1] instanceof Long) { ByteBuffer buf = ByteBuffer.allocate(8);
+		 * byte[] temp = getByteArray(fileName,objs[0].toString()); if( null !=
+		 * temp ) { return buf.put(temp).getLong(); } else { return objs[1]; } }
+		 * else if (objs[1] instanceof Float) { ByteBuffer buf =
+		 * ByteBuffer.allocate(4); byte[] temp =
+		 * getByteArray(fileName,objs[0].toString()); if( null != temp ) {
+		 * return buf.put(temp).getFloat(); } else { return objs[1]; } } else if
+		 * (objs[1] instanceof Boolean) { ByteBuffer buf =
+		 * ByteBuffer.allocate(1); byte[] temp =
+		 * getByteArray(fileName,objs[0].toString()); if( null != temp ) {
+		 * return buf.put(temp).get(); } else { return objs[1]; } }
+		 */
 		return null;
 	}
 
-	public static boolean put(String aFileName,String key, byte[] value) {
+	public static boolean put(String aFileName, String key, byte[] value) {
 		boolean bSaveOk = false;
 		byte[] data = null;
 		if (value == null) {
@@ -207,7 +156,7 @@ public class PreferenceManager {
 		return bSaveOk;
 	}
 
-	public static byte[] getByteArray(String aFileName,String key) {
+	public static byte[] getByteArray(String aFileName, String key) {
 		ByteArrayInputStream bin = null;
 		DataInputStream din = null;
 		byte[] data = null;
@@ -273,7 +222,7 @@ public class PreferenceManager {
 
 	public static void write(String file, byte[] msg) {
 		try {
-			Log.e("writeFile", ""+file);
+			Log.e("writeFile", "" + file);
 			FileOutputStream stream = IMOApp.getApp().openFileOutput(file, Context.MODE_WORLD_WRITEABLE);
 			stream.write(msg);
 			stream.flush();

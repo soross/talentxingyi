@@ -1,15 +1,11 @@
 package com.imo.util;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
 /**
  * 定制的默认大小为10的容器，当容量大于10时，删除第一个元素
- * 
- * @author fengxiaowei
- * 
  */
 public class CustomList {
 	private Map<Integer, Integer> map = new HashMap<Integer, Integer>();
@@ -36,17 +32,17 @@ public class CustomList {
 		map.put(obj, obj);
 		link.add(obj);
 	}
-	
-	public void clear(){
+
+	public void clear() {
 		map.clear();
 		link.clear();
 	}
-	
+
 	@Override
 	public String toString() {
-		String result ="";
-		for(int i=0;i<map.size();i++){
-			result = result +"  "+ link.get(i);
+		String result = "";
+		for (int i = 0; i < map.size(); i++) {
+			result = result + "  " + link.get(i);
 		}
 		return result;
 	}
