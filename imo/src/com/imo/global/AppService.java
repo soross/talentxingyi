@@ -2,9 +2,7 @@ package com.imo.global;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 
 import com.imo.network.Log.CustomExceptionHandler;
 import com.imo.network.net.EngineConst;
@@ -15,9 +13,6 @@ import com.imo.util.LogFactory;
 /**
  * 保持网络通信线程较高的优先级别 <br>
  * 在服务中启动网络通信线程
- * 
- * @author CaixiaoLong
- * 
  */
 public class AppService extends Service {
 
@@ -55,9 +50,7 @@ public class AppService extends Service {
 				if (nioThreadInstance == null) {
 					nioThreadInstance = new NIOThread();
 				}
-				tcpConnection = 
-						(TCPConnection) nioThreadInstance
-						.newTCPConnection(EngineConst.IMO_CONNECTION_ID,EngineConst.IMO_SERVER_ADDRESS, true);
+				tcpConnection = (TCPConnection) nioThreadInstance.newTCPConnection(EngineConst.IMO_CONNECTION_ID, EngineConst.IMO_SERVER_ADDRESS, true);
 			}
 			return tcpConnection;
 		}
@@ -106,7 +99,7 @@ public class AppService extends Service {
 	public void reset() {
 		synchronized (lock_reset) {
 			if (nioThreadInstance != null) {
-				nioThreadInstance.release(EngineConst.IMO_CONNECTION_ID,true);
+				nioThreadInstance.release(EngineConst.IMO_CONNECTION_ID, true);
 				nioThreadInstance.dispose();
 				nioThreadInstance = null;
 				tcpConnection = null;
