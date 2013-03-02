@@ -3,18 +3,14 @@ package com.imo.global;
 import java.util.HashMap;
 
 /**
- * 
  * ÈÎÎñÀà
- * 
- * @author CaixiaoLong
- *
  */
 public class IMOTask {
-	
-	private int taskType ;
-	
-	private HashMap<String, Object> taskParams ;
-	
+
+	private int taskType;
+
+	private HashMap<String, Object> taskParams;
+
 	public IMOTask() {
 		super();
 	}
@@ -32,7 +28,6 @@ public class IMOTask {
 	public void setTaskType(int taskType) {
 		this.taskType = taskType;
 	}
-
 
 	public HashMap<String, Object> getTaskParams() {
 		return taskParams;

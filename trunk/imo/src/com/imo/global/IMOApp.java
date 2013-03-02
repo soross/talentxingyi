@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import android.R.integer;
 import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationManager;
@@ -13,7 +12,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
-import android.os.Message;
 import android.widget.Toast;
 
 import com.imo.R;
@@ -33,23 +31,19 @@ import com.imo.network.packages.DeptMaskItem;
 import com.imo.network.packages.EmployeeInfoItem;
 import com.imo.network.packages.InnerContactorItem;
 import com.imo.network.packages.OuterContactorItem;
-import com.imo.util.Functions;
 import com.imo.util.LogFactory;
 import com.imo.util.NoticeManager;
 
 /**
  * 全局控制类 <br>
  * 生命周期的维持范围：应用程序启动后创建，直到应用程序退出
- * 
- * @author CaixiaoLong
- * 
  */
 public class IMOApp extends Application {
 
 	/**
 	 * 当前项目的模式： true-开发模式 ； false-发布模式
 	 */
-//	private boolean mAppMode = false;
+	// private boolean mAppMode = false;
 	private boolean mAppMode = true;
 
 	public Activity mLastActivity = null;
@@ -71,17 +65,17 @@ public class IMOApp extends Application {
 	 * 脱机摘要全局数据:key= UId ; Value = CId
 	 */
 	public HashMap<Integer, Integer> mOfflineMsgMap = new HashMap<Integer, Integer>();
-	
+
 	/**
 	 * 隐藏部门数组
 	 */
 	public ArrayList<Integer> hide_dept_ids = new ArrayList<Integer>();
-	
+
 	/**
 	 * 后台消息读取用户id缓存
 	 */
 	public static List<Integer> sendMsgUserId = new ArrayList<Integer>();
-	
+
 	/**
 	 * 程序退出标记
 	 */
@@ -221,11 +215,7 @@ public class IMOApp extends Application {
 
 	public HashMap<Integer, Integer> userStateMap;
 
-	public void updateData(int[] deptid, int[] dept_uc, int[] dept_user_uc,
-			HashMap<Integer, DeptMaskItem> deptInfoMap,
-			HashMap<Integer, int[]> deptUserIdsMap,
-			HashMap<Integer, int[]> deptUserNextSiblingMap,
-			HashMap<Integer, HashMap<Integer, Integer>> deptUserSiblingMap,
+	public void updateData(int[] deptid, int[] dept_uc, int[] dept_user_uc, HashMap<Integer, DeptMaskItem> deptInfoMap, HashMap<Integer, int[]> deptUserIdsMap, HashMap<Integer, int[]> deptUserNextSiblingMap, HashMap<Integer, HashMap<Integer, Integer>> deptUserSiblingMap,
 			HashMap<Integer, HashMap<Integer, EmployeeInfoItem>> deptUserInfoMap) {
 		this.deptid = deptid;
 		this.dept_uc = dept_uc;
@@ -258,8 +248,7 @@ public class IMOApp extends Application {
 
 		try {
 			size = mNodeMap.keySet().size();
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 
 		mAllCidArray = new int[size];
 		mAllUidArray = new int[size];
@@ -429,14 +418,8 @@ public class IMOApp extends Application {
 	 * @param outerGroupIdMap
 	 * @param outerGroupContactMap
 	 */
-	public void updateContactData(
-			HashMap<Integer, InnerContactorItem> innerGroupIdMap,
-			HashMap<Integer, ArrayList<Integer>> innerGroupContactMap,
-			HashMap<Integer, String> innerContactWorkSignMap,
-			HashMap<Integer, OuterContactorItem> outerGroupIdMap,
-			HashMap<Integer, ArrayList<OuterContactItem>> outerGroupContactMap,
-			HashMap<Integer, String> outerContactCorpMap,
-			HashMap<Integer, OuterContactBasicInfo> outerContactInfoMap) {
+	public void updateContactData(HashMap<Integer, InnerContactorItem> innerGroupIdMap, HashMap<Integer, ArrayList<Integer>> innerGroupContactMap, HashMap<Integer, String> innerContactWorkSignMap, HashMap<Integer, OuterContactorItem> outerGroupIdMap,
+			HashMap<Integer, ArrayList<OuterContactItem>> outerGroupContactMap, HashMap<Integer, String> outerContactCorpMap, HashMap<Integer, OuterContactBasicInfo> outerContactInfoMap) {
 		this.innerGroupIdMap = innerGroupIdMap;
 		this.innerGroupContactMap = innerGroupContactMap;
 		this.innerContactWorkSignMap = innerContactWorkSignMap;
@@ -464,14 +447,12 @@ public class IMOApp extends Application {
 		imoStorage = IMOStorage.getInstance(this);
 		// 启动网络通信服务
 		// startService(new Intent(getApplicationContext(), AppService.class));
-		bindService(new Intent(getApplicationContext(), AppService.class),
-				null, Context.BIND_AUTO_CREATE);
+		bindService(new Intent(getApplicationContext(), AppService.class), null, Context.BIND_AUTO_CREATE);
 
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 		connectionChangeReceiver = new ConnectionChangeReceiver();
-		registerReceiver(connectionChangeReceiver, new IntentFilter(
-				ConnectivityManager.CONNECTIVITY_ACTION));
+		registerReceiver(connectionChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
 		// shutdownReceiver = new ShutdownReceiver();
 		// registerReceiver(shutdownReceiver, new
@@ -556,7 +537,7 @@ public class IMOApp extends Application {
 	 * 根据Activity的名称在列表中查找AbsBaseActivity
 	 * 
 	 * @param activityName
-	 *            AbsBaseActivity名称。
+	 *        AbsBaseActivity名称。
 	 * @return
 	 */
 	public Activity findActivityByName(String activityName) {
@@ -624,7 +605,7 @@ public class IMOApp extends Application {
 		closeAllActivity();
 		AppService.getService().reset();
 		IMOApp.getApp().resetGlobalData();
-		
+
 		DataEngine.getInstance().clearInQueue();
 		DataEngine.getInstance().clearSendQueue();
 		DataEngine.getInstance().clearTimeoutQueue();
@@ -636,16 +617,14 @@ public class IMOApp extends Application {
 	 * 注销失败提示
 	 */
 	public void showLogoutFailed() {
-		Toast.makeText(mLastActivity,
-				getResources().getString(R.string.logoutError), 1).show();
+		Toast.makeText(mLastActivity, getResources().getString(R.string.logoutError), 1).show();
 	}
 
 	/**
 	 * 网络中断,重新登录提示
 	 */
 	public void showLoadingFailed() {
-		Toast.makeText(mLastActivity,
-				getResources().getString(R.string.loadingError), 1).show();
+		Toast.makeText(mLastActivity, getResources().getString(R.string.loadingError), 1).show();
 	}
 
 	/**
@@ -654,8 +633,7 @@ public class IMOApp extends Application {
 	public void exitApp() {
 		setAppExit(true);
 
-		LogFactory.d("ExitApp", "mAbsBaseActivityList size = "
-				+ mAbsBaseActivityList.size());
+		LogFactory.d("ExitApp", "mAbsBaseActivityList size = " + mAbsBaseActivityList.size());
 		String TIME = "timexxx";
 		LogFactory.d(TIME, "Time-1:" + System.currentTimeMillis());
 		imoStorage.close();
@@ -690,8 +668,7 @@ public class IMOApp extends Application {
 		if (connectionChangeReceiver != null) {
 			try {
 				unregisterReceiver(connectionChangeReceiver);
-			} catch (Exception e) {
-			}
+			} catch (Exception e) {}
 		}
 		LogFactory.d(TIME, "Time6:" + System.currentTimeMillis());
 		android.os.Process.killProcess(android.os.Process.myPid());

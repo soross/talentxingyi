@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 import android.graphics.Bitmap;
 
-import com.imo.module.welcome.NewFeaturesActivity;
-import com.imo.network.net.EngineConst;
 import com.imo.network.packages.CorpMaskItem;
 import com.imo.network.packages.EmployeeProfileItem;
 import com.imo.util.CustomList;
@@ -49,14 +47,14 @@ public class Globe {
 	 * 缓存公司详细信息
 	 */
 	public static final HashMap<Integer, CorpMaskItem> corpMaskItems = new HashMap<Integer, CorpMaskItem>();
-	
+
 	/**
 	 * 控制什么时候连接到服务器
 	 */
 	public static boolean canConnect = false;
-	
+
 	public static CustomList customList = new CustomList(100);
-	
+
 	/**
 	 * 显示在屏幕上的Activity数量
 	 */
