@@ -12,31 +12,30 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
-
+ */
 package com.imo.network.Encrypt;
 
 /**
- * Thrown when a Decoder has encountered a failure condition during a decode. 
+ * Thrown when a Decoder has encountered a failure condition during a decode.
  * 
  * @author Apache Software Foundation
  * @version $Id: DecoderException.java,v 1.9 2004/02/29 04:08:31 tobrien Exp $
  */
 public class DecoderException extends Exception {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1315051953604789788L;
 
 	/**
-     * Creates a DecoderException
-     * 
-     * @param pMessage A message with meaning to a human
-     */
-    public DecoderException(String pMessage) {
-        super(pMessage);
-    }
+	 * Creates a DecoderException
+	 * 
+	 * @param pMessage
+	 *        A message with meaning to a human
+	 */
+	public DecoderException(String pMessage) {
+		super(pMessage);
+	}
 
-}  
-
+}
