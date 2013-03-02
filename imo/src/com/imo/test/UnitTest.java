@@ -9,15 +9,15 @@ public class UnitTest extends InstrumentationTestCase {
 
 	public void testSave() throws Throwable {
 		Log.v(Tag, "test the testSave");
-		
+
 		int i = 4 + 8;
 		Assert.assertEquals(5, i);
 	}
 
 	public void testSomethingElse() throws Throwable {
 		Log.v(Tag, "test the testSomethingElse");
-		
-		int i = 1+1;
+
+		int i = 1 + 1;
 		Assert.assertEquals(2, i);
 	}
 }

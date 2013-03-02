@@ -31,15 +31,9 @@ import android.os.PowerManager.WakeLock;
 import android.util.Log;
 
 /**
- * 日志服务，日志默认会存储在SDcar里如果没有SDcard会存储在内存中的安装目录下面; 
- * 1.本服务默认在SDcard中每天生成一个日志文件;
- * 2.如果有SDCard的话会将之前内存中的文件拷贝到SDCard中 ;
- * 3.如果没有SDCard，在安装目录下只保存当前在写日志;
- * 4.SDcard的装载卸载动作会在步骤2,3中切换 
- * 5.SDcard中的日志文件只保存7天;
- * 
- * @author dfsun
- * 
+ * 日志服务，日志默认会存储在SDcar里如果没有SDcard会存储在内存中的安装目录下面; 1.本服务默认在SDcard中每天生成一个日志文件;
+ * 2.如果有SDCard的话会将之前内存中的文件拷贝到SDCard中 ; 3.如果没有SDCard，在安装目录下只保存当前在写日志;
+ * 4.SDcard的装载卸载动作会在步骤2,3中切换 5.SDcard中的日志文件只保存7天;
  */
 public class LogService extends Service {
 	private static final String TAG = "LogService";
@@ -50,7 +44,7 @@ public class LogService extends Service {
 
 	private String LOG_PATH_MEMORY_DIR; // 日志文件在内存中的路径(日志文件在安装目录中的路径)
 	private String LOG_PATH_SDCARD_DIR; // 日志文件在sdcard中的路径
-	
+
 	@SuppressWarnings("unused")
 	private String LOG_SERVICE_LOG_PATH; // 本服务产生的日志，记录日志服务开启失败信息
 
@@ -150,7 +144,7 @@ public class LogService extends Service {
 
 		// 部署任务
 		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, sender);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, sender);
 		recordLogServiceLog("deployNextTask succ,next task time is:" + myLogSdf.format(calendar.getTime()));
 	}
 
@@ -271,7 +265,7 @@ public class LogService extends Service {
 		for (int i = 1; i < orgProcessList.size(); i++) {
 			String processInfo = orgProcessList.get(i);
 			String[] proStr = processInfo.split(" ");
-			
+
 			List<String> orgInfo = new ArrayList<String>();
 			for (String str : proStr) {
 				if (!"".equals(str)) {
@@ -338,7 +332,6 @@ public class LogService extends Service {
 		commandList.add("time");
 		commandList.add("*:I");
 
-
 		try {
 			process = Runtime.getRuntime().exec(commandList.toArray(new String[commandList.size()]));
 			recordLogServiceLog("start collecting the log,and log name is:" + logFileName);
@@ -393,7 +386,7 @@ public class LogService extends Service {
 		Intent intent = new Intent(MONITOR_LOG_SIZE_ACTION);
 		PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
 		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),MEMORY_LOG_FILE_MONITOR_INTERVAL, sender);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), MEMORY_LOG_FILE_MONITOR_INTERVAL, sender);
 		Log.d(TAG, "deployLogSizeMonitorTask() succ !");
 	}
 
