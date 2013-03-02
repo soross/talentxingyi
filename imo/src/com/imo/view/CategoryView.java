@@ -8,22 +8,17 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.imo.R;
 import com.imo.global.IMOApp;
 
-
 /**
  * 类别显示View
- * 
- * @author CaixiaoLong
- *
  */
 public class CategoryView extends LinearLayout {
-	
+
 	private TextView tv_category;
 	private TextView tv_category_time;
 
@@ -36,44 +31,40 @@ public class CategoryView extends LinearLayout {
 		super(context);
 		init(context);
 	}
-	
+
 	private void init(Context context) {
-		
+
 		getViewByInflater(context);
 	}
-	
-	private void getViewByInflater(Context context) {
-		
-	    LayoutInflater.from(context).inflate(R.layout.category_view, this, true);
 
-	    tv_category = (TextView) findViewById(R.id.tv_category);
-	    tv_category_time = (TextView) findViewById(R.id.tv_category_time);
-		
+	private void getViewByInflater(Context context) {
+
+		LayoutInflater.from(context).inflate(R.layout.category_view, this, true);
+
+		tv_category = (TextView) findViewById(R.id.tv_category);
+		tv_category_time = (TextView) findViewById(R.id.tv_category_time);
+
 	}
-	
-	
-	public String  getCategory(){
+
+	public String getCategory() {
 		return tv_category.getText().toString();
 	}
-	
-	
-	public void setCategoryText(String category){
-		
+
+	public void setCategoryText(String category) {
+
 		tv_category.setText(formatShowDate(category));
 	}
-	
-	
-	public void setCategoryTime(String time){
-		if (time!=null) {
+
+	public void setCategoryTime(String time) {
+		if (time != null) {
 			tv_category_time.setVisibility(View.VISIBLE);
 			tv_category_time.setText(time);
-		}else{
+		} else {
 			tv_category_time.setVisibility(View.GONE);
 		}
 	}
 
-	
-    /**
+	/**
 	 * 格式化最后需要显示的时间格式
 	 * 
 	 * @param date
@@ -86,8 +77,7 @@ public class CategoryView extends LinearLayout {
 
 		Format format = new SimpleDateFormat("yyyy-MM-dd");
 		String today = format.format(new Date(System.currentTimeMillis()));
-		String yesterday = format.format(new Date(System.currentTimeMillis()
-				- 24 * 60 * 60 * 1000L));
+		String yesterday = format.format(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000L));
 
 		if (date.equals(today)) {
 			showDate = IMOApp.getApp().getResources().getString(R.string.today);
@@ -102,5 +92,5 @@ public class CategoryView extends LinearLayout {
 
 		return showDate;
 	}
-	
+
 }
