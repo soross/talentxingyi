@@ -13,8 +13,7 @@ public class QgroupOffline {
 	public QgroupOffline() {
 	}
 
-	public QgroupOffline(int msg_id, int msgType, int host_cid, int host_uid,
-			int qgroupid, int query_groupid, String group_name, String text) {
+	public QgroupOffline(int msg_id, int msgType, int host_cid, int host_uid, int qgroupid, int query_groupid, String group_name, String text) {
 		super();
 		this.msg_id = msg_id;
 		this.msgType = msgType;
@@ -28,10 +27,7 @@ public class QgroupOffline {
 
 	@Override
 	public String toString() {
-		return "QgroupOffline [msg_id=" + msg_id + ", msgType=" + msgType
-				+ ", host_cid=" + host_cid + ", host_uid=" + host_uid
-				+ ", qgroupid=" + qgroupid + ", query_groupid=" + query_groupid
-				+ ", group_name=" + group_name + ", text=" + text + "]";
+		return "QgroupOffline [msg_id=" + msg_id + ", msgType=" + msgType + ", host_cid=" + host_cid + ", host_uid=" + host_uid + ", qgroupid=" + qgroupid + ", query_groupid=" + query_groupid + ", group_name=" + group_name + ", text=" + text + "]";
 	}
 
 	public int getMsg_id() {

@@ -1,15 +1,14 @@
 package com.imo.network.packages.domain;
 
 public class GroupOfflineMsg {
-	private int type ;
-	private int from_cid ;
-	private int from_uid ;
+	private int type;
+	private int from_cid;
+	private int from_uid;
 	private int time;
 	private int msgid;
 	private String msg;
-	
-	public GroupOfflineMsg(int type, int from_cid, int from_uid, int time,
-			int msgid, String msg) {
+
+	public GroupOfflineMsg(int type, int from_cid, int from_uid, int time, int msgid, String msg) {
 		super();
 		this.type = type;
 		this.from_cid = from_cid;
@@ -69,11 +68,7 @@ public class GroupOfflineMsg {
 
 	@Override
 	public String toString() {
-		return "GroupOfflineMsg [type=" + type + ", from_cid=" + from_cid
-				+ ", from_uid=" + from_uid + ", time=" + time + ", msgid="
-				+ msgid + ", msg=" + msg + "]";
+		return "GroupOfflineMsg [type=" + type + ", from_cid=" + from_cid + ", from_uid=" + from_uid + ", time=" + time + ", msgid=" + msgid + ", msg=" + msg + "]";
 	}
-	
-	
-			
+
 }

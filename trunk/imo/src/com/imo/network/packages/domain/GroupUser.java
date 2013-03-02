@@ -1,11 +1,11 @@
 package com.imo.network.packages.domain;
 
 public class GroupUser {
-	
+
 	private int cid;
 	private int uid;
 	private int status;
-	
+
 	public GroupUser(int cid, int uid) {
 		this.cid = cid;
 		this.uid = uid;
@@ -16,8 +16,7 @@ public class GroupUser {
 		this.uid = uid;
 		this.status = status;
 	}
-	
-	
+
 	public int getCid() {
 		return cid;
 	}
@@ -44,10 +43,7 @@ public class GroupUser {
 
 	@Override
 	public String toString() {
-		return "GroupUser [cid=" + cid + ", uid=" + uid + ", status=" + status
-				+ "]";
+		return "GroupUser [cid=" + cid + ", uid=" + uid + ", status=" + status + "]";
 	}
 
-	
-	
 }
