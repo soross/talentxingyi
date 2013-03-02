@@ -2,12 +2,9 @@ package com.imo.activity;
 
 /**
  * ActivityTag ¿‡
- * 
- * @author CaixiaoLong
- * 
  */
 public class ActivityTag {
-	
+
 	private final Class<?> mActivityCls;
 
 	private final String mId;
