@@ -11,8 +11,7 @@ public class OfflineQgroupChatMsg {
 	public OfflineQgroupChatMsg() {
 	}
 
-	public OfflineQgroupChatMsg(int type, int from_cid, int from_uid, int time,
-			int msgid, String msg) {
+	public OfflineQgroupChatMsg(int type, int from_cid, int from_uid, int time, int msgid, String msg) {
 		super();
 		this.type = type;
 		this.from_cid = from_cid;
@@ -24,9 +23,7 @@ public class OfflineQgroupChatMsg {
 
 	@Override
 	public String toString() {
-		return "OfflineQgroupChatMsg [type=" + type + ", from_cid=" + from_cid
-				+ ", from_uid=" + from_uid + ", time=" + time + ", msgid="
-				+ msgid + ", msg=" + msg + "]";
+		return "OfflineQgroupChatMsg [type=" + type + ", from_cid=" + from_cid + ", from_uid=" + from_uid + ", time=" + time + ", msgid=" + msgid + ", msg=" + msg + "]";
 	}
 
 	public int getType() {
