@@ -16,7 +16,7 @@ import android.view.Window;
  */
 public abstract class AbsBaseActivityGroup extends ActivityGroup {
 
-	private String TAG = "AbsBaseActivityGroup";
+	private static final String TAG = AbsBaseActivityGroup.class.getSimpleName();
 
 	protected Stack<View> mChildActivityStack = new Stack<View>();
 
@@ -137,7 +137,6 @@ public abstract class AbsBaseActivityGroup extends ActivityGroup {
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
-
 		getCurrentActivity().onWindowFocusChanged(hasFocus);
 	}
 
