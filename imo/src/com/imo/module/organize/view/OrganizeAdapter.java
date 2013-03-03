@@ -1,11 +1,8 @@
 package com.imo.module.organize.view;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +10,6 @@ import android.widget.BaseAdapter;
 
 import com.imo.R;
 import com.imo.global.IMOApp;
-import com.imo.module.contact.ContactActivity;
-import com.imo.module.organize.OrganizeActivity;
 import com.imo.module.organize.struct.Node;
 import com.imo.module.organize.struct.NodeData;
 import com.imo.module.organize.struct.NodeManager;
@@ -23,9 +18,6 @@ import com.imo.util.LogFactory;
 
 /**
  * 组织结构适配器
- * 
- * @author CaixiaoLong
- * 
  */
 public class OrganizeAdapter extends BaseAdapter {
 
@@ -36,10 +28,6 @@ public class OrganizeAdapter extends BaseAdapter {
 
 	private ArrayList<Node> allNodes = new ArrayList<Node>();
 	private ArrayList<Node> showNodes = new ArrayList<Node>();
-	private ArrayList<Node> searchResultNodes = new ArrayList<Node>();
-
-	// 更新部门下在线员工的统计数据 deptStateStatisticsMap
-	private HashMap<Integer, Integer> deptStateStatisticsMap = null;
 
 	private int selectedPos = -1;
 
@@ -58,45 +46,24 @@ public class OrganizeAdapter extends BaseAdapter {
 		for (int i = 0; i < IMOApp.getApp().deptid.length; i++) {
 
 		}
-
-	}
-
-	/**
-	 * 初步实现搜索功能
-	 * 
-	 * @param key
-	 *            搜索关键字
-	 */
-	private void search(String key) {
-		// 联系人或分支的搜索
-		for (int i = 0; i < allNodes.size(); i++) {
-			if (allNodes.get(i).toString().indexOf(key) >= 0) {
-				searchResultNodes.add(allNodes.get(i));
-			}
-		}
 	}
 
 	public void search(ArrayList<Integer> userId) {
-		for (int i = 0; i < allNodes.size(); i++) {
-			// if (allNodes.get(i)) {
-			//
-			// }
-
-		}
+		for (int i = 0; i < allNodes.size(); i++) {}
 	}
 
 	/**
 	 * 在构造方法中实现树的数据源适配
 	 * 
 	 * @param context
-	 *            上下文对象
+	 *        上下文对象
 	 * @param rootNode
-	 *            [数据结构的一棵树对象]
+	 *        [数据结构的一棵树对象]
 	 */
 	public OrganizeAdapter(Context context, Node rootNode) {
 		adapter = this;
 		this.mContext = context;
-		// initBg();
+
 		executeAdapter(rootNode);
 
 		showFirstData(rootNode);
@@ -105,10 +72,9 @@ public class OrganizeAdapter extends BaseAdapter {
 	public OrganizeAdapter(Context context, Node rootNode, Boolean isRoot) {
 		adapter = this;
 		this.mContext = context;
-		// initBg();
+
 		executeAdapter(rootNode);
 
-		// showFirstData(rootNode);
 		showRootData(rootNode);
 	}
 
@@ -130,27 +96,6 @@ public class OrganizeAdapter extends BaseAdapter {
 		this.selectedPos = pos;
 	}
 
-	// /**
-	// * 设置展开级别
-	// *
-	// * @param level
-	// */
-	// public void setExpandLevel(int level){
-	// showNodes.clear();
-	// for(int i=0;i<allNodes.size();i++){
-	// Node node = allNodes.get(i);
-	// if(node.getLevel() <= level){
-	// if(node.getLevel() < level){
-	// node.setNodeState(true);
-	// }else{
-	// node.setNodeState(false);
-	// }
-	// showNodes.add(node);
-	// }
-	// }
-	// adapter.notifyDataSetChanged();
-	// }
-
 	/**
 	 * 更新节点的状态
 	 * 
@@ -171,7 +116,7 @@ public class OrganizeAdapter extends BaseAdapter {
 	 * 执行树结构和ListView的适配 <br>
 	 * 
 	 * @param node
-	 *            节点对象
+	 *        节点对象
 	 */
 	private void executeAdapter(Node node) {
 
@@ -199,8 +144,7 @@ public class OrganizeAdapter extends BaseAdapter {
 
 		for (int i = 0; i < allNodes.size(); i++) {
 			Node node = allNodes.get(i);
-			if (!NodeManager.isParentCollapsed(node)
-					|| NodeManager.isRoot(node)) {
+			if (!NodeManager.isParentCollapsed(node) || NodeManager.isRoot(node)) {
 				if (node.isNeedShow()) {
 					showNodes.add(node);
 				}
@@ -244,15 +188,6 @@ public class OrganizeAdapter extends BaseAdapter {
 		return position;
 	}
 
-	// @Override
-	// public boolean isEnabled(int position) {
-	// if (getItem(position).getId() == EngineConst.uId) {
-	// return false;
-	// }else {
-	// return true;
-	// }
-	// }
-
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -286,41 +221,21 @@ public class OrganizeAdapter extends BaseAdapter {
 		} else {
 			view.isMySelfNode = false;
 		}
-		// ==================================
 
 		if (forContact) {
-			isInner = NodeManager.isParent(node, IMOApp.getApp().rootNodeInner)
-					|| (IMOApp.getApp().rootNodeInner == node);
+			isInner = NodeManager.isParent(node, IMOApp.getApp().rootNodeInner) || (IMOApp.getApp().rootNodeInner == node);
 		}
-		// if (forContact) {
-		// isInner = NodeManager.isParent(node,
-		// ContactActivity.getActivity().rootNodeInner)
-		// || (ContactActivity.getActivity().rootNodeInner == node);
-		// }
 
 		if (node != null) {
 			if (NodeManager.isLeaf(node) && !node.isDept()) {
 				view.builderViewByType(NodeView.TYPE_LEAF_NODE);
-				// view.setLNData(data,node.getOnLineState());////first time
 				Integer state = 0;
 				if (forContact) {
-
-					// isInner =
-					// NodeManager.isParent(node,ContactActivity.getActivity().rootNodeInner);
-
-					// if (isInner) {
-					// state = IMOApp.getApp().userStateMap.get(node.getId());
-					// }else{
-					// state =
-					// IMOApp.getApp().outerUserStateMap.get(node.getId());
-					// }
-
 					state = IMOApp.getApp().getUserStateByUid(node.getId());
 
 					if (state == null) {
 						state = 0;
-						LogFactory.d("Outer",
-								"..............Adapter outer state = null");
+						LogFactory.d("Outer", "..............Adapter outer state = null");
 					}
 
 					view.setLNData(data, state); // //Update User State Show
@@ -328,17 +243,15 @@ public class OrganizeAdapter extends BaseAdapter {
 				} else {
 					// / for Organize
 					if (null != IMOApp.getApp().userStateMap && IMOApp.getApp().userStateMap.containsKey(node.getId())) {
-						view.setLNData(data,
-								IMOApp.getApp().userStateMap.get(node.getId())); // //Update
-																					// User
-																					// State
-																					// Show
+						view.setLNData(data, IMOApp.getApp().userStateMap.get(node.getId())); // //Update
+																								// User
+																								// State
+																								// Show
 					}
 				}
 
-				// //部门下的第一个员工
-				if (position == 0
-						|| (position > 0 && getItem(position - 1).isDept())) {
+				// 部门下的第一个员工
+				if (position == 0 || (position > 0 && getItem(position - 1).isDept())) {
 					view.setBackgroundResource(R.drawable.leaf_node_first_bg);
 				} else {
 					view.setBackgroundResource(R.drawable.leaf_node_bg);
@@ -372,28 +285,13 @@ public class OrganizeAdapter extends BaseAdapter {
 																	// Data;
 				view.updateNodeState(node.getNodeState());
 
-				// view.setBackgroundDrawable(dept_bg);
-				// view.setLayoutParams(new
-				// LayoutParams(LayoutParams.FILL_PARENT, 68));
-
 				view.setBackgroundResource(R.drawable.dept_node_bg);// /imo_dept_gradual_bg)
 			}
-			// view.setPadding((node.getLevel())*20, 3,3, 3);
 		}
 
 		if (selectedPos == position) {
 			view.setBackgroundResource(R.drawable.leaf_selected);
 		}
-
-		// int height = (int)
-		// (mContext.getResources().getDimension(R.dimen.dept_node_height) *
-		// IMOApp.getApp().mScale);
-		// ViewGroup.LayoutParams params =
-		// (ViewGroup.LayoutParams)view.getLayoutParams();
-		// // params.width = (int) (width * IMOApp.getApp().mScale);
-		// params.height = height;
-		// view.setLayoutParams(params);
-
 		return view;
 	}
 
@@ -401,7 +299,7 @@ public class OrganizeAdapter extends BaseAdapter {
 	int onLineCount = 0;
 
 	private void getStatics(Node node) {
-		if(!node.isNeedShow())
+		if (!node.isNeedShow())
 			return;
 		for (int i = 0; i < node.getChildNodes().size(); i++) {
 
@@ -413,11 +311,7 @@ public class OrganizeAdapter extends BaseAdapter {
 
 			} else {
 				allCount++;
-				// LogFactory.d("Adapter", "User Node id = " +
-				// tempNode.getId());
-				if (IMOApp.getApp().userStateMap.get(tempNode.getId()) != null
-						&& IMOApp.getApp().userStateMap.get(tempNode.getId()) != 0) {
-					// if (tempNode.getOnLineState() != 0) {
+				if (IMOApp.getApp().userStateMap.get(tempNode.getId()) != null && IMOApp.getApp().userStateMap.get(tempNode.getId()) != 0) {
 					onLineCount++;
 				}
 			}
@@ -432,9 +326,7 @@ public class OrganizeAdapter extends BaseAdapter {
 
 			if (!tempNode.isDept() && tempNode.isNeedShow()) {
 				allCount++;
-				if (IMOApp.getApp().outerUserStateMap.get(tempNode.getId()) != null
-						&& IMOApp.getApp().outerUserStateMap.get(tempNode
-								.getId()) != 0 && tempNode.isNeedShow()) {
+				if (IMOApp.getApp().outerUserStateMap.get(tempNode.getId()) != null && IMOApp.getApp().outerUserStateMap.get(tempNode.getId()) != 0 && tempNode.isNeedShow()) {
 					onLineCount++;
 				}
 			} else {
@@ -442,67 +334,4 @@ public class OrganizeAdapter extends BaseAdapter {
 			}
 		}
 	}
-
-	// ==============================================================
-	// private LayerDrawable dept_bg = null;
-	// private LayerDrawable user_bg = null;
-	// private LayerDrawable first_user_bg = null;
-
-	// /**
-	// * 使用代码构建Bg
-	// */
-	// private void initBg(){
-	// int top = (int)
-	// (mContext.getResources().getDimension(R.dimen.dept_node_height) *
-	// IMOApp.getApp().mScale);
-	// Drawable[] drawableArray_dept = new Drawable[2];
-	// // Bitmap bm =
-	// BitmapFactory.decodeResource(mContext.getResources(),R.drawable.titlebar_bg);
-	// drawableArray_dept[0] =
-	// mContext.getResources().getDrawable(R.drawable.imo_dept_gradual_bg);
-	// drawableArray_dept[1] =
-	// mContext.getResources().getDrawable(R.drawable.dept_line0);
-	// // drawableArray[0] =
-	// mContext.getResources().getDrawable(R.drawable.imo_dept_gradual_bg);
-	// // drawableArray[1] =
-	// mContext.getResources().getDrawable(R.drawable.user_line1);
-	// // drawableArray[1] =
-	// mContext.getResources().getDrawable(R.drawable.user_line2);
-	// // drawableArray[0] = new PaintDrawable(11);
-	// // drawableArray[1] = new PaintDrawable(Color.WHITE);
-	// // drawableArray[2] = new BitmapDrawable(bm);
-	//
-	// dept_bg = new LayerDrawable(drawableArray_dept);
-	// dept_bg.setLayerInset(0, 0, 0, 0, 0);
-	// dept_bg.setLayerInset(1, 0, 0, 0, (top-1));
-	//
-	// Drawable[] drawableArray_user = new Drawable[3];
-	// drawableArray_user[0] =
-	// mContext.getResources().getDrawable(R.drawable.imo_user_gradient_bg);
-	// drawableArray_user[1] =
-	// mContext.getResources().getDrawable(R.drawable.user_line1);
-	// drawableArray_user[2] =
-	// mContext.getResources().getDrawable(R.drawable.user_line2);
-	// user_bg = new LayerDrawable(drawableArray_user);
-	// user_bg.setLayerInset(0, 0, 0, 0, 2);
-	// user_bg.setLayerInset(1, 0, (top-2), 0, 1);
-	// user_bg.setLayerInset(2, 0, (top-1), 0, 0);
-	// // imageView.setImageDrawable(ld);
-	// }
-
-	private void getStatics(Node node, int allCount, int onLineCount) {
-
-		for (int i = 0; i < node.getChildNodes().size(); i++) {
-			Node tempNode = node.getChildNodes().get(i);
-			if (!tempNode.isDept()) {
-				allCount++;
-				if (tempNode.getOnLineState() == 1) {
-					onLineCount++;
-				}
-			} else {
-				getStatics(tempNode, allCount, onLineCount);
-			}
-		}
-	}
-
 }
