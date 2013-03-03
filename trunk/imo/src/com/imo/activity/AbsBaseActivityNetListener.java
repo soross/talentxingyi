@@ -72,11 +72,10 @@ import com.imo.util.TimeOutHandle;
  * 2-实际逻辑事件中调用 super.mNIOThread.send 发请求包【包单独编写】 <br>
  * 3-NotifyPacketArrived方法中逻辑：【1）buffer--->obj 2)调用super.sendMessage(type,obj)】 <br>
  * 4-refresh方法中更新UI的数据操作， <br>
- * 
- * @author CaixiaoLong
- * 
  */
 public abstract class AbsBaseActivityNetListener extends AbsBaseActivity implements PacketsObserver {
+
+	private static final String TAG = AbsBaseActivityNetListener.class.getSimpleName();
 
 	/**
 	 * 数据请求UI更新的Type类型
@@ -108,8 +107,6 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 	protected TimeOutHandle mTimeOutHandle = null;
 	protected NIOThread mNIOThread = AppService.getService() != null ? AppService.getService().getNIOThreadInstance() : null;
 
-	// private TCPConnection tcpConnection = getTcpConnection();
-
 	protected TCPConnection getTcpConnection() {
 		return AppService.getService() != null ? AppService.getService().getTcpConnection() : null;
 	}
@@ -119,7 +116,6 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 		if (AppService.getService() != null) {
 			AppService.getService().reset();
 			mNIOThread = AppService.getService().getNIOThreadInstance();
-			// tcpConnection = AppService.getService().getTcpConnection();
 			getTcpConnection();
 		}
 
@@ -201,12 +197,6 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 	public void NotifyPacketArrived(String aConnectionId, short command) {
 		switch (command) {
 			case IMOCommand.IMO_SEND_MESSAGE: {
-				// if (!(mGlobal.mLastActivity instanceof FirstLoadingActivity
-				// ||
-				// mGlobal.mLastActivity instanceof NormalLoadingActivity)) {
-				// getChatMessage(command);
-				// }
-
 				LogFactory.e("NotifyPacketArrived", "" + command);
 				sendMessage(SEND_MESSAGE, command);
 				break;
@@ -356,10 +346,6 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 	}
 
 	private void reLogin(short command) {
-		// LogFactory.e("old TCPConnection Tag:", "" + tcpConnection.getId());
-		// tcpConnection = getTcpConnection();
-		// LogFactory.e("new TCPConnection Tag:", "" + tcpConnection.getId());
-
 		ReloginInPacket reloginInPacket = (ReloginInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		short ret = reloginInPacket.getRet();
 
@@ -499,9 +485,9 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 			// if ("DialogueActivity".equals(Functions.getCurrentActivity()))
 
 			// 增加接收到用户信息后的用户id缓存功能
-			if (!mGlobal.sendMsgUserId.contains(fromUid)) {
-				mGlobal.sendMsgUserId.add(fromUid);
-				System.out.println("当前增加的聊天用户id-------" + mGlobal.sendMsgUserId);
+			if (!IMOApp.sendMsgUserId.contains(fromUid)) {
+				IMOApp.sendMsgUserId.add(fromUid);
+				System.out.println("当前增加的聊天用户id-------" + IMOApp.sendMsgUserId);
 			}
 
 			if (mGlobal.mLastActivity instanceof DialogueActivity) {
@@ -521,15 +507,9 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 				return;
 			}
 
-			// 消息的声音和震动提示设计上，开始分为前后台，现在不分了。
-			// if (IMOApp.getApp().hasRunInBackground) {
-			//
-			// } else {
-			// Functions.msgNotification();
-			// }
 			Functions.msgNotification(); // 铃声振动
 
-			// /来消息的时候更新状态
+			// 来消息的时候更新状态
 			IMOApp.getApp().updateStateForGetMSG(fromUid);
 
 			// 通知界面显示
@@ -569,10 +549,6 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 		RecentContactInfo info = new RecentContactInfo(fromCid, fromUid, name, message, time, isRead == 0 ? 1 : 0, RecentContactInfo.NORMAL_TYPE);
 
 		try {
-			// RecentContactInfo temp_info = new
-			// RecentContactInfo(info.getCid(), info.getUid(), info.getName(),
-			// info.getInfo(), info.getTime(), info.getCount(),
-			// RecentContactInfo.NORMAL_TYPE);
 			IMOApp.imoStorage.updateRecentContact(info, info.getTime().split(" ")[0]);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -616,9 +592,6 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 
 				switch (msg.what) {
 					case FORCE_EXIT:
-						// mGlobal.destoryActivityFrom("LoginActivity");
-						// AppService.getService().reset();
-						// LoginActivity.launch(mContext);
 						EngineConst.isLoginSuccess = false;
 
 						DataEngine.getInstance().setLogicStatus(LOGICSTATUS.DISCONNECTED);
@@ -693,8 +666,8 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 					IMOApp.getApp().turn2LoginForLogout();
 					return;
 				}
-				// ==========头像变灰=============================
-				// /标识网络不可用
+				// ==========头像变灰=========
+				// 标识网络不可用
 				EngineConst.isNetworkValid = false;
 				Message failedMSG = new Message();
 				// failedMSG.obj = false;
@@ -757,17 +730,7 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 	 */
 	private void handleTimeOut(Message msg) {
 		short command = (Short) msg.obj;
-		// if (IMOApp.getApp().mLastActivity instanceof RecentContactActivity
-		// ||IMOApp.getApp().mLastActivity instanceof OrganizeActivity
-		// ||IMOApp.getApp().mLastActivity instanceof ContactActivity
-		// ||IMOApp.getApp().mLastActivity instanceof GroupActivity
-		// ){
-		// Toast.makeText(mContext, "数据请求超时！", Toast.LENGTH_SHORT).show();
-		// }else{
-		// mTimeOutHandle.showDialog(mContext);
-		// }
-
-		// /重登陆只有超时
+		// 重登陆只有超时
 		if (command == IMOCommand.IMO_GET_RELOGIN) {
 			// //再次打开失败接受大门
 			IMOApp.getApp().hasPackageFailed = false;
@@ -812,37 +775,6 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 		mTimeOutHandle.showDialog(mContext);
 	}
 
-	/*
-	 * protected Handler mFailedHandler = new Handler() { public void
-	 * handleMessage(Message msg) { IMOApp.getApp().showLoadingFailed();
-	 * EngineConst.isLoginSuccess = false;
-	 * IMOApp.getApp().turn2LoginForLogout(); //
-	 * if(IMOApp.getApp().mLastActivity instanceof FirstLoadingActivity) // { //
-	 * LoginActivity.launch(IMOApp.getApp().mLastActivity); //
-	 * IMOApp.getApp().mLastActivity.finish(); // } else
-	 * if(IMOApp.getApp().mLastActivity instanceof // NormalLoadingActivity) {
-	 * // LoginActivity.launch(IMOApp.getApp().mLastActivity); //
-	 * IMOApp.getApp().mLastActivity.finish(); // } }; };
-	 */
-
-	// private void initDialog() {
-	// absDialog = DialogFactory.alertDialog(mContext,
-	// resources.getString(R.string.warn),
-	// resources.getString(R.string.notifypacket_timeout),
-	// new String[] { resources.getString(R.string.ok) },
-	// new DialogInterface.OnClickListener() {
-	//
-	// @Override
-	// public void onClick(DialogInterface dialog,
-	// int which) {
-	// if (mContext instanceof LoginActivity) {
-	// AppService.getService().reset();
-	// LoginActivity.launch(mContext);
-	// }
-	// }
-	// });
-	// }
-
 	/**
 	 * 打开软件的时候发送CrashMSG信息
 	 */
@@ -882,37 +814,10 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 		}
 	}
 
-	// /* TCP Packet arrived **/
-	// @Override
-	// public void NotifyPacketArrived(String aConnectionId, short command){
-	//
-	// }
-	//
-	// /* HTTP Packet arrived **/
-	// @Override
-	// public void NotifyHttpPacketArrived(String aConnectionId, ByteBuffer
-	// aBuffer){
-	//
-	// }
-
-	// /* Packet progress **/
-	// @Override
-	// public void NotifyPacketProgress(String aConnectionId, short
-	// command,short aTotalLen,short aSendedLen){
-	//
-	// }
-
 	/* Packet Timeout * */
 	@Override
 	public void NotifyPacketTimeOut(String aConnectionId, short aErrorCode) {
 		LogFactory.e("Timeout", "timeout packet command = " + aErrorCode);
-		// if (aErrorCode == IMOCommand.IMO_GET_RELOGIN) {
-		// mGlobal.reLoginTimeOut = true;
-		// IMOApp.getApp().destoryActivityFrom("LoginActivity");
-		// AppService.getService().reset();
-		// LoginActivity.launch(mContext);
-		// return;
-		// }
 		sendMessage(NotifyPacketTimeOut, aErrorCode);
 	}
 
@@ -959,10 +864,6 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 
 	@Override
 	public void finish() {
-		// if (getTcpConnection() != null) {
-		// getTcpConnection().removeFromObserverList(this);
-		// }
-
 		IMOApp.getDataEngine().removeFromObserverList(this);
 
 		try {

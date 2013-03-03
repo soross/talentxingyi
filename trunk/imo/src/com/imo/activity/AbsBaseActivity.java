@@ -25,6 +25,8 @@ import com.imo.view.TitleBar;
  */
 public abstract class AbsBaseActivity extends Activity {
 
+	private static final String TAG = AbsBaseActivity.class.getSimpleName();
+
 	protected IMOApp mGlobal = IMOApp.getApp();
 
 	protected Context mContext;
@@ -32,10 +34,6 @@ public abstract class AbsBaseActivity extends Activity {
 	protected TitleBar mTitleBar;
 
 	protected BottomBar mBottomBar;
-
-	// protected Handler mParentHandler;
-
-	// protected Message msg;
 
 	protected Resources resources;
 
@@ -82,8 +80,6 @@ public abstract class AbsBaseActivity extends Activity {
 
 		initBaseData();
 
-		// handlerMessage();
-
 		installViews();
 
 		registerEvents();
@@ -95,7 +91,6 @@ public abstract class AbsBaseActivity extends Activity {
 	 */
 	protected void initConnection() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -129,17 +124,12 @@ public abstract class AbsBaseActivity extends Activity {
 	}
 
 	private void registerBottomBarEvent() {
-
-		// /init bottombar
 		mBottomBar.setBottomBar(bottomBarImgResId, bottomBarImgResIdSelected, new int[4]);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// if(needSendRecoverNotice()){
-		// NoticeManager.updateRecoverAppNotice(notificationManager);
-		// }
 	}
 
 	@Override
@@ -185,26 +175,6 @@ public abstract class AbsBaseActivity extends Activity {
 		mGlobal.clearAllNotice();
 	}
 
-	// protected void handlerMessage() {
-	// mParentHandler = new Handler() {
-	// @Override
-	// public void handleMessage(Message msg) {
-	// super.handleMessage(msg);
-	//
-	// refresh(msg);
-	// }
-	//
-	// };
-	//
-	// // msg = new Message();
-	// }
-
-	// protected void sendMessage(Object obj) {
-	// msg = new Message();
-	// msg.obj = obj;
-	// mParentHandler.sendMessage(msg);
-	// }
-
 	protected boolean needObserver() {
 		return true;
 	}
@@ -225,22 +195,6 @@ public abstract class AbsBaseActivity extends Activity {
 
 		return super.onKeyDown(keyCode, event);
 	}
-
-	//
-	// if (keyCode == KeyEvent.KEYCODE_MENU) {
-	//
-	// }
-	//
-	// if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-	//
-	// }
-	//
-	// if (keyCode == KeyEvent.KEYCODE_SEARCH) {
-	//
-	// }
-	//
-	// return super.onKeyDown(keyCode, event);
-	// }
 
 	protected abstract void installViews();
 
