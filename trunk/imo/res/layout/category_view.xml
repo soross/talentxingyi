@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#eeeeee"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/recent_contact_category_height"
+        android:background="#eeeeee"
+        android:orientation="horizontal" >
+
+        <!--
+  23 
+  #666666
+   paddingleft 15px
+        -->
+        <TextView
+            android:id="@+id/tv_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/recent_contact_category_paddingleft"
+            android:text="2012-04-01"
+            android:textColor="#666666"
+            android:textSize="@dimen/recent_contact_category_fontsize" />
+        
+        <TextView
+            android:id="@+id/tv_category_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/tv_category"
+            android:text="2012-04-01"
+            android:textColor="#c5c5c5"
+            android:layout_marginRight="@dimen/titlebar_btn_marginleft" 
+            android:textSize="@dimen/recent_contact_time_fontsize" />
+    </RelativeLayout>
+
+    <!--android:layout_height="@dimen/middle_divider_height"  -->
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2px"
+        android:layout_gravity="bottom"
+        android:background="@drawable/middle_title_divider_line" />
+
+</LinearLayout>

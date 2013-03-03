@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:imo="http://schemas.android.com/apk/res/com.imo"
+   android:background="@color/default_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- 顶部信息 -->
+   <include layout="@layout/middle_userconfig"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/recent_contact_face_marginleft"
+        android:paddingRight="@dimen/recent_contact_face_marginleft" >
+
+<!--         <com.imo.view.SettingItemView
+            android:id="@+id/edit_work_sign"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/setting_item_margintop"
+            android:background="@drawable/item_default_bg"
+            imo:itemText="@string/edit_work_sign"
+            imo:leftsrc="@drawable/icon_edit_work_sign"
+            imo:rightsrc="@drawable/icon_triangle_small" 
+            android:focusable="false">
+        </com.imo.view.SettingItemView> -->
+
+        <com.imo.view.SettingItemView
+            android:id="@+id/my_profile"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/setting_item_margintop"
+            android:background="@drawable/item_default_bg"
+            imo:itemText="@string/my_profile"
+            imo:leftsrc="@drawable/icon_my_profile"
+            imo:rightsrc="@drawable/icon_triangle_small" 
+            android:focusable="false">
+        </com.imo.view.SettingItemView>
+
+        <com.imo.view.SettingItemView
+            android:id="@+id/system_config"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/setting_item_margintop"
+            android:background="@drawable/item_default_bg"
+            imo:itemText="@string/system_setting"
+            imo:leftsrc="@drawable/icon_system_config"
+            imo:rightsrc="@drawable/icon_triangle_small" 
+            android:focusable="false">
+        </com.imo.view.SettingItemView>
+    </LinearLayout>
+
+</LinearLayout>

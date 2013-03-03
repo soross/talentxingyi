@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:imo="http://schemas.android.com/apk/res/com.imo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_bg"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="20dip" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/recent_contact_face_marginleft"
+            android:paddingRight="@dimen/recent_contact_face_marginleft" >
+
+            <com.imo.view.SettingItemView
+                android:id="@+id/notice_setting"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/item_top_bg"
+                imo:hasRightCheckbox="true"
+                imo:itemText="@string/notice_setting" >
+            </com.imo.view.SettingItemView>
+
+            <com.imo.view.SettingItemView
+                android:id="@+id/sound_prompt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_middle_bg"
+                imo:hasRightCheckbox="true"
+                imo:itemText="@string/sound_prompt" >
+            </com.imo.view.SettingItemView>
+
+            <com.imo.view.SettingItemView
+                android:id="@+id/vibrate_prompt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_bottom_bg"
+                imo:hasRightCheckbox="true"
+                imo:itemText="@string/vibrate_prompt" >
+            </com.imo.view.SettingItemView>
+
+            <!-- imo:rightsrc="@drawable/toggle_open" -->
+
+            <com.imo.view.SettingItemView
+                android:id="@+id/state_setting"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/item_default_bg"
+                imo:itemText="@string/state_setting"
+                imo:rightsrc="@drawable/icon_triangle_small"
+                android:visibility="gone" >
+            </com.imo.view.SettingItemView>
+
+            <com.imo.view.SettingItemView
+                android:id="@+id/new_features"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/item_top_bg"
+                imo:itemText="@string/new_features"
+                imo:rightsrc="@drawable/icon_triangle_small" >
+            </com.imo.view.SettingItemView>
+
+            <com.imo.view.SettingItemView
+                android:id="@+id/about_app"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_bottom_bg"
+                imo:itemText="@string/about_app"
+                imo:rightsrc="@drawable/icon_triangle_small" >
+            </com.imo.view.SettingItemView>
+
+            <com.imo.view.SettingItemView
+                android:id="@+id/app_update"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/item_default_bg"
+                imo:itemCenterText="@string/app_update" >
+            </com.imo.view.SettingItemView>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

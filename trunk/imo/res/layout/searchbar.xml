@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="@dimen/searchbar_height_out"
+	android:gravity="center_vertical"
+	android:background="@drawable/imo_searchbar_gradual_bg">
+
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/searchbar_height_in"
+		android:layout_gravity="center_vertical"
+		android:background="@drawable/searchbar_frame"
+		android:layout_marginLeft="@dimen/searchbar_border_padding"
+		android:layout_marginRight="@dimen/searchbar_border_padding">
+
+		<ImageView
+			android:id="@+id/iv_search"
+			android:layout_width="@dimen/searchbar_icon_width"
+			android:layout_height="@dimen/searchbar_icon_width"
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true"
+			android:layout_marginLeft="@dimen/searchbar_icon_paddingleft"
+			android:src="@drawable/search"
+			android:visibility="visible"  />
+
+		<!--5dip
+		
+		  -->
+		<EditText
+			android:id="@+id/et_key"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_toRightOf="@+id/iv_search"
+			android:layout_toLeftOf="@+id/btn_delete"
+			android:background="@null"
+			android:focusableInTouchMode="true"
+			android:hint="@string/search_hint"
+			android:paddingLeft="@dimen/searchbar_content_padding_left"
+			android:singleLine="true"
+			android:cursorVisible="false"
+			android:textColor="@color/search_key_font_color"
+			android:textColorHint="@color/search_key_hint_font_color"
+			android:textSize="@dimen/searchbar_key_font_size">
+
+			<!-- <requestFocus /> -->
+		</EditText>
+
+		<Button
+			android:id="@+id/btn_delete"
+			android:layout_width="@dimen/searchbar_delete_width"
+			android:layout_height="@dimen/searchbar_delete_width"
+			android:layout_marginRight="5dip"
+			android:background="@drawable/iv_search_delete"
+			android:layout_centerVertical="true"
+			android:layout_alignParentRight="true" 
+			android:visibility="gone"
+			/>
+	</RelativeLayout>
+
+</LinearLayout>

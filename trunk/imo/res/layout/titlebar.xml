@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/titlebar_height"
+    android:background="@drawable/imo_titlebar_gradual_bg" >
+
+    <!-- 组织结构 和  联系人 使用 -->
+
+    <RelativeLayout
+        android:id="@+id/special_layout"
+        style="@style/layout_default_style"
+        android:gravity="center_vertical"
+        android:visibility="gone" >
+
+        <FrameLayout
+            android:id="@+id/face_frame"
+            android:layout_width="@dimen/titlebar_face_frame_height"
+            android:layout_height="@dimen/titlebar_face_frame_height"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/titlebar_face_margin_left" >
+
+            <ImageView
+                android:id="@+id/iv_face"
+                android:layout_width="@dimen/titlebar_face_height"
+                android:layout_height="@dimen/titlebar_face_height"
+                android:layout_gravity="center"
+                android:layout_margin="1px"
+                android:scaleType="fitXY"
+                android:src="@drawable/imo_default_face" />
+
+            <ImageView
+                android:id="@+id/iv_face_frame"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/imo_titlebar_face_board" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignBottom="@+id/face_frame"
+            android:layout_alignTop="@+id/face_frame"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="2px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="2px"
+            android:layout_toRightOf="@+id/face_frame"
+            android:orientation="vertical"
+            android:weightSum="2.0" >
+
+            <LinearLayout
+                android:id="@+id/state_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="0dip"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="2.0"
+                android:background="@drawable/imo_titlebar_state_bg"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="horizontal"
+                android:paddingRight="10px" >
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:maxEms="10"
+                    android:singleLine="true"
+                    android:textColor="@color/titlebar_name_color"
+                    android:textSize="@dimen/titlebar_name_fontsize" />
+
+                <ImageView
+                    android:id="@+id/iv_state"
+                    android:layout_width="@dimen/titlebar_state_height"
+                    android:layout_height="@dimen/titlebar_state_height"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="7dp"
+                    android:src="@drawable/state_online" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/line2"
+                android:layout_width="fill_parent"
+                android:layout_height="0dip"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/tv_worksign"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="@color/titlebar_worksign_color"
+                    android:textColorHint="@color/titlebar_worksign_color"
+                    android:textSize="@dimen/titlebar_worksign_fontsize" />
+            </LinearLayout>
+            <!-- android:hint="@string/default_sign" -->
+        </LinearLayout>
+
+	<RelativeLayout
+		android:id="@+id/btn_system_set"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:layout_width="@dimen/user_node_triangle_layout_width"
+		android:layout_height="fill_parent"
+		android:paddingRight="@dimen/user_node_triangle_margin_right">
+		<ImageView
+		    android:id="@+id/btn_system_set_img"
+			android:layout_width="@dimen/user_node_triangle_width"
+			android:layout_height="@dimen/user_node_triangle_height"
+			android:src="@drawable/system_set_btn_nor" 
+			android:layout_centerVertical="true"
+			android:layout_alignParentRight="true"/>
+	</RelativeLayout>
+    </RelativeLayout>
+
+    <!-- 带按钮 文版的标题栏 -->
+
+    <include layout="@layout/titlebar_default" />
+
+</LinearLayout>

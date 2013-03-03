@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/background"
+    android:id="@+id/dialogue"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ECF9FF"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp" >
+
+        <Button
+            android:id="@+id/ib_findHistory"
+            android:layout_alignParentLeft="true"
+            android:layout_width="140dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/find_log_bg" />
+
+        <Button
+            android:id="@+id/ib_call"
+            android:layout_toLeftOf="@+id/ib_short_message"
+            android:layout_width="60dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/do_call_btn"
+            android:enabled="false" />
+        <Button
+            android:id="@+id/ib_short_message"
+            android:layout_alignParentRight="true"
+            android:layout_width="60dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/send_short_message_btn"
+            android:enabled="false" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lv_dialogueList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#ECF9FF"
+        android:cacheColorHint="@null"
+        android:divider="@null"
+        android:transcriptMode="alwaysScroll"
+        android:dividerHeight="0dp"
+        android:listSelector="#ECF9FF" >
+    </ListView>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#598CBB"
+        android:padding="5dp" 
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/btn_getPic"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/get_emotion"
+            android:paddingRight="5dp" 
+            android:layout_marginRight="5dp"/>
+
+        <ImageView
+            android:id="@+id/btn_send"
+            android:layout_width="40dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+             android:src="@drawable/dialogue_send"
+           />
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <EditText
+            android:id="@+id/et_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/btn_send"
+            android:layout_toRightOf="@id/btn_getPic"
+            android:minHeight="35dp"
+            android:maxHeight="40dp"
+            android:paddingLeft="5dp"
+            android:background="@drawable/dialogue_round_editview" />
+    </RelativeLayout>
+
+</LinearLayout>
