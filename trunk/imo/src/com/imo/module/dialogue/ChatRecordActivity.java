@@ -65,8 +65,7 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 		chat_last = (ImageView) findViewById(R.id.iv_chat_last);
 		chat_delete = (ImageView) findViewById(R.id.iv_chat_delete);
 		chat_record_List = (ListView) findViewById(R.id.lv_chat_record_List);
-		dialogueListAdapter = new DialogueListAdapter(this, message_list,
-				R.layout.dialogue_list_iteml, null, null);
+		dialogueListAdapter = new DialogueListAdapter(this, message_list, R.layout.dialogue_list_iteml, null, null);
 		chat_record_List.setAdapter(dialogueListAdapter);
 		try {
 			sum = IMOApp.imoStorage.getMessageSum(aboutUid);
@@ -99,8 +98,7 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 		IMOApp.imoStorage.updateMessage(aboutUid);
 		getMessage(aboutUid, currentIndex, capacity);
 
-		LogFactory.d(TAG, "sum:" + sum + "  currentIndex:" + currentIndex
-				+ "  CurrentPage:" + getCurrentPage());
+		LogFactory.d(TAG, "sum:" + sum + "  currentIndex:" + currentIndex + "  CurrentPage:" + getCurrentPage());
 
 	}
 
@@ -143,27 +141,23 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 			byte[] b_about_head = null;
 			try {
 				b_about_head = IOUtil.readFile("HeadPic" + aboutUid, this);
-			} catch (Exception e) {
-			}
+			} catch (Exception e) {}
 			if (b_about_head != null && b_about_head.length > 0) {
 				// Bitmap bitmap = BitmapFactory.decodeByteArray(b_about_head,
 				// 0,
 				// b_about_head.length);
 				// about_head = new BitmapDrawable(bitmap);
-				about_head = BitmapFactory.decodeByteArray(b_about_head, 0,
-						b_about_head.length);
+				about_head = BitmapFactory.decodeByteArray(b_about_head, 0, b_about_head.length);
 				return;
 			}
 			if (aboutSex) {
 				// about_head = getResources().getDrawable(
 				// R.drawable.imo_default_face_boy);
-				about_head = BitmapFactory.decodeResource(getResources(),
-						R.drawable.imo_default_face_boy);
+				about_head = BitmapFactory.decodeResource(getResources(), R.drawable.imo_default_face_boy);
 			} else {
 				// about_head = getResources().getDrawable(
 				// R.drawable.imo_default_face_girl);
-				about_head = BitmapFactory.decodeResource(getResources(),
-						R.drawable.imo_default_face_girl);
+				about_head = BitmapFactory.decodeResource(getResources(), R.drawable.imo_default_face_girl);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -178,9 +172,7 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 		try {
 			messageInfos = IMOApp.imoStorage.getMessage(uId, index, count);
 			for (MessageInfo messageInfo : messageInfos) {
-				show_message = MessageDataFilter
-						.jsonToCharSequence(new JSONObject(messageInfo
-								.getText()));
+				show_message = MessageDataFilter.jsonToCharSequence(new JSONObject(messageInfo.getText()));
 				map = new HashMap<String, Object>();
 				map.put("time", messageInfo.getTime());
 				map.put("date", messageInfo.getDate());
@@ -206,8 +198,7 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 	@Override
 	protected void registerEvents() {
 
-		mTitleBar.initDefaultTitleBar(resources.getString(R.string.back),
-				aboutName, null);
+		mTitleBar.initDefaultTitleBar(resources.getString(R.string.back), aboutName, null);
 
 		mTitleBar.setLeftBtnListene(new View.OnClickListener() {
 
@@ -217,8 +208,7 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 			}
 		});
 
-		mTitleBar.updateCenterInfo("记录（" + getCurrentPage() + "/"
-				+ getSumPages() + "）");
+		mTitleBar.updateCenterInfo("记录（" + getCurrentPage() + "/" + getSumPages() + "）");
 
 		chat_first.setOnClickListener(new OnClickListener() {
 
@@ -226,14 +216,12 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 			public void onClick(View arg0) {
 				currentIndex = 0;
 				getMessage(aboutUid, currentIndex, capacity);
-				mTitleBar.updateCenterInfo("记录（" + getCurrentPage() + "/"
-						+ getSumPages() + "）");
+				mTitleBar.updateCenterInfo("记录（" + getCurrentPage() + "/" + getSumPages() + "）");
 				chat_back.setEnabled(false);
 				chat_first.setEnabled(false);
 				chat_last.setEnabled(true);
 				chat_next.setEnabled(true);
-				LogFactory.d(TAG, "sum:" + sum + "  currentIndex:"
-						+ currentIndex + "  CurrentPage:" + getCurrentPage());
+				LogFactory.d(TAG, "sum:" + sum + "  currentIndex:" + currentIndex + "  CurrentPage:" + getCurrentPage());
 			}
 		});
 		chat_back.setOnClickListener(new OnClickListener() {
@@ -254,10 +242,8 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 					chat_next.setEnabled(true);
 				}
 				getMessage(aboutUid, currentIndex, capacity);
-				mTitleBar.updateCenterInfo("记录（" + getCurrentPage() + "/"
-						+ getSumPages() + "）");
-				LogFactory.d(TAG, "sum:" + sum + "  currentIndex:"
-						+ currentIndex + "  CurrentPage:" + getCurrentPage());
+				mTitleBar.updateCenterInfo("记录（" + getCurrentPage() + "/" + getSumPages() + "）");
+				LogFactory.d(TAG, "sum:" + sum + "  currentIndex:" + currentIndex + "  CurrentPage:" + getCurrentPage());
 			}
 		});
 		chat_next.setOnClickListener(new OnClickListener() {
@@ -280,10 +266,8 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 					chat_next.setEnabled(true);
 				}
 				getMessage(aboutUid, currentIndex, capacity);
-				mTitleBar.updateCenterInfo("记录（" + getCurrentPage() + "/"
-						+ getSumPages() + "）");
-				LogFactory.d(TAG, "sum:" + sum + "  currentIndex:"
-						+ currentIndex + "  CurrentPage:" + getCurrentPage());
+				mTitleBar.updateCenterInfo("记录（" + getCurrentPage() + "/" + getSumPages() + "）");
+				LogFactory.d(TAG, "sum:" + sum + "  currentIndex:" + currentIndex + "  CurrentPage:" + getCurrentPage());
 			}
 		});
 		chat_last.setOnClickListener(new OnClickListener() {
@@ -300,10 +284,8 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 				chat_first.setEnabled(true);
 				chat_last.setEnabled(false);
 				chat_next.setEnabled(false);
-				mTitleBar.updateCenterInfo("记录（" + getCurrentPage() + "/"
-						+ getSumPages() + "）");
-				LogFactory.d(TAG, "sum:" + sum + "  currentIndex:"
-						+ currentIndex + "  CurrentPage:" + getCurrentPage());
+				mTitleBar.updateCenterInfo("记录（" + getCurrentPage() + "/" + getSumPages() + "）");
+				LogFactory.d(TAG, "sum:" + sum + "  currentIndex:" + currentIndex + "  CurrentPage:" + getCurrentPage());
 			}
 		});
 		chat_delete.setOnClickListener(new OnClickListener() {
@@ -314,40 +296,38 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 					public void onClick(DialogInterface arg0, int arg1) {
 
 						switch (arg1) {
-						case DialogInterface.BUTTON1:// 删除数据
-						{
-							try {
-								IMOApp.imoStorage.deleteMessage(aboutUid);
-								RecentContactActivity.getActivity()
-										.deleteRecentUser(aboutUid);
-							} catch (Exception e) {
-								e.printStackTrace();
+							case DialogInterface.BUTTON1:// 删除数据
+							{
+								try {
+									IMOApp.imoStorage.deleteMessage(aboutUid);
+									RecentContactActivity.getActivity().deleteRecentUser(aboutUid);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								chat_delete.setEnabled(false);
+								chat_first.setEnabled(false);
+								chat_back.setEnabled(false);
+								chat_next.setEnabled(false);
+								chat_last.setEnabled(false);
+								message_list.clear();
+								dialogueListAdapter.notifyDataSetChanged();
+								mTitleBar.updateCenterInfo("记录（" + 1 + "/" + 1 + "）");
+								break;
 							}
-							chat_delete.setEnabled(false);
-							chat_first.setEnabled(false);
-							chat_back.setEnabled(false);
-							chat_next.setEnabled(false);
-							chat_last.setEnabled(false);
-							message_list.clear();
-							dialogueListAdapter.notifyDataSetChanged();
-							mTitleBar.updateCenterInfo("记录（" + 1 + "/" + 1
-									+ "）");
-							break;
-						}
-						case DialogInterface.BUTTON2:// 取消
+							case DialogInterface.BUTTON2:// 取消
 
-							break;
+								break;
 
-						default:
-							break;
+							default:
+								break;
 						}
 						dialog.dismiss();
 					}
 
 				};
-				dialog = DialogFactory.alertDialog(mContext, "imo提示",
-						"确认删除该联系人的历史记录？", new String[] { "删除", "取消" },
-						tempListener, tempListener);
+				dialog = DialogFactory.alertDialog(mContext, "imo提示", "确认删除该联系人的历史记录？", new String[] {
+						"删除", "取消"
+				}, tempListener, tempListener);
 				dialog.show();
 
 			}

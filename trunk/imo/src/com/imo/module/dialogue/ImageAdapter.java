@@ -40,14 +40,9 @@ public class ImageAdapter extends BaseAdapter {
 		ImageView imageview;
 		if (convertView == null) {
 			imageview = new ImageView(mContext);
-			imageview.setLayoutParams(new GridView.LayoutParams(
-					(int) (64 * IMOApp.getApp().mScale), (int) (64 * IMOApp
-							.getApp().mScale)));
+			imageview.setLayoutParams(new GridView.LayoutParams((int) (64 * IMOApp.getApp().mScale), (int) (64 * IMOApp.getApp().mScale)));
 			imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			imageview.setPadding((int) (15 * IMOApp.getApp().mScale),
-					(int) (15 * IMOApp.getApp().mScale),
-					(int) (15 * IMOApp.getApp().mScale),
-					(int) (15 * IMOApp.getApp().mScale));
+			imageview.setPadding((int) (15 * IMOApp.getApp().mScale), (int) (15 * IMOApp.getApp().mScale), (int) (15 * IMOApp.getApp().mScale), (int) (15 * IMOApp.getApp().mScale));
 		} else {
 			imageview = (ImageView) convertView;
 		}
