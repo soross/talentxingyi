@@ -6,22 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
 import com.imo.R;
-import com.imo.activity.AbsBaseActivityNetListener;
-import com.imo.global.AppService;
 import com.imo.global.Globe;
 import com.imo.global.IMOApp;
 import com.imo.module.config.SystemSetActivity;
@@ -29,10 +25,7 @@ import com.imo.module.contact.ContactActivity;
 import com.imo.module.dialogue.recent.RecentContactActivity;
 import com.imo.module.group.GroupActivity;
 import com.imo.module.organize.OrganizeActivity;
-import com.imo.module.welcome.WelcomeActivity;
-import com.imo.network.net.EngineConst;
 import com.imo.util.DialogFactory;
-import com.imo.util.Functions;
 import com.imo.util.LogFactory;
 import com.imo.util.NoticeManager;
 import com.imo.util.PreferenceManager;
@@ -40,9 +33,6 @@ import com.imo.view.BottomBar;
 
 /**
  * MainActivityGroup
- * 
- * @author CaixiaoLong
- * 
  */
 public class MainActivityGroup extends TabActivity {
 
@@ -119,17 +109,7 @@ public class MainActivityGroup extends TabActivity {
 	public static void launch(Context c) {
 		Intent intent = new Intent(c, MainActivityGroup.class);
 		c.startActivity(intent);
-		// ((Activity) c).finish();
-		// c=null;
-		// System.gc();
 	}
-
-	// public static MainActivityGroup instance = null;
-	//
-	// public static MainActivityGroup getActivityGroup(){
-	//
-	// return instance;
-	// }
 
 	public static MainActivityGroup getActivityGroup() {
 		return activityGroup;
@@ -252,7 +232,7 @@ public class MainActivityGroup extends TabActivity {
 			}
 		});
 
-		// //默认进入组织结构界面
+		// 默认进入组织结构界面
 		mBottomBar.setCurPos(1);
 		tabHost.setCurrentTabByTag(generalTag(1));
 	}
@@ -269,8 +249,6 @@ public class MainActivityGroup extends TabActivity {
 	 */
 	private void addNewTabSpec(String tag, CharSequence label, Class<?> cls) {
 		Intent intent = new Intent(this, cls);
-		// intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		TabSpec tabSpec = tabHost.newTabSpec(tag).setIndicator(label).setContent(intent);
 
 		if (tabHost != null)
@@ -304,17 +282,6 @@ public class MainActivityGroup extends TabActivity {
 		if (keyCode == KeyEvent.KEYCODE_SEARCH) {
 
 		}
-
-		// return super.onKeyDown(keyCode, event);
-
-		// if(keyCode==KeyEvent.KEYCODE_MENU) {
-		// this.getLocalActivityManager().getCurrentActivity().openOptionsMenu();
-		// }else if(keyCode == KeyEvent.KEYCODE_BACK){
-		// DialogFactory.promptExit(this.getLocalActivityManager().getCurrentActivity()).show();
-		// return true;
-		// }
-		//
-		// return super.onKeyDown(keyCode, event);
 		return true;
 	}
 

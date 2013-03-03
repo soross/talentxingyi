@@ -25,9 +25,6 @@ import com.imo.view.CustomFlipper;
 
 /**
  * 新功能介绍界面
- * 
- * @author CaixiaoLong
- *
  */
 public class NewFeaturesActivity extends AbsBaseActivityNetListener {
 	
@@ -118,38 +115,7 @@ public class NewFeaturesActivity extends AbsBaseActivityNetListener {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		
 		detector.onTouchEvent(event);
-//		LogFactory.d(TAG ,"px------->" + event.getY());
-//		LogFactory.d(TAG ,"px---cha---->" + (mScreenHeight - event.getY()));
-		
-//		if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP ) {   
-////			LogFactory.d(TAG ,"px---cha---->" + (mScreenHeight - event.getY()));
-//			if (flipper.getDisplayedChild() == 3 ) {
-//				if (isNormalScreen) {
-//					if ((mScreenHeight - event.getY()) < 180 && (mScreenHeight- event.getY())>90 ){
-//						GuideActivity.this.finish();
-//						return true;
-//					} 
-//				}else {
-//					if ((mScreenHeight - event.getY()) < 85 && (mScreenHeight- event.getY())>40 ){
-////						LogFactory.d(TAG ,"UserGuideActivity finish.................Small Screen");
-//						GuideActivity.this.finish();
-//						return true;
-//					} 
-//				}
-//				
-//			}
-//		}
-//		 if (event.getAction() == MotionEvent.ACTION_DOWN) {   
-//	            Log.v("Touch", "ACTION_DOWN");   
-//	        } else if (event.getAction() == MotionEvent.ACTION_UP) {   
-//	            Log.v("Touch", "ACTION_UP");   
-//	        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {   
-//	            Log.v("Touch", "ACTION_MOVE");   
-//	        }   
-
-//		return (super.onTouchEvent(event));
 		return true;
 	}
 	
