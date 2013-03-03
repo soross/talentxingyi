@@ -2,9 +2,7 @@ package com.imo.global;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 
 import com.imo.network.Log.CustomExceptionHandler;
 import com.imo.network.net.EngineConst;
@@ -15,11 +13,10 @@ import com.imo.util.LogFactory;
 /**
  * 保持网络通信线程较高的优先级别 <br>
  * 在服务中启动网络通信线程
- * 
- * @author CaixiaoLong
- * 
  */
 public class AppService extends Service {
+
+	private static final String TAG = AppService.class.getSimpleName();
 
 	public static AppService appService = null;
 
@@ -51,13 +48,13 @@ public class AppService extends Service {
 
 	public TCPConnection getTcpConnection() {
 		synchronized (lock_getTcpConnection) {
+			LogFactory.d(TAG, "tcpConnection == null:" + (tcpConnection == null) + ",Globe.canConnect:" + Globe.canConnect);
 			if (tcpConnection == null && Globe.canConnect) {
 				if (nioThreadInstance == null) {
 					nioThreadInstance = new NIOThread();
 				}
-				tcpConnection = 
-						(TCPConnection) nioThreadInstance
-						.newTCPConnection(EngineConst.IMO_CONNECTION_ID,EngineConst.IMO_SERVER_ADDRESS, true);
+				LogFactory.d(TAG, "EngineConst.IMO_CONNECTION_ID:" + EngineConst.IMO_CONNECTION_ID + ",EngineConst.IMO_SERVER_ADDRESS:" + EngineConst.IMO_SERVER_ADDRESS);
+				tcpConnection = (TCPConnection) nioThreadInstance.newTCPConnection(EngineConst.IMO_CONNECTION_ID, EngineConst.IMO_SERVER_ADDRESS, true);
 			}
 			return tcpConnection;
 		}
@@ -106,7 +103,7 @@ public class AppService extends Service {
 	public void reset() {
 		synchronized (lock_reset) {
 			if (nioThreadInstance != null) {
-				nioThreadInstance.release(EngineConst.IMO_CONNECTION_ID,true);
+				nioThreadInstance.release(EngineConst.IMO_CONNECTION_ID, true);
 				nioThreadInstance.dispose();
 				nioThreadInstance = null;
 				tcpConnection = null;
