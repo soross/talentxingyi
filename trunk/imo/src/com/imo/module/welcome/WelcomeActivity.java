@@ -300,8 +300,6 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 			LoginActivity.launch(this);
 			dialog.dismiss();
 			finish();
-			// dialog = DialogFactory.netErrorDialog(mContext);
-			// dialog.show();
 			return;
 		}
 
