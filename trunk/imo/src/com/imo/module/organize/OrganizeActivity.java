@@ -126,9 +126,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		mTitleBar.initOrganizeTitlebar();
 
-		mTitleBar.setOrganizeTitleData(Globe.myself == null ? null
-				: Globe.myself.getName(), Globe.myself == null ? null
-				: Globe.myself.getSign());
+		mTitleBar.setOrganizeTitleData(Globe.myself == null ? null : Globe.myself.getName(), Globe.myself == null ? null : Globe.myself.getSign());
 
 		pop_view = findViewById(R.id.pop_view);
 
@@ -153,8 +151,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		mSearchResultAdapter = new SearchResultAdapter(mContext);
 
-		mChangeStatePop = new ChangeStatePop(LayoutInflater.from(mContext)
-				.inflate(R.layout.changestate_dialog, null, true));
+		mChangeStatePop = new ChangeStatePop(LayoutInflater.from(mContext).inflate(R.layout.changestate_dialog, null, true));
 
 	}
 
@@ -172,8 +169,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		 * networkIsConnected = false; }
 		 */
 
-		LogFactory.e("updateFace", ""
-				+ DataEngine.getInstance().getLogicStatus());
+		LogFactory.e("updateFace", "" + DataEngine.getInstance().getLogicStatus());
 
 		mTitleBar.updateStateIcon(networkIsConnected);
 
@@ -190,8 +186,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		} else {
 			// / 头像跳灰色
 			if (Globe.bm_head != null) {
-				ImageUtil.setFaceImg(mTitleBar.getFaceView(), Globe.bm_head, 0,
-						-1);
+				ImageUtil.setFaceImg(mTitleBar.getFaceView(), Globe.bm_head, 0, -1);
 			} else {
 				mTitleBar.setOfflineFaceDefault();
 			}
@@ -204,19 +199,12 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	 */
 	public Handler titleBarHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			System.out
-					.println("titleBarHandler1:" + EngineConst.isNetworkValid);
-			System.out.println("titleBarHandler2:"
-					+ EngineConst.isReloginSuccess);
+			System.out.println("titleBarHandler1:" + EngineConst.isNetworkValid);
+			System.out.println("titleBarHandler2:" + EngineConst.isReloginSuccess);
 
-			ConnectionLog.MusicLogInstance().addLog(
-					"titleBarHandler isNetworkValid:"
-							+ EngineConst.isNetworkValid
-							+ ",isReloginSuccess :"
-							+ EngineConst.isReloginSuccess);
+			ConnectionLog.MusicLogInstance().addLog("titleBarHandler isNetworkValid:" + EngineConst.isNetworkValid + ",isReloginSuccess :" + EngineConst.isReloginSuccess);
 
-			updateFace(EngineConst.isNetworkValid
-					&& EngineConst.isReloginSuccess);
+			updateFace(EngineConst.isNetworkValid && EngineConst.isReloginSuccess);
 		}
 	};
 
@@ -238,8 +226,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		LogFactory.d("onResume", TAG + ": onResume....");
 
 		super.onResume();
-		mTitleBar.updateSign(Globe.myself == null ? null : Globe.myself
-				.getSign());
+		mTitleBar.updateSign(Globe.myself == null ? null : Globe.myself.getSign());
 
 		updateFace(EngineConst.isNetworkValid && EngineConst.isReloginSuccess);
 
@@ -262,10 +249,10 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 	@Override
 	protected void registerEvents() {
-		String isFirstLoading = (String) PreferenceManager.get("IMOLoading",
-				new String[] { "isFirstLoading", "no" });
-		MainActivityGroup.getActivityGroup().updateTipShow(
-				!isFirstLoading.equals("yes"));
+		String isFirstLoading = (String) PreferenceManager.get("IMOLoading", new String[] {
+				"isFirstLoading", "no"
+		});
+		MainActivityGroup.getActivityGroup().updateTipShow(!isFirstLoading.equals("yes"));
 
 		if (getTcpConnection() == null) {
 			resetConnection();
@@ -342,38 +329,22 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 				if (EngineConst.isNetworkValid && EngineConst.isReloginSuccess) {
 					return;
 				} else if (ConnectionChangeReceiver.pingAddress()) {
-					System.out.println("shoudong old connection id = "
-							+ EngineConst.IMO_CONNECTION_ID);
+					System.out.println("shoudong old connection id = " + EngineConst.IMO_CONNECTION_ID);
 					EngineConst.isReloginSuccess = false;
 					String oldConnectionID = EngineConst.IMO_CONNECTION_ID;
 
-					EngineConst.IMO_CONNECTION_ID = EngineConst
-							.GenerateRandomString();
+					EngineConst.IMO_CONNECTION_ID = EngineConst.GenerateRandomString();
 
-					System.out.println("shoudong new connection id :"
-							+ EngineConst.IMO_CONNECTION_ID
-							+ ",old connectionID :" + oldConnectionID);
+					System.out.println("shoudong new connection id :" + EngineConst.IMO_CONNECTION_ID + ",old connectionID :" + oldConnectionID);
 
-					AppService.getService().setTcpConnection(
-							(TCPConnection) AppService
-									.getService()
-									.getNIOThreadInstance()
-									.newTCPConnection(
-											EngineConst.IMO_CONNECTION_ID,
-											EngineConst.IMO_SERVER_ADDRESS,
-											true));
+					AppService.getService().setTcpConnection((TCPConnection) AppService.getService().getNIOThreadInstance().newTCPConnection(EngineConst.IMO_CONNECTION_ID, EngineConst.IMO_SERVER_ADDRESS, true));
 
 					// AppService.getService().getNIOThreadInstance().copyConnectionObservers(oldConnectionID,
 					// EngineConst.IMO_CONNECTION_ID);
-					AppService.getService().getNIOThreadInstance()
-							.release(oldConnectionID, false);
+					AppService.getService().getNIOThreadInstance().release(oldConnectionID, false);
 
-					ReloginOutPacket out = new ReloginOutPacket(ByteBuffer
-							.wrap(EngineConst.sessionKey),
-							IMOCommand.IMO_GET_RELOGIN, EngineConst.cId,
-							EngineConst.uId);
-					AppService.getService().getNIOThreadInstance()
-							.send(EngineConst.IMO_CONNECTION_ID, out, false);
+					ReloginOutPacket out = new ReloginOutPacket(ByteBuffer.wrap(EngineConst.sessionKey), IMOCommand.IMO_GET_RELOGIN, EngineConst.cId, EngineConst.uId);
+					AppService.getService().getNIOThreadInstance().send(EngineConst.IMO_CONNECTION_ID, out, false);
 				}
 
 				// ReloginOutPacket out = new
@@ -402,8 +373,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 				ArrayList<Integer> deptUserId = mGlobal.imoStorage.search(key);
 
 				if (deptUserId != null) {
-					mSearchResultAdapter
-							.setShowData(getSearchResult(deptUserId));
+					mSearchResultAdapter.setShowData(getSearchResult(deptUserId));
 					mSearchRestltListView.setAdapter(mSearchResultAdapter);
 				} else {
 					mSearchResultAdapter.setEmpty();
@@ -419,8 +389,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		mSearchRestltListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View view,
-					int position, long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
 				if (mSearchResultAdapter.getItem(position).getId() == EngineConst.uId) {
 					EmployeeDetailActivity.launch(mContext);
 
@@ -459,18 +428,14 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			// / init group contactInfoList
 			employeeInfoItemList = new ArrayList<EmployeeInfoItem>();
 
-			ArrayList<Integer> contactIdList = mGlobal.innerGroupContactMap
-					.get(groupId);
+			ArrayList<Integer> contactIdList = mGlobal.innerGroupContactMap.get(groupId);
 
 			if (contactIdList != null) {
 				for (int i = 0; i < contactIdList.size(); i++) {
-					employeeInfoItemList.add(RecentContactActivity
-							.getActivity().getEmployeeInfoByUid(
-									contactIdList.get(i)));
+					employeeInfoItemList.add(RecentContactActivity.getActivity().getEmployeeInfoByUid(contactIdList.get(i)));
 				}
 				// / 构建内部联系人组和对应的 联系人列表的映射
-				mGlobal.mInnerGroupContactMap
-						.put(groupId, employeeInfoItemList);
+				mGlobal.mInnerGroupContactMap.put(groupId, employeeInfoItemList);
 			} else {
 				LogFactory.d(TAG, " groupId = " + groupId + " is empty...");
 			}
@@ -497,10 +462,8 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		mGlobal.rootNodeContact.setDept(true);
 		mGlobal.rootNodeInner.setDept(true);
 		mGlobal.rootNodeOuter.setDept(true);
-		NodeManager
-				.addChildNode(mGlobal.rootNodeContact, mGlobal.rootNodeInner);
-		NodeManager
-				.addChildNode(mGlobal.rootNodeContact, mGlobal.rootNodeOuter);
+		NodeManager.addChildNode(mGlobal.rootNodeContact, mGlobal.rootNodeInner);
+		NodeManager.addChildNode(mGlobal.rootNodeContact, mGlobal.rootNodeOuter);
 
 		// bindListView();
 	}
@@ -514,22 +477,19 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		for (Integer groupId : mGlobal.innerGroupIdMap.keySet()) {// //mGlobal.
 																	// 使用全局数据
 			InnerContactorItem item = mGlobal.innerGroupIdMap.get(groupId);
-			Node innerGroupNode = new Node(
-					new NodeData(item.getGroupName(), ""));
+			Node innerGroupNode = new Node(new NodeData(item.getGroupName(), ""));
 			innerGroupNode.setId(item.getGroupID());
 			innerGroupNode.setDept(true);
 			NodeManager.addChildNode(mGlobal.rootNodeInner, innerGroupNode);
 
-			ArrayList<EmployeeInfoItem> employeeInfoItems = mGlobal.mInnerGroupContactMap
-					.get(groupId);
+			ArrayList<EmployeeInfoItem> employeeInfoItems = mGlobal.mInnerGroupContactMap.get(groupId);
 
 			if (employeeInfoItems != null) {
 				for (int i = 0; i < employeeInfoItems.size(); i++) {
 					EmployeeInfoItem info = employeeInfoItems.get(i);
 					String sign = "";
 					if (info != null) {
-						sign = mGlobal.innerContactWorkSignMap.get(info
-								.getUid());
+						sign = mGlobal.innerContactWorkSignMap.get(info.getUid());
 					}
 					if (sign == null || sign.trim().equals("")) {
 						sign = "";
@@ -538,9 +498,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 					}
 
 					if (info != null) {
-						Node contactNode = new Node(new NodeData(
-								isBoy(info.getGender()),
-								(info.getName() + sign)));
+						Node contactNode = new Node(new NodeData(isBoy(info.getGender()), (info.getName() + sign)));
 						contactNode.setId(info.getUid());
 						NodeManager.addChildNode(innerGroupNode, contactNode);
 					} else {
@@ -565,25 +523,21 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		for (Integer groupId : mGlobal.outerGroupIdMap.keySet()) {
 
 			OuterContactorItem item = mGlobal.outerGroupIdMap.get(groupId);
-			Node outerGroupNode = new Node(
-					new NodeData(item.getGroupName(), ""));
+			Node outerGroupNode = new Node(new NodeData(item.getGroupName(), ""));
 			outerGroupNode.setId(item.getGroupID());
 			outerGroupNode.setDept(true);
 			NodeManager.addChildNode(mGlobal.rootNodeOuter, outerGroupNode);
 
-			ArrayList<OuterContactItem> outerContact_ID_Items = mGlobal.outerGroupContactMap
-					.get(groupId);
+			ArrayList<OuterContactItem> outerContact_ID_Items = mGlobal.outerGroupContactMap.get(groupId);
 
 			if (outerContact_ID_Items != null) {
 				for (int i = 0; i < outerContact_ID_Items.size(); i++) {
 					int uid = outerContact_ID_Items.get(i).getUid();
-					OuterContactBasicInfo info = mGlobal.outerContactInfoMap
-							.get(uid);
+					OuterContactBasicInfo info = mGlobal.outerContactInfoMap.get(uid);
 
 					String cropName = "";
 					if (info != null) {
-						cropName = mGlobal.outerContactCorpMap.get(info
-								.getCid());
+						cropName = mGlobal.outerContactCorpMap.get(info.getCid());
 					}
 
 					if (cropName == null || cropName.trim().equals("")) {
@@ -593,9 +547,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 					}
 
 					if (info != null) {
-						Node contactNode = new Node(new NodeData(
-								isBoy(info.getGender()),
-								(info.getName() + cropName)));
+						Node contactNode = new Node(new NodeData(isBoy(info.getGender()), (info.getName() + cropName)));
 						contactNode.setCid(info.getCid());
 						contactNode.setId(info.getUid());
 						contactNode.setNeedShow(isNeedShow(groupId, uid));
@@ -606,18 +558,15 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 					}
 				}
 			} else {
-				LogFactory
-						.d(TAG, "outer groupId = " + groupId + " is Empty...");
+				LogFactory.d(TAG, "outer groupId = " + groupId + " is Empty...");
 			}
 		}
 	}
 
 	private boolean isNeedShow(Integer groupId, int uid) {
-		ArrayList<OuterContactItem> list = mGlobal.outerGroupContactMap
-				.get(groupId);
+		ArrayList<OuterContactItem> list = mGlobal.outerGroupContactMap.get(groupId);
 		for (OuterContactItem outerContactItem : list) {
-			if (outerContactItem.getUid() == uid
-					&& outerContactItem.getFlag() == 0x4D) {
+			if (outerContactItem.getUid() == uid && outerContactItem.getFlag() == 0x4D) {
 				return true;
 			}
 		}
@@ -632,9 +581,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		LogFactory.e("OrganizeActivity", "onDestroy");
 
 		if (EngineConst.isConnected) {
-			CommonOutPacket outPacket = new CommonOutPacket(
-					ByteBuffer.allocate(0), IMOCommand.IMO_EXIT,
-					EngineConst.cId, EngineConst.uId);
+			CommonOutPacket outPacket = new CommonOutPacket(ByteBuffer.allocate(0), IMOCommand.IMO_EXIT, EngineConst.cId, EngineConst.uId);
 
 			mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 		}
@@ -687,14 +634,14 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		public void handleMessage(Message msg) {
 			short command = (short) msg.arg1;
 			switch (command) {
-			case IMOCommand.IMO_UPDATE_STATUS:
-				LogFactory.d(TAG, "-------->Login Over");
-				break;
-			case IMOCommand.IMO_GET_EMPLOYEE_STATUS:
-				responseState(command);
-				break;
-			default:
-				break;
+				case IMOCommand.IMO_UPDATE_STATUS:
+					LogFactory.d(TAG, "-------->Login Over");
+					break;
+				case IMOCommand.IMO_GET_EMPLOYEE_STATUS:
+					responseState(command);
+					break;
+				default:
+					break;
 			}
 		};
 	};
@@ -724,10 +671,8 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	 */
 	private void responseState(short command) {
 
-		LogFactory.d("EmployeeState",
-				"----------responseEmployeeState ---------");
-		GetEmployeesStatusInPacket inPacket = (GetEmployeesStatusInPacket) IMOApp
-				.getDataEngine().getInPacketByCommand(command);
+		LogFactory.d("EmployeeState", "----------responseEmployeeState ---------");
+		GetEmployeesStatusInPacket inPacket = (GetEmployeesStatusInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		if (inPacket == null) {
 			return;
 		}
@@ -746,8 +691,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 			Object[] idArrays = getRequestUserIdArray();
 			if (idArrays != null) {
-				doEmployeeState(((int[]) idArrays[0]).length,
-						((int[]) idArrays[0]), ((int[]) idArrays[1]));
+				doEmployeeState(((int[]) idArrays[0]).length, ((int[]) idArrays[0]), ((int[]) idArrays[1]));
 			}
 		} else {
 			LogFactory.d("EmployeeState", "状态请求完成。。。。。");
@@ -777,40 +721,29 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			requestCIds = new int[PARENT_MAX_STATE_REQUEST_COUNT];
 			requestUIds = new int[PARENT_MAX_STATE_REQUEST_COUNT];
 
-			LogFactory.d("State--HasRequestCount", "hasRequestCount = "
-					+ parent_hasRequestCount);
+			LogFactory.d("State--HasRequestCount", "hasRequestCount = " + parent_hasRequestCount);
 
-			System.arraycopy(mGlobal.getAllCidArray(), parent_hasRequestCount
-					* PARENT_MAX_STATE_REQUEST_COUNT, requestCIds, 0,
-					PARENT_MAX_STATE_REQUEST_COUNT);
-			System.arraycopy(mGlobal.getAllUidArray(), parent_hasRequestCount
-					* PARENT_MAX_STATE_REQUEST_COUNT, requestUIds, 0,
-					PARENT_MAX_STATE_REQUEST_COUNT);
+			System.arraycopy(mGlobal.getAllCidArray(), parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT, requestCIds, 0, PARENT_MAX_STATE_REQUEST_COUNT);
+			System.arraycopy(mGlobal.getAllUidArray(), parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT, requestUIds, 0, PARENT_MAX_STATE_REQUEST_COUNT);
 
 			this.parent_hasRequestCount++;
 
 		} else {
-			LogFactory.d("StateHasRequestCount",
-					" State has Request Completed !! hasRequestCount = "
-							+ parent_hasRequestCount);
+			LogFactory.d("StateHasRequestCount", " State has Request Completed !! hasRequestCount = " + parent_hasRequestCount);
 
-			requestCIds = new int[mGlobal.getAllCidArray().length
-					- parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT];
-			requestUIds = new int[mGlobal.getAllUidArray().length
-					- parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT];
+			requestCIds = new int[mGlobal.getAllCidArray().length - parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT];
+			requestUIds = new int[mGlobal.getAllUidArray().length - parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT];
 
-			System.arraycopy(mGlobal.getAllCidArray(), parent_hasRequestCount
-					* PARENT_MAX_STATE_REQUEST_COUNT, requestCIds, 0,
-					requestUIds.length);
-			System.arraycopy(mGlobal.getAllUidArray(), parent_hasRequestCount
-					* PARENT_MAX_STATE_REQUEST_COUNT, requestUIds, 0,
-					requestUIds.length);
+			System.arraycopy(mGlobal.getAllCidArray(), parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT, requestCIds, 0, requestUIds.length);
+			System.arraycopy(mGlobal.getAllUidArray(), parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT, requestUIds, 0, requestUIds.length);
 
 			this.parent_hasRequestCount++;
 
 		}
 
-		return new Object[] { requestCIds, requestUIds };
+		return new Object[] {
+				requestCIds, requestUIds
+		};
 	}
 
 	// ==================状态重新获取==============================
@@ -868,9 +801,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		if (mNIOThread != null) {
 			// 修改command
-			CommonOutPacket outPacket = new CommonOutPacket(
-					ByteBuffer.allocate(0), IMOCommand.IMO_UPDATE_STATUS,
-					EngineConst.cId, EngineConst.uId);
+			CommonOutPacket outPacket = new CommonOutPacket(ByteBuffer.allocate(0), IMOCommand.IMO_UPDATE_STATUS, EngineConst.cId, EngineConst.uId);
 
 			mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 		} else {
@@ -886,16 +817,16 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case TYPE_GETTREE:
-				getOrganizeTree();
-				break;
-			case TYPE_UPDATEPULLSTATE:
-				if (adapter != null)
-					adapter.notifyDataSetChanged();
-				break;
+				case TYPE_GETTREE:
+					getOrganizeTree();
+					break;
+				case TYPE_UPDATEPULLSTATE:
+					if (adapter != null)
+						adapter.notifyDataSetChanged();
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 
 		};
@@ -1048,8 +979,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		// doRequestOwnState();
 
 		if (rootNodeDept != null) {
-			int size = rootNodeDept.getChildNodes() != null ? rootNodeDept
-					.getChildNodes().size() : 0;
+			int size = rootNodeDept.getChildNodes() != null ? rootNodeDept.getChildNodes().size() : 0;
 			LogFactory.d("rootNodeDept", "root child count = " + size);
 		}
 
@@ -1058,8 +988,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
 
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 			mSearchBar.updateCursorState(false);
 
@@ -1078,11 +1007,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 					data.putString("name", curNode.getNodeData().nodeName);
 					data.putBoolean("sex", curNode.getNodeData().isBoy);
 
-					LogFactory.d(
-							"data",
-							"cid=" + EngineConst.cId + "  uid ="
-									+ curNode.getId() + "  mName= "
-									+ curNode.getNodeData().nodeName);
+					LogFactory.d("data", "cid=" + EngineConst.cId + "  uid =" + curNode.getId() + "  mName= " + curNode.getNodeData().nodeName);
 					// ///////////////////////update
 					// RecentContact//////////////////////for Test begin
 					/*
@@ -1103,11 +1028,9 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 					if (!mGlobal.sendMsgUserId.isEmpty()) {
 						if (mGlobal.sendMsgUserId.contains(curNode.getId())) {
 							mGlobal.sendMsgUserId.remove(myMsgUserid);
-							System.out.println("剩余的 msg id-----"
-									+ mGlobal.sendMsgUserId);
+							System.out.println("剩余的 msg id-----" + mGlobal.sendMsgUserId);
 							if (mGlobal.sendMsgUserId.isEmpty()) {
-								MainActivityGroup.getActivityGroup().mHandler
-										.sendEmptyMessage(0);
+								MainActivityGroup.getActivityGroup().mHandler.sendEmptyMessage(0);
 							}
 						}
 					}
@@ -1120,8 +1043,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 				adapter.showChildNodes(curNode);
 				mListView.setSelection(0);// / for selected first node
 				if (mStructNavView.getViewGroupChildCount() == 0) {
-					mStructNavView.addItem(rootNodeDept.getNodeData().nodeName,
-							rootNodeDept);
+					mStructNavView.addItem(rootNodeDept.getNodeData().nodeName, rootNodeDept);
 				}
 				mStructNavView.addItem(curNode.getNodeData().nodeName, curNode);
 				// 实现导航点击事件的封装。
@@ -1223,8 +1145,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			// if (currentDeptNeedHide(id))
 			// deptNode.setNeedShow(false);
 			nodeMap.put(deptInfo.getDept_id(), deptNode);
-			deptNodeNextSiblingMap.put(deptInfo.getDept_id(),
-					deptInfo.getNext_sibling());
+			deptNodeNextSiblingMap.put(deptInfo.getDept_id(), deptInfo.getNext_sibling());
 			deptIdList.add(deptInfo.getDept_id());
 		}
 
@@ -1263,8 +1184,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			}
 		}
 		// 显示自己
-		System.out.println("显示部门列表："
-				+ Arrays.toString(special_hide_dept_ids.toArray()));
+		System.out.println("显示部门列表：" + Arrays.toString(special_hide_dept_ids.toArray()));
 		for (Integer did : special_hide_dept_ids) {
 			if (nodeMap == null)
 				break;
@@ -1279,20 +1199,20 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	}
 
 	private Integer findDidByUid(int uid) {
-//		Iterator<Entry<Integer, int[]>> iter = IMOApp.getApp().deptUserIdsMap
-//				.entrySet().iterator();
-//
-//		while (iter.hasNext()) {
-//			Map.Entry<Integer, int[]> entry = (Map.Entry<Integer, int[]>) iter
-//					.next();
-//			Integer key = entry.getKey();
-//			int[] val = entry.getValue();
-//			for (int i = 0; i < val.length; i++) {
-//				if (val[i] == uid)
-//					return key;
-//			}
-//		}
-//		return null;
+		// Iterator<Entry<Integer, int[]>> iter = IMOApp.getApp().deptUserIdsMap
+		// .entrySet().iterator();
+		//
+		// while (iter.hasNext()) {
+		// Map.Entry<Integer, int[]> entry = (Map.Entry<Integer, int[]>) iter
+		// .next();
+		// Integer key = entry.getKey();
+		// int[] val = entry.getValue();
+		// for (int i = 0; i < val.length; i++) {
+		// if (val[i] == uid)
+		// return key;
+		// }
+		// }
+		// return null;
 		return IMOApp.imoStorage.findDidByUid(uid);
 	}
 
@@ -1377,21 +1297,15 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 				Object[] args = getCurNode(deptInfo, deptNode.getParentNode());
 				if (args != null) {
-					return buildTree(
-							mGlobal.deptInfoMap.get((Integer) args[0]),
-							(Node) args[1]);
+					return buildTree(mGlobal.deptInfoMap.get((Integer) args[0]), (Node) args[1]);
 				} else
 					return true;
 			} else {
 				curNode = deptNode.getParentNode();
-				return buildTree(
-						mGlobal.deptInfoMap.get(deptInfo.getNext_sibling()),
-						curNode);
+				return buildTree(mGlobal.deptInfoMap.get(deptInfo.getNext_sibling()), curNode);
 			}
 		} else {
-			return buildTree(
-					mGlobal.deptInfoMap.get(deptInfo.getFirst_child()),
-					deptNode);
+			return buildTree(mGlobal.deptInfoMap.get(deptInfo.getFirst_child()), deptNode);
 		}
 	}
 
@@ -1399,8 +1313,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		Node curNode = null;
 
-		Integer id = mGlobal.deptInfoMap.get(deptInfo.getParent_dept_id())
-				.getNext_sibling();
+		Integer id = mGlobal.deptInfoMap.get(deptInfo.getParent_dept_id()).getNext_sibling();
 
 		if (id != -1) {
 			curNode = leafParent.getParentNode();
@@ -1408,11 +1321,11 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			if (NodeManager.isRoot(leafParent)) {
 				return null;
 			}
-			return getCurNode(
-					mGlobal.deptInfoMap.get(deptInfo.getParent_dept_id()),
-					leafParent.getParentNode());
+			return getCurNode(mGlobal.deptInfoMap.get(deptInfo.getParent_dept_id()), leafParent.getParentNode());
 		}
-		return new Object[] { id, curNode };
+		return new Object[] {
+				id, curNode
+		};
 	}
 
 	/**
@@ -1426,12 +1339,9 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			deptNode.setId(deptIdList.get(i));
 
 			// =========================================||
-			if (mGlobal.deptUserInfoMap.get(deptIdList.get(i)) != null
-					&& mGlobal.deptUserInfoMap.get(deptIdList.get(i)).keySet()
-							.size() != 0) {
-				addDeptUser(deptNode,
-						mGlobal.deptInfoMap.get(deptIdList.get(i)));// 添加该部门下的所有User
-																	// leafNode
+			if (mGlobal.deptUserInfoMap.get(deptIdList.get(i)) != null && mGlobal.deptUserInfoMap.get(deptIdList.get(i)).keySet().size() != 0) {
+				addDeptUser(deptNode, mGlobal.deptInfoMap.get(deptIdList.get(i)));// 添加该部门下的所有User
+																					// leafNode
 
 				for (int j = 0; j < deptNode.getChildNodes().size(); j++) {
 					Node temNode = deptNode.getChildNodes().get(j);
@@ -1446,31 +1356,24 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			/*
 			 * LogFactory.d("deptNameMapSize", "All dept count = " +
 			 * nodeMap.keySet().size()); // LogFactory.d("deptName",
-			 * "this dept id = " + nodeMap.get(this.deptid[i]));
-			 * 
-			 * // ==================================== //get first_user id int
+			 * "this dept id = " + nodeMap.get(this.deptid[i])); //
+			 * ==================================== //get first_user id int
 			 * dept_first_userId =
 			 * this.deptInfoMap.get(this.deptid[i]).getFfirst_user() ; //get
 			 * first_user userInfo EmployeeInfoItem curEmployeeInfo =
 			 * deptUserInfoMap.get(this.deptid[i]).get(dept_first_userId);
-			 * 
 			 * //build the first user node Node curNode = new Node(new
 			 * NodeData(isBoy
 			 * (curEmployeeInfo.getGender()),curEmployeeInfo.getName()));
 			 * //获得兄弟Node NodeManager.addChildNode(deptNode, curNode);
-			 * 
 			 * //添加单个部门的员工UserInfo Map //
 			 * HashMap<Integer,GetAllEmployeesInfoInPacket.EmployeeInfoItem>
 			 * userInfoMap = deptUserInfoMap.get(this.deptid[i]);
 			 * HashMap<Integer,GetAllEmployeesInfoInPacket.EmployeeInfoItem>
 			 * userInfoMap = deptUserInfoMap.get(deptIdList.get(i));
-			 * 
 			 * HashMap<Integer, Integer> deptUserSiblingMapItem =
-			 * deptUserSiblingMap.get(this.deptid[i]);
-			 * 
-			 * // Node leafNode; // int[] userIdArray =
-			 * this.deptUserIdsMap.get(this.deptid[i]);
-			 * 
+			 * deptUserSiblingMap.get(this.deptid[i]); // Node leafNode; //
+			 * int[] userIdArray = this.deptUserIdsMap.get(this.deptid[i]);
 			 * //在该部门中依次添加用户节点 for (int j = 0; j <
 			 * this.deptUserIdsMap.get(this.deptid[i]).length -1; j++) {
 			 * curEmployeeInfo = addUserNode(deptNode, curEmployeeInfo,
@@ -1493,32 +1396,24 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 			// userNodeMapItem = new HashMap<Integer, Node>();//////
 
-			EmployeeInfoItem curEmployeeInfo = mGlobal.deptUserInfoMap.get(
-					deptMaskItem.getDept_id()).get(dept_first_userId);
+			EmployeeInfoItem curEmployeeInfo = mGlobal.deptUserInfoMap.get(deptMaskItem.getDept_id()).get(dept_first_userId);
 
 			// build the first user node
-			Node curNode = new Node(new NodeData(
-					isBoy(curEmployeeInfo.getGender()),
-					curEmployeeInfo.getName()));
+			Node curNode = new Node(new NodeData(isBoy(curEmployeeInfo.getGender()), curEmployeeInfo.getName()));
 			curNode.setId(curEmployeeInfo.getUid());// ====
-			curNode.setOnLineState(mGlobal.userStateMap.get(curEmployeeInfo
-					.getUid()));
+			curNode.setOnLineState(mGlobal.userStateMap.get(curEmployeeInfo.getUid()));
 			NodeManager.addChildNode(deptNode, curNode);
 
 			// userNodeMapItem.put(curEmployeeInfo.getUid(), curNode);//////
 
 			// 添加单个部门的员工UserInfo Map
-			HashMap<Integer, EmployeeInfoItem> userInfoMap = mGlobal.deptUserInfoMap
-					.get(deptMaskItem.getDept_id());
+			HashMap<Integer, EmployeeInfoItem> userInfoMap = mGlobal.deptUserInfoMap.get(deptMaskItem.getDept_id());
 
-			HashMap<Integer, Integer> deptUserSiblingMapItem = mGlobal.deptUserSiblingMap
-					.get(deptMaskItem.getDept_id());
+			HashMap<Integer, Integer> deptUserSiblingMapItem = mGlobal.deptUserSiblingMap.get(deptMaskItem.getDept_id());
 
 			// 在该部门中依次添加用户节点
-			for (int j = 0; j < mGlobal.deptUserIdsMap.get(deptMaskItem
-					.getDept_id()).length - 1; j++) {
-				curEmployeeInfo = addUserNode(deptNode, curEmployeeInfo,
-						userInfoMap, deptUserSiblingMapItem);
+			for (int j = 0; j < mGlobal.deptUserIdsMap.get(deptMaskItem.getDept_id()).length - 1; j++) {
+				curEmployeeInfo = addUserNode(deptNode, curEmployeeInfo, userInfoMap, deptUserSiblingMapItem);
 				if (curEmployeeInfo == null) {
 					break;
 				}
@@ -1531,16 +1426,13 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 	/**
 	 * @param parentNode
-	 *            部门节点
+	 *        部门节点
 	 * @param curEmployeeInfo
-	 *            当前的用户信息
+	 *        当前的用户信息
 	 * @param deptUserInfoMap
-	 *            部门UserInfoMap
+	 *        部门UserInfoMap
 	 */
-	private EmployeeInfoItem addUserNode(Node parentNode,
-			EmployeeInfoItem curEmployeeInfo,
-			HashMap<Integer, EmployeeInfoItem> deptUserInfoMap,
-			HashMap<Integer, Integer> deptUserSiblingMapItem) {
+	private EmployeeInfoItem addUserNode(Node parentNode, EmployeeInfoItem curEmployeeInfo, HashMap<Integer, EmployeeInfoItem> deptUserInfoMap, HashMap<Integer, Integer> deptUserSiblingMapItem) {
 
 		// int colleagueId = curEmployeeInfo.getColleague_uid();
 		int colleagueId = curEmployeeInfo.getUid();
@@ -1563,8 +1455,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 			Node leafNode = new Node(new NodeData(isBoy, nodeName));
 			if (mGlobal.userStateMap != null) {
-				leafNode.setOnLineState(mGlobal.userStateMap
-						.get(employeeInfoItem.getUid()));
+				leafNode.setOnLineState(mGlobal.userStateMap.get(employeeInfoItem.getUid()));
 			}
 
 			leafNode.setId(employeeInfoItem.getUid());
@@ -1600,8 +1491,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			// }
 			Node node = mGlobal.mNodeMap.get(uid);
 
-			if (node != null && node.getParentNode() != null
-					&& node.getParentNode().isNeedShow()) {
+			if (node != null && node.getParentNode() != null && node.getParentNode().isNeedShow()) {
 				searchResultList.add(node);
 			}
 
@@ -1623,8 +1513,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		int[] destArray = new int[curArray.length + tempArray.length];
 
 		System.arraycopy(curArray, 0, destArray, 0, curArray.length);
-		System.arraycopy(tempArray, 0, destArray, curArray.length,
-				tempArray.length);
+		System.arraycopy(tempArray, 0, destArray, curArray.length, tempArray.length);
 		curArray = tempArray = null;
 		System.gc();
 		return destArray;
@@ -1637,15 +1526,12 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	 * @param tempArray
 	 * @return
 	 */
-	private EmployeeInfoItem[] mergeUserArray(EmployeeInfoItem[] curArray,
-			EmployeeInfoItem[] tempArray) {
+	private EmployeeInfoItem[] mergeUserArray(EmployeeInfoItem[] curArray, EmployeeInfoItem[] tempArray) {
 
-		EmployeeInfoItem[] destArray = new EmployeeInfoItem[curArray.length
-				+ tempArray.length];
+		EmployeeInfoItem[] destArray = new EmployeeInfoItem[curArray.length + tempArray.length];
 
 		System.arraycopy(curArray, 0, destArray, 0, curArray.length);
-		System.arraycopy(tempArray, 0, destArray, curArray.length,
-				tempArray.length);
+		System.arraycopy(tempArray, 0, destArray, curArray.length, tempArray.length);
 		curArray = tempArray = null;
 		System.gc();
 		return destArray;
@@ -1682,15 +1568,14 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 				if (node != null) {
 					adapter.showChildNodes(node);
 				} else {
-					boolean keepOnline = (Boolean) PreferenceManager.get(
-							Globe.SP_FILE, new Object[] {
-									LoginActivity.LOGIN_KEEPONLINE, false });
+					boolean keepOnline = (Boolean) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+							LoginActivity.LOGIN_KEEPONLINE, false
+					});
 					if (!keepOnline) {
 						DialogFactory.promptExit(mContext).show();
 					} else {
 						IMOApp.getApp().hasRunInBackground = true;
-						NoticeManager
-								.updateRecoverAppNotice(notificationManager);
+						NoticeManager.updateRecoverAppNotice(notificationManager);
 						Functions.backToDesk(this);
 					}
 				}
@@ -1712,8 +1597,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		parent_hasRequestCount = 0;
 		int allSize = mGlobal.getAllUidArray().length;
-		parent_StateRequestCount = (allSize % PARENT_MAX_STATE_REQUEST_COUNT == 0) ? (allSize / PARENT_MAX_STATE_REQUEST_COUNT)
-				: (allSize / PARENT_MAX_STATE_REQUEST_COUNT + 1);
+		parent_StateRequestCount = (allSize % PARENT_MAX_STATE_REQUEST_COUNT == 0) ? (allSize / PARENT_MAX_STATE_REQUEST_COUNT) : (allSize / PARENT_MAX_STATE_REQUEST_COUNT + 1);
 
 		LogFactory.d("StateCount", "一共请求的次数 = " + parent_StateRequestCount);
 
@@ -1721,8 +1605,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		if (idArrays != null) {
 			LogFactory.d("SendUid", Arrays.toString((int[]) idArrays[1]));
-			doEmployeeState(((int[]) idArrays[0]).length,
-					((int[]) idArrays[0]), ((int[]) idArrays[1]));
+			doEmployeeState(((int[]) idArrays[0]).length, ((int[]) idArrays[0]), ((int[]) idArrays[1]));
 		}
 	}
 }

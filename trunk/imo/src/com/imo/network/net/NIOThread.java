@@ -25,6 +25,8 @@ import com.imo.network.packages.OutPacket;
 import com.imo.util.LogFactory;
 
 public class NIOThread implements Runnable {
+	private static final String TAG = NIOThread.class.getSimpleName();
+
 	/** 线程是否结束的标志 */
 	protected boolean shutdown = false;
 	/** 端口选择器 */
@@ -62,18 +64,16 @@ public class NIOThread implements Runnable {
 	 * 注册一个IConnection到NIOThread中
 	 * 
 	 * @param port
-	 *            IConnection实现
+	 *        IConnection实现
 	 * @throws ClosedChannelException
-	 *             如果注册失败
+	 *         如果注册失败
 	 */
 	public void register(IConnection port) throws ClosedChannelException {
 		SelectableChannel channel = port.channel();
 		if (channel instanceof SocketChannel) {
-			channel.register(selector, SelectionKey.OP_CONNECT,
-					port.getNIOHandler());
+			channel.register(selector, SelectionKey.OP_CONNECT, port.getNIOHandler());
 		} else if (channel instanceof DatagramChannel) {
-			channel.register(selector, SelectionKey.OP_READ,
-					port.getNIOHandler());
+			channel.register(selector, SelectionKey.OP_READ, port.getNIOHandler());
 		}
 		if (!ports.contains(port))
 			ports.add(port);
@@ -86,8 +86,7 @@ public class NIOThread implements Runnable {
 	 * @param ops
 	 * @throws ClosedChannelException
 	 */
-	public void register(IConnection port, int ops)
-			throws ClosedChannelException {
+	public void register(IConnection port, int ops) throws ClosedChannelException {
 		SelectableChannel channel = port.channel();
 		if (channel instanceof SocketChannel)
 			channel.register(selector, ops, port.getNIOHandler());
@@ -98,7 +97,7 @@ public class NIOThread implements Runnable {
 	}
 
 	Object lock_deregister = new Object();
-	
+
 	private void deregister(IConnection port) {
 		synchronized (lock_deregister) {
 			if (port == null)
@@ -110,7 +109,7 @@ public class NIOThread implements Runnable {
 			if (key != null)
 				key.cancel();
 			port.dispose();
-			System.gc();	
+			System.gc();
 		}
 	}
 
@@ -118,7 +117,7 @@ public class NIOThread implements Runnable {
 	 * 发送错误事件到所有IConnection
 	 * 
 	 * @param e
-	 *            包含错误信息的Exception
+	 *        包含错误信息的Exception
 	 */
 	private void dispatchErrorToAll(Exception e, short aErrorCode) {
 		for (IConnection port : ports)
@@ -147,30 +146,25 @@ public class NIOThread implements Runnable {
 	 * @see IConnection#maintain()
 	 */
 	Object lock_run = new Object();
+
 	public void run() {
 		synchronized (lock_run) {
 			int n = 0;
-
 			while (!shutdown) {
-
 				try {
-//					if(EngineConst.isLoginSuccess
-//							|| !EngineConst.isNetworkValid)
-						Thread.sleep(80);
-
-					if (/*EngineConst.isStartRelogin*/true) {
-
+					Thread.sleep(80);
+					if (true) {
 						// do select
 						try {
 							if (selector != null)
 								n = selector.select(10);
+							LogFactory.d(TAG, "selector.select n:" + n);
 							// 如果要shutdown，关闭selector退出
 							if (shutdown) {
 								selector.close();
 								break;
 							}
 						} catch (IOException e) {
-							// dispatchErrorToAll(e);
 							e.printStackTrace();
 						}
 
@@ -191,19 +185,16 @@ public class NIOThread implements Runnable {
 								INIOHandler handler = (INIOHandler) sk.attachment();
 								try {
 									if (sk.isConnectable()) {
-										// LogFactory.e("NIOThread",
-										// "isConnectable");
+										LogFactory.d(TAG, "sk.isConnectable()");
 										handler.processConnect(sk);
 									} else if (sk.isReadable()) {
-										// LogFactory.e("NIOThread", "isReadable");
+										LogFactory.d(TAG, "sk.isReadable()");
 										handler.processRead(sk);
 									}
 								} catch (IOException e) {
-									// handler.processError(e);
 									e.printStackTrace();
 								} catch (RuntimeException e) {
 									e.printStackTrace();
-									// Log.e("error",e.toString());
 								}
 							}
 
@@ -233,16 +224,16 @@ public class NIOThread implements Runnable {
 	public void addDisposeRequest(IConnection p) {
 		synchronized (disposeQueue) {
 			disposeQueue.offer(p);
-			
-			LogFactory.e("disposeQueue", "name --->"+"disposeQueue size :"+disposeQueue.size());
+
+			LogFactory.e("disposeQueue", "name --->" + "disposeQueue size :" + disposeQueue.size());
 		}
 	}
-
 
 	/**
 	 * 检查是否有新连接要加入
 	 */
 	Object lock_checkNewConnection = new Object();
+
 	private void checkNewConnection() {
 		synchronized (lock_checkNewConnection) {
 			while (!newConnections.isEmpty()) {
@@ -255,7 +246,7 @@ public class NIOThread implements Runnable {
 						e1.printStackTrace();
 					}
 				}
-			}	
+			}
 		}
 	}
 
@@ -324,7 +315,7 @@ public class NIOThread implements Runnable {
 
 	private Object lock_release = new Object();
 
-	public void release(IConnection con,boolean allRelease) {
+	public void release(IConnection con, boolean allRelease) {
 		synchronized (lock_release) {
 			if (con == null)
 				return;
@@ -333,55 +324,36 @@ public class NIOThread implements Runnable {
 			while (it.hasNext()) {
 				Map.Entry<IConnection, Integer> entry = (Map.Entry<IConnection, Integer>) it.next();
 				IConnection iCon = (IConnection) entry.getKey();
-				
-				if(iCon.getId().equals(EngineConst.IMO_CONNECTION_ID)&&allRelease == false)
-				{
-					
-				}
-				else
-				{
+
+				if (iCon.getId().equals(EngineConst.IMO_CONNECTION_ID) && allRelease == false) {
+
+				} else {
 					references.remove(iCon);
 					registry.remove(iCon.getId());
-					
+
 					iCon.dispose();
 				}
 			}
-			
-			/*
-			Integer reference = references.get(con);
-			if (reference == null)
-				return;
-			reference--;
-			LogFactory.e("release", "name--->"+con.getId()+", count--->"+reference);
-			if (reference <= 0) {
-				references.remove(con);
-				registry.remove(con.getId());
-				this.addDisposeRequest((IConnection) con);
-			} else
-				references.put(con, reference);
-				**/
 		}
 	}
 
 	private Object lock_release_id = new Object();
 
-	public void release(String id,boolean allRelease) {
+	public void release(String id, boolean allRelease) {
 		synchronized (lock_release_id) {
-			
+
 			DataEngine.getInstance().clearInQueue();
 			DataEngine.getInstance().clearSendQueue();
 			DataEngine.getInstance().clearTimeoutQueue();
-			
+
 			IConnection con = getConnection(id);
-			release(con,allRelease);
-			LogFactory.e("NIOThread","release registry size :" + registry.size());
+			release(con, allRelease);
+			LogFactory.e("NIOThread", "release registry size :" + registry.size());
 		}
 	}
 
 	public IConnection getConnection(String id) {
-		int i = new Random().nextInt();
 		IConnection conn = registry.get(id);
-		i++;
 		return conn;
 	}
 
@@ -411,6 +383,7 @@ public class NIOThread implements Runnable {
 			Integer i = references.get(con);
 			if (i != null) {
 				i++;
+				LogFactory.d(TAG, "increaseReference:" + i);
 				references.put(con, i);
 			}
 		}
@@ -420,34 +393,32 @@ public class NIOThread implements Runnable {
 	 * 使用指定的port发送一个包
 	 * 
 	 * @param name
-	 *            port name
+	 *        port name
 	 * @param packet
-	 *            OutPacket子类
+	 *        OutPacket子类
 	 * @param keepSent
-	 *            true表示保存发出的包，这种需要是因为有些协议的返回包没有什么可用信息，需要使用发出包来 触发事件
+	 *        true表示保存发出的包，这种需要是因为有些协议的返回包没有什么可用信息，需要使用发出包来 触发事件
 	 * @return true表示包发送成功，false表示失败
 	 */
 	public void send(String id, OutPacket packet, boolean keepSent) {
 		IConnection port = getConnection(id);
 		if (port != null) {
 			DataEngine.getInstance().getOutQueue().add(packet);
-			LogFactory.e("id:" + id, "add packet <" + packet.getCommand()
-					+ "> to port,and isStartRelogin = "
-					+ EngineConst.isStartRelogin);
+			LogFactory.e(TAG, "id:" + id + ",add packet <" + packet.getCommand() + "> to port,and isStartRelogin = " + EngineConst.isStartRelogin);
 		} else {
-			LogFactory.e("NIOThread", "send port is null");
+			LogFactory.e(TAG, "send port is null");
 		}
 	}
 
-	public synchronized IConnection newUDPConnection(String id,InetSocketAddress server, boolean start) {
+	public synchronized IConnection newUDPConnection(String id, InetSocketAddress server, boolean start) {
 		return null;
 	}
 
 	private Object lock_newTCPConnection = new Object();
 
-	public IConnection newTCPConnection(String id, InetSocketAddress server,
-			boolean start) {
+	public IConnection newTCPConnection(String id, InetSocketAddress server, boolean start) {
 		synchronized (lock_newTCPConnection) {
+			LogFactory.d(TAG, "hasConnection(id:+" + id + "+):" + hasConnection(id));
 			if (hasConnection(id)) {
 				IConnection con = getConnection(id);
 				increaseReference(con);
@@ -462,47 +433,43 @@ public class NIOThread implements Runnable {
 				return null;
 			}
 			registry.put(id, port);
-			LogFactory.e("NIOThread", "registry size :" + registry.size());
+			LogFactory.e(TAG, "registry size :" + registry.size());
 			references.put(port, 1);
 			wakeup(port);
-			// if(start)
-			// port.start();
 			return port;
 		}
 	}
 
-	public synchronized IConnection newHTTPConnection(String id, String server,
-			int port, String host, boolean start, PacketsObserver aObserver) {
-//		if (hasConnection(id)) {
-//			IConnection con = getConnection(id);
-//			increaseReference(con);
-//			/* Http是短连接，暂不支持连接复用* */
-//			// return con;
-//		}
-//		InetSocketAddress IMO_SERVER_ADDRESS = new InetSocketAddress(server,
-//				port);
-//
-//		HTTPConnection httpport;
-//		try {
-//			httpport = new HTTPConnection(id, IMO_SERVER_ADDRESS, host);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//		registry.put(id, httpport);
-//		references.put(httpport, 1);
-//		wakeup(httpport);
-//		if (start)
-//			httpport.start();
-//		return httpport;
+	public synchronized IConnection newHTTPConnection(String id, String server, int port, String host, boolean start, PacketsObserver aObserver) {
+		// if (hasConnection(id)) {
+		// IConnection con = getConnection(id);
+		// increaseReference(con);
+		// /* Http是短连接，暂不支持连接复用* */
+		// // return con;
+		// }
+		// InetSocketAddress IMO_SERVER_ADDRESS = new InetSocketAddress(server,
+		// port);
+		//
+		// HTTPConnection httpport;
+		// try {
+		// httpport = new HTTPConnection(id, IMO_SERVER_ADDRESS, host);
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// return null;
+		// }
+		// registry.put(id, httpport);
+		// references.put(httpport, 1);
+		// wakeup(httpport);
+		// if (start)
+		// httpport.start();
+		// return httpport;
 		return null;
 	}
 
-	
 	/*
 	 * (non-Javadoc)
 	 */
-	public  void dispose() {
+	public void dispose() {
 		new Thread() {
 			@Override
 			public void run() {
