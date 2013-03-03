@@ -6,8 +6,6 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
@@ -30,8 +28,6 @@ import com.imo.network.packages.EmployeeProfileItem;
 import com.imo.network.packages.GetEmployeeProfileInPacket;
 import com.imo.network.packages.GetEmployeeProfileOutPacket;
 import com.imo.network.packages.IMOCommand;
-import com.imo.util.DialogFactory;
-import com.imo.util.IOUtil;
 import com.imo.util.ImageUtil;
 import com.imo.view.SettingItemView;
 import com.imo.view.SettingItemView.OnSettingItemClickListener;
@@ -42,8 +38,7 @@ import com.imo.view.SettingItemView.OnSettingItemClickListener;
  * @author CaixiaoLong
  * 
  */
-public class EmployeeDetailActivity extends AbsBaseActivityNetListener
-		implements OnSettingItemClickListener {
+public class EmployeeDetailActivity extends AbsBaseActivityNetListener implements OnSettingItemClickListener {
 
 	private final int aUntransID = 11;
 	private ImageView iv_userFace;
@@ -63,7 +58,6 @@ public class EmployeeDetailActivity extends AbsBaseActivityNetListener
 	private int cid = EngineConst.cId;
 	private int uid = EngineConst.uId;
 	private String mName = "";
-	private String userPosition = "";
 
 	// private boolean isBoy = false;
 
@@ -87,7 +81,6 @@ public class EmployeeDetailActivity extends AbsBaseActivityNetListener
 
 		see_dialogue_record = (SettingItemView) findViewById(R.id.see_dialogue_record);
 
-		// ===============初始化数据===========================
 		initBundleData();
 
 		loadHeadPic();
@@ -102,8 +95,7 @@ public class EmployeeDetailActivity extends AbsBaseActivityNetListener
 			getEmployeeInfo(cid, uid);
 		} else {
 			tv_userPosition.setText(Globe.myself.getPos());
-			tv_worksign_content.setText(Globe.myself == null ? ""
-					: Globe.myself.getSign());
+			tv_worksign_content.setText(Globe.myself == null ? "" : Globe.myself.getSign());
 		}
 	}
 
@@ -111,32 +103,8 @@ public class EmployeeDetailActivity extends AbsBaseActivityNetListener
 	 * 记载头像
 	 */
 	private void loadHeadPic() {
-		float face_width = getResources().getDimension(
-				R.dimen.middle_title_face_height);
+		float face_width = getResources().getDimension(R.dimen.middle_title_face_height);
 		ImageUtil.changeFaceByUid(iv_userFace, uid, face_width, false);
-		// int borderColor = 0xffCACACA;
-		// byte[] b_head = null;
-		// try {
-		// b_head = IOUtil.readFile("HeadPic" + uid, this);
-		// } catch (Exception e) {
-		// }
-		// // 文件中没有个人头像，则网络请求
-		// if (b_head != null && b_head.length > 0) {
-		// Bitmap bitmap = BitmapFactory.decodeByteArray(b_head, 0,
-		// b_head.length);
-		// iv_userFace.setImageBitmap(ImageUtil
-		// .generateRoundCornerBitmap(bitmap, mGlobal.radius,
-		// face_width, face_width, borderColor));
-		// } else {
-		// if (isBoy) {
-		// iv_userFace
-		// .setBackgroundResource(R.drawable.imo_default_face_boy);
-		// } else {
-		// iv_userFace
-		// .setBackgroundResource(R.drawable.imo_default_face_girl);
-		// }
-		// }
-
 	}
 
 	private void initBundleData() {
@@ -145,22 +113,18 @@ public class EmployeeDetailActivity extends AbsBaseActivityNetListener
 			cid = data.getInt("cid");
 			uid = data.getInt("uid");
 			mName = data.getString("name");
-			// isBoy = data.getBoolean("sex");
 		} else {
 			if (Globe.myself != null) {
 				cid = EngineConst.cId;
 				uid = EngineConst.uId;
 				mName = Globe.myself.getName();
-				// isBoy = Globe.myself.getGender() == 0 ? false : true;
-				userPosition = Globe.myself.getPos();
 			}
 		}
 	}
 
 	@Override
 	protected void registerEvents() {
-		mTitleBar.initDefaultTitleBar(resources.getString(R.string.back),
-				resources.getString(R.string.detail));
+		mTitleBar.initDefaultTitleBar(resources.getString(R.string.back), resources.getString(R.string.detail));
 
 		mTitleBar.setLeftBtnListene(new OnClickListener() {
 			@Override
@@ -189,18 +153,17 @@ public class EmployeeDetailActivity extends AbsBaseActivityNetListener
 		Map<String, Object> result = (Map<String, Object>) msg.obj;
 		if (NotifyPacketArrived == msg.what) {
 			switch ((Short) result.get("cmd")) {
-			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
-				if ((Short) result.get("ret") == 0) {
-					EmployeeProfileItem employeeProfileItem = (EmployeeProfileItem) result
-							.get("employeeProfileItem");
-					tv_userPosition.setText(employeeProfileItem.getPos());
-					tv_worksign_content.setText(employeeProfileItem.getSign());
-					Globe.employeeProfileItems.put(uid, employeeProfileItem);
-				} else {
-					Toast.makeText(this, "读取个人资料失败", Toast.LENGTH_SHORT).show();
+				case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
+					if ((Short) result.get("ret") == 0) {
+						EmployeeProfileItem employeeProfileItem = (EmployeeProfileItem) result.get("employeeProfileItem");
+						tv_userPosition.setText(employeeProfileItem.getPos());
+						tv_worksign_content.setText(employeeProfileItem.getSign());
+						Globe.employeeProfileItems.put(uid, employeeProfileItem);
+					} else {
+						Toast.makeText(this, "读取个人资料失败", Toast.LENGTH_SHORT).show();
+					}
+					break;
 				}
-				break;
-			}
 			}
 		}
 
@@ -212,28 +175,27 @@ public class EmployeeDetailActivity extends AbsBaseActivityNetListener
 		Bundle dataBundle = null;
 
 		switch (v.getId()) {
-		case R.id.see_ta_card:
-			dataBundle = new Bundle();
-			dataBundle.putInt("cid", cid);
-			dataBundle.putInt("uid", uid);
-			dataBundle.putString("name", mName);
-			// bundle1.putBoolean("sex", isBoy);
-			CardActivity.launch(mContext, dataBundle);
-			// CardActivity.launch(mContext, getIntent().getExtras());
-			break;
-		case R.id.see_dialogue_record:
-			dataBundle = new Bundle();
-			dataBundle.putInt("aboutCid", cid);
-			dataBundle.putInt("aboutUid", uid);
-			dataBundle.putString("aboutName", mName);
-			// bundle.putBoolean("aboutSex", isBoy);
-			Intent intent = new Intent(EmployeeDetailActivity.this,
-					ChatRecordActivity.class);
-			intent.putExtras(dataBundle);
-			startActivity(intent);
-			break;
-		default:
-			break;
+			case R.id.see_ta_card:
+				dataBundle = new Bundle();
+				dataBundle.putInt("cid", cid);
+				dataBundle.putInt("uid", uid);
+				dataBundle.putString("name", mName);
+				// bundle1.putBoolean("sex", isBoy);
+				CardActivity.launch(mContext, dataBundle);
+				// CardActivity.launch(mContext, getIntent().getExtras());
+				break;
+			case R.id.see_dialogue_record:
+				dataBundle = new Bundle();
+				dataBundle.putInt("aboutCid", cid);
+				dataBundle.putInt("aboutUid", uid);
+				dataBundle.putString("aboutName", mName);
+				// bundle.putBoolean("aboutSex", isBoy);
+				Intent intent = new Intent(EmployeeDetailActivity.this, ChatRecordActivity.class);
+				intent.putExtras(dataBundle);
+				startActivity(intent);
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -243,8 +205,7 @@ public class EmployeeDetailActivity extends AbsBaseActivityNetListener
 	}
 
 	@Override
-	public void NotifyPacketProgress(String aConnectionId, short command,
-			short aTotalLen, short aSendedLen) {
+	public void NotifyPacketProgress(String aConnectionId, short command, short aTotalLen, short aSendedLen) {
 
 	}
 
@@ -252,29 +213,27 @@ public class EmployeeDetailActivity extends AbsBaseActivityNetListener
 	public void NotifyPacketArrived(String aConnectionId, short command) {
 		super.NotifyPacketArrived(aConnectionId, command);
 		switch (command) {
-		case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
-			short ret = -1;
-			EmployeeProfileItem employeeProfileItem = null;
-			try {
-				GetEmployeeProfileInPacket getEmployeeProfileInPacket = (GetEmployeeProfileInPacket) IMOApp
-						.getDataEngine().getInPacketByCommand(command);
-				employeeProfileItem = getEmployeeProfileInPacket
-						.getEmployeeItem();
-				ret = getEmployeeProfileInPacket.getRet();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				Map<String, Object> result = new HashMap<String, Object>();
-				result.put("cmd", command);
-				result.put("ret", ret);
-				result.put("employeeProfileItem", employeeProfileItem);
-				sendMessage(NotifyPacketArrived, result);
-			}
+			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
+				short ret = -1;
+				EmployeeProfileItem employeeProfileItem = null;
+				try {
+					GetEmployeeProfileInPacket getEmployeeProfileInPacket = (GetEmployeeProfileInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
+					employeeProfileItem = getEmployeeProfileInPacket.getEmployeeItem();
+					ret = getEmployeeProfileInPacket.getRet();
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					Map<String, Object> result = new HashMap<String, Object>();
+					result.put("cmd", command);
+					result.put("ret", ret);
+					result.put("employeeProfileItem", employeeProfileItem);
+					sendMessage(NotifyPacketArrived, result);
+				}
 
-			break;
-		}
-		default:
-			break;
+				break;
+			}
+			default:
+				break;
 		}
 	}
 
@@ -282,16 +241,15 @@ public class EmployeeDetailActivity extends AbsBaseActivityNetListener
 	public boolean CanAcceptPacket(int command) {
 		super.CanAcceptPacket(command);
 		switch (command) {
-		case IMOCommand.IMO_GET_EMPLOYEE_PROFILE:
-			return true;
-		default:
-			return false;
+			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE:
+				return true;
+			default:
+				return false;
 		}
 	}
 
 	private void getEmployeeInfo(int cid, int uid) {
-		EmployeeProfileItem employeeProfileItem = Globe.employeeProfileItems
-				.get(uid);
+		EmployeeProfileItem employeeProfileItem = Globe.employeeProfileItems.get(uid);
 		if (employeeProfileItem != null) {
 			tv_userPosition.setText(employeeProfileItem.getPos());
 			tv_worksign_content.setText(employeeProfileItem.getSign());
@@ -302,13 +260,9 @@ public class EmployeeDetailActivity extends AbsBaseActivityNetListener
 			return;
 		}
 
-		int mask = (1 << 4) | 1 | (1 << 1) | (1 << 2) | (1 << 5) | (1 << 6)
-				| (1 << 9) | (1 << 11) | (1 << 12);// 签名，用户账户，公司账户，姓名，手机，电子邮件，标志，职务，电话
-		ByteBuffer bodyBuffer = GetEmployeeProfileOutPacket
-				.GenerateEmployeeProfileBody(aUntransID, cid, uid, mask);
-		GetEmployeeProfileOutPacket out = new GetEmployeeProfileOutPacket(
-				bodyBuffer, IMOCommand.IMO_GET_EMPLOYEE_PROFILE,
-				EngineConst.cId, EngineConst.uId);
+		int mask = (1 << 4) | 1 | (1 << 1) | (1 << 2) | (1 << 5) | (1 << 6) | (1 << 9) | (1 << 11) | (1 << 12);// 签名，用户账户，公司账户，姓名，手机，电子邮件，标志，职务，电话
+		ByteBuffer bodyBuffer = GetEmployeeProfileOutPacket.GenerateEmployeeProfileBody(aUntransID, cid, uid, mask);
+		GetEmployeeProfileOutPacket out = new GetEmployeeProfileOutPacket(bodyBuffer, IMOCommand.IMO_GET_EMPLOYEE_PROFILE, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 		Toast.makeText(this, "正在加载个人详情", Toast.LENGTH_SHORT).show();
 	}

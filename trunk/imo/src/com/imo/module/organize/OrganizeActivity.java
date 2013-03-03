@@ -4,12 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import android.R.bool;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -29,14 +23,12 @@ import android.widget.ListView;
 import com.imo.R;
 import com.imo.activity.AbsBaseActivityNetListener;
 import com.imo.dataengine.DataEngine;
-import com.imo.dataengine.DataEngine.LOGICSTATUS;
 import com.imo.global.AppService;
 import com.imo.global.Globe;
 import com.imo.global.IMOApp;
 import com.imo.module.MainActivityGroup;
 import com.imo.module.config.SystemSetActivity;
 import com.imo.module.config.UserConfigActivity;
-import com.imo.module.contact.ContactActivity;
 import com.imo.module.contact.OuterContactBasicInfo;
 import com.imo.module.contact.OuterContactItem;
 import com.imo.module.dialogue.DialogueActivity;
@@ -74,9 +66,6 @@ import com.imo.view.SearchBar.OnSearchListener;
 
 /**
  * 组织架构界面
- * 
- * @author CaixiaoLong
- * 
  */
 public class OrganizeActivity extends AbsBaseActivityNetListener {
 
@@ -126,9 +115,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		mTitleBar.initOrganizeTitlebar();
 
-		mTitleBar.setOrganizeTitleData(Globe.myself == null ? null
-				: Globe.myself.getName(), Globe.myself == null ? null
-				: Globe.myself.getSign());
+		mTitleBar.setOrganizeTitleData(Globe.myself == null ? null : Globe.myself.getName(), Globe.myself == null ? null : Globe.myself.getSign());
 
 		pop_view = findViewById(R.id.pop_view);
 
@@ -153,8 +140,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		mSearchResultAdapter = new SearchResultAdapter(mContext);
 
-		mChangeStatePop = new ChangeStatePop(LayoutInflater.from(mContext)
-				.inflate(R.layout.changestate_dialog, null, true));
+		mChangeStatePop = new ChangeStatePop(LayoutInflater.from(mContext).inflate(R.layout.changestate_dialog, null, true));
 
 	}
 
@@ -166,14 +152,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	 * 更新头像
 	 */
 	private void updateFace(boolean networkIsConnected) {
-		/*
-		 * if( DataEngine.getInstance().getLogicStatus() ==
-		 * LOGICSTATUS.LOGINOVER ) { networkIsConnected = true; } else {
-		 * networkIsConnected = false; }
-		 */
-
-		LogFactory.e("updateFace", ""
-				+ DataEngine.getInstance().getLogicStatus());
+		LogFactory.e("updateFace", "" + DataEngine.getInstance().getLogicStatus());
 
 		mTitleBar.updateStateIcon(networkIsConnected);
 
@@ -185,17 +164,16 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			} else {
 				mTitleBar.setFaceDefault(mThisUidIsBoy(EngineConst.uId));
 			}
-			// //显示onLine图标
+			// 显示onLine图标
 
 		} else {
-			// / 头像跳灰色
+			// 头像跳灰色
 			if (Globe.bm_head != null) {
-				ImageUtil.setFaceImg(mTitleBar.getFaceView(), Globe.bm_head, 0,
-						-1);
+				ImageUtil.setFaceImg(mTitleBar.getFaceView(), Globe.bm_head, 0, -1);
 			} else {
 				mTitleBar.setOfflineFaceDefault();
 			}
-			// //显示offlineLine图标
+			// 显示offlineLine图标
 		}
 	}
 
@@ -204,19 +182,12 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	 */
 	public Handler titleBarHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			System.out
-					.println("titleBarHandler1:" + EngineConst.isNetworkValid);
-			System.out.println("titleBarHandler2:"
-					+ EngineConst.isReloginSuccess);
+			System.out.println("titleBarHandler1:" + EngineConst.isNetworkValid);
+			System.out.println("titleBarHandler2:" + EngineConst.isReloginSuccess);
 
-			ConnectionLog.MusicLogInstance().addLog(
-					"titleBarHandler isNetworkValid:"
-							+ EngineConst.isNetworkValid
-							+ ",isReloginSuccess :"
-							+ EngineConst.isReloginSuccess);
+			ConnectionLog.MusicLogInstance().addLog("titleBarHandler isNetworkValid:" + EngineConst.isNetworkValid + ",isReloginSuccess :" + EngineConst.isReloginSuccess);
 
-			updateFace(EngineConst.isNetworkValid
-					&& EngineConst.isReloginSuccess);
+			updateFace(EngineConst.isNetworkValid && EngineConst.isReloginSuccess);
 		}
 	};
 
@@ -238,8 +209,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		LogFactory.d("onResume", TAG + ": onResume....");
 
 		super.onResume();
-		mTitleBar.updateSign(Globe.myself == null ? null : Globe.myself
-				.getSign());
+		mTitleBar.updateSign(Globe.myself == null ? null : Globe.myself.getSign());
 
 		updateFace(EngineConst.isNetworkValid && EngineConst.isReloginSuccess);
 
@@ -262,10 +232,10 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 	@Override
 	protected void registerEvents() {
-		String isFirstLoading = (String) PreferenceManager.get("IMOLoading",
-				new String[] { "isFirstLoading", "no" });
-		MainActivityGroup.getActivityGroup().updateTipShow(
-				!isFirstLoading.equals("yes"));
+		String isFirstLoading = (String) PreferenceManager.get("IMOLoading", new String[] {
+				"isFirstLoading", "no"
+		});
+		MainActivityGroup.getActivityGroup().updateTipShow(!isFirstLoading.equals("yes"));
 
 		if (getTcpConnection() == null) {
 			resetConnection();
@@ -276,22 +246,14 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			IMOApp.getDataEngine().addToObserverList(this);
 		}
 
-		// //1- 更新自己的状态 login over
+		// 1- 更新自己的状态 login over
 		doRequestOwnState();
-		// / 2- 发送CrashReport
+		// 2- 发送CrashReport
 		sendCrashMSG();
 
 		getOrganizeTree();
 
 		getContactTree();
-		// mTitleBar.setSystemSetListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		//
-		// SystemSetActivity.launch(OrganizeActivity.this);
-		// }
-		// });
 
 		mTitleBar.setSystemSetListener(new OnTouchListener() {
 
@@ -317,7 +279,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			}
 		});
 
-		// ///状态弹窗显示
+		// 状态弹窗显示
 		mTitleBar.setStateOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -342,45 +304,21 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 				if (EngineConst.isNetworkValid && EngineConst.isReloginSuccess) {
 					return;
 				} else if (ConnectionChangeReceiver.pingAddress()) {
-					System.out.println("shoudong old connection id = "
-							+ EngineConst.IMO_CONNECTION_ID);
+					System.out.println("shoudong old connection id = " + EngineConst.IMO_CONNECTION_ID);
 					EngineConst.isReloginSuccess = false;
 					String oldConnectionID = EngineConst.IMO_CONNECTION_ID;
 
-					EngineConst.IMO_CONNECTION_ID = EngineConst
-							.GenerateRandomString();
+					EngineConst.IMO_CONNECTION_ID = EngineConst.GenerateRandomString();
 
-					System.out.println("shoudong new connection id :"
-							+ EngineConst.IMO_CONNECTION_ID
-							+ ",old connectionID :" + oldConnectionID);
+					System.out.println("shoudong new connection id :" + EngineConst.IMO_CONNECTION_ID + ",old connectionID :" + oldConnectionID);
 
-					AppService.getService().setTcpConnection(
-							(TCPConnection) AppService
-									.getService()
-									.getNIOThreadInstance()
-									.newTCPConnection(
-											EngineConst.IMO_CONNECTION_ID,
-											EngineConst.IMO_SERVER_ADDRESS,
-											true));
+					AppService.getService().setTcpConnection((TCPConnection) AppService.getService().getNIOThreadInstance().newTCPConnection(EngineConst.IMO_CONNECTION_ID, EngineConst.IMO_SERVER_ADDRESS, true));
 
-					// AppService.getService().getNIOThreadInstance().copyConnectionObservers(oldConnectionID,
-					// EngineConst.IMO_CONNECTION_ID);
-					AppService.getService().getNIOThreadInstance()
-							.release(oldConnectionID, false);
+					AppService.getService().getNIOThreadInstance().release(oldConnectionID, false);
 
-					ReloginOutPacket out = new ReloginOutPacket(ByteBuffer
-							.wrap(EngineConst.sessionKey),
-							IMOCommand.IMO_GET_RELOGIN, EngineConst.cId,
-							EngineConst.uId);
-					AppService.getService().getNIOThreadInstance()
-							.send(EngineConst.IMO_CONNECTION_ID, out, false);
+					ReloginOutPacket out = new ReloginOutPacket(ByteBuffer.wrap(EngineConst.sessionKey), IMOCommand.IMO_GET_RELOGIN, EngineConst.cId, EngineConst.uId);
+					AppService.getService().getNIOThreadInstance().send(EngineConst.IMO_CONNECTION_ID, out, false);
 				}
-
-				// ReloginOutPacket out = new
-				// ReloginOutPacket(ByteBuffer.wrap(EngineConst.sessionKey),IMOCommand.IMO_GET_RELOGIN,
-				// EngineConst.cId, EngineConst.uId);
-				// AppService.getService().getNIOThreadInstance().send(EngineConst.IMO_CONNECTION_ID,
-				// out, false);
 			}
 		});
 
@@ -396,14 +334,13 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			}
 
 			private void doSearch(String key) {
-				// //查询的结果UIDList
+				// 查询的结果UIDList
 				update2State(true);
-				// /数据库中查询结果
-				ArrayList<Integer> deptUserId = mGlobal.imoStorage.search(key);
+				// 数据库中查询结果
+				ArrayList<Integer> deptUserId = IMOApp.imoStorage.search(key);
 
 				if (deptUserId != null) {
-					mSearchResultAdapter
-							.setShowData(getSearchResult(deptUserId));
+					mSearchResultAdapter.setShowData(getSearchResult(deptUserId));
 					mSearchRestltListView.setAdapter(mSearchResultAdapter);
 				} else {
 					mSearchResultAdapter.setEmpty();
@@ -419,8 +356,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		mSearchRestltListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View view,
-					int position, long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
 				if (mSearchResultAdapter.getItem(position).getId() == EngineConst.uId) {
 					EmployeeDetailActivity.launch(mContext);
 
@@ -439,7 +375,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	}
 
 	public void getContactTree() {
-		// //1- 初始化内部联系Group_EmployeeInfoList MAP
+		// 1- 初始化内部联系Group_EmployeeInfoList MAP
 		initInnerGroupMap();
 
 		buildContactTree();
@@ -456,21 +392,17 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		ArrayList<EmployeeInfoItem> employeeInfoItemList = null;
 
 		for (Integer groupId : mGlobal.innerGroupIdMap.keySet()) {
-			// / init group contactInfoList
+			// init group contactInfoList
 			employeeInfoItemList = new ArrayList<EmployeeInfoItem>();
 
-			ArrayList<Integer> contactIdList = mGlobal.innerGroupContactMap
-					.get(groupId);
+			ArrayList<Integer> contactIdList = mGlobal.innerGroupContactMap.get(groupId);
 
 			if (contactIdList != null) {
 				for (int i = 0; i < contactIdList.size(); i++) {
-					employeeInfoItemList.add(RecentContactActivity
-							.getActivity().getEmployeeInfoByUid(
-									contactIdList.get(i)));
+					employeeInfoItemList.add(RecentContactActivity.getActivity().getEmployeeInfoByUid(contactIdList.get(i)));
 				}
-				// / 构建内部联系人组和对应的 联系人列表的映射
-				mGlobal.mInnerGroupContactMap
-						.put(groupId, employeeInfoItemList);
+				// 构建内部联系人组和对应的 联系人列表的映射
+				mGlobal.mInnerGroupContactMap.put(groupId, employeeInfoItemList);
 			} else {
 				LogFactory.d(TAG, " groupId = " + groupId + " is empty...");
 			}
@@ -483,11 +415,9 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	 * 构建InnerContact 构建OuterContact
 	 */
 	public void buildContactTree() {
-
 		buildEmptyTree();
 		buildInnerContactTree();
 		buildOuterContactTree();
-		// sortNode();
 	}
 
 	/**
@@ -497,12 +427,8 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		mGlobal.rootNodeContact.setDept(true);
 		mGlobal.rootNodeInner.setDept(true);
 		mGlobal.rootNodeOuter.setDept(true);
-		NodeManager
-				.addChildNode(mGlobal.rootNodeContact, mGlobal.rootNodeInner);
-		NodeManager
-				.addChildNode(mGlobal.rootNodeContact, mGlobal.rootNodeOuter);
-
-		// bindListView();
+		NodeManager.addChildNode(mGlobal.rootNodeContact, mGlobal.rootNodeInner);
+		NodeManager.addChildNode(mGlobal.rootNodeContact, mGlobal.rootNodeOuter);
 	}
 
 	/**
@@ -510,26 +436,23 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	 */
 	private void buildInnerContactTree() {
 		NodeManager.clearChildNode(mGlobal.rootNodeInner);
-		// /根据数据Map构建Node对象，添加到AllNodeList中去。只是添加分组Node
+		// 根据数据Map构建Node对象，添加到AllNodeList中去。只是添加分组Node
 		for (Integer groupId : mGlobal.innerGroupIdMap.keySet()) {// //mGlobal.
 																	// 使用全局数据
 			InnerContactorItem item = mGlobal.innerGroupIdMap.get(groupId);
-			Node innerGroupNode = new Node(
-					new NodeData(item.getGroupName(), ""));
+			Node innerGroupNode = new Node(new NodeData(item.getGroupName(), ""));
 			innerGroupNode.setId(item.getGroupID());
 			innerGroupNode.setDept(true);
 			NodeManager.addChildNode(mGlobal.rootNodeInner, innerGroupNode);
 
-			ArrayList<EmployeeInfoItem> employeeInfoItems = mGlobal.mInnerGroupContactMap
-					.get(groupId);
+			ArrayList<EmployeeInfoItem> employeeInfoItems = mGlobal.mInnerGroupContactMap.get(groupId);
 
 			if (employeeInfoItems != null) {
 				for (int i = 0; i < employeeInfoItems.size(); i++) {
 					EmployeeInfoItem info = employeeInfoItems.get(i);
 					String sign = "";
 					if (info != null) {
-						sign = mGlobal.innerContactWorkSignMap.get(info
-								.getUid());
+						sign = mGlobal.innerContactWorkSignMap.get(info.getUid());
 					}
 					if (sign == null || sign.trim().equals("")) {
 						sign = "";
@@ -538,9 +461,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 					}
 
 					if (info != null) {
-						Node contactNode = new Node(new NodeData(
-								isBoy(info.getGender()),
-								(info.getName() + sign)));
+						Node contactNode = new Node(new NodeData(isBoy(info.getGender()), (info.getName() + sign)));
 						contactNode.setId(info.getUid());
 						NodeManager.addChildNode(innerGroupNode, contactNode);
 					} else {
@@ -565,25 +486,21 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		for (Integer groupId : mGlobal.outerGroupIdMap.keySet()) {
 
 			OuterContactorItem item = mGlobal.outerGroupIdMap.get(groupId);
-			Node outerGroupNode = new Node(
-					new NodeData(item.getGroupName(), ""));
+			Node outerGroupNode = new Node(new NodeData(item.getGroupName(), ""));
 			outerGroupNode.setId(item.getGroupID());
 			outerGroupNode.setDept(true);
 			NodeManager.addChildNode(mGlobal.rootNodeOuter, outerGroupNode);
 
-			ArrayList<OuterContactItem> outerContact_ID_Items = mGlobal.outerGroupContactMap
-					.get(groupId);
+			ArrayList<OuterContactItem> outerContact_ID_Items = mGlobal.outerGroupContactMap.get(groupId);
 
 			if (outerContact_ID_Items != null) {
 				for (int i = 0; i < outerContact_ID_Items.size(); i++) {
 					int uid = outerContact_ID_Items.get(i).getUid();
-					OuterContactBasicInfo info = mGlobal.outerContactInfoMap
-							.get(uid);
+					OuterContactBasicInfo info = mGlobal.outerContactInfoMap.get(uid);
 
 					String cropName = "";
 					if (info != null) {
-						cropName = mGlobal.outerContactCorpMap.get(info
-								.getCid());
+						cropName = mGlobal.outerContactCorpMap.get(info.getCid());
 					}
 
 					if (cropName == null || cropName.trim().equals("")) {
@@ -593,9 +510,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 					}
 
 					if (info != null) {
-						Node contactNode = new Node(new NodeData(
-								isBoy(info.getGender()),
-								(info.getName() + cropName)));
+						Node contactNode = new Node(new NodeData(isBoy(info.getGender()), (info.getName() + cropName)));
 						contactNode.setCid(info.getCid());
 						contactNode.setId(info.getUid());
 						contactNode.setNeedShow(isNeedShow(groupId, uid));
@@ -606,18 +521,15 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 					}
 				}
 			} else {
-				LogFactory
-						.d(TAG, "outer groupId = " + groupId + " is Empty...");
+				LogFactory.d(TAG, "outer groupId = " + groupId + " is Empty...");
 			}
 		}
 	}
 
 	private boolean isNeedShow(Integer groupId, int uid) {
-		ArrayList<OuterContactItem> list = mGlobal.outerGroupContactMap
-				.get(groupId);
+		ArrayList<OuterContactItem> list = mGlobal.outerGroupContactMap.get(groupId);
 		for (OuterContactItem outerContactItem : list) {
-			if (outerContactItem.getUid() == uid
-					&& outerContactItem.getFlag() == 0x4D) {
+			if (outerContactItem.getUid() == uid && outerContactItem.getFlag() == 0x4D) {
 				return true;
 			}
 		}
@@ -632,19 +544,12 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		LogFactory.e("OrganizeActivity", "onDestroy");
 
 		if (EngineConst.isConnected) {
-			CommonOutPacket outPacket = new CommonOutPacket(
-					ByteBuffer.allocate(0), IMOCommand.IMO_EXIT,
-					EngineConst.cId, EngineConst.uId);
+			CommonOutPacket outPacket = new CommonOutPacket(ByteBuffer.allocate(0), IMOCommand.IMO_EXIT, EngineConst.cId, EngineConst.uId);
 
 			mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 		}
 		super.onDestroy();
 	}
-
-	/**
-	 * 当前状态： false- 组织结构正常ListView true - 搜索结果ListView
-	 */
-	private boolean state = false;
 
 	/**
 	 * 更新显示List的状态
@@ -687,14 +592,14 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		public void handleMessage(Message msg) {
 			short command = (short) msg.arg1;
 			switch (command) {
-			case IMOCommand.IMO_UPDATE_STATUS:
-				LogFactory.d(TAG, "-------->Login Over");
-				break;
-			case IMOCommand.IMO_GET_EMPLOYEE_STATUS:
-				responseState(command);
-				break;
-			default:
-				break;
+				case IMOCommand.IMO_UPDATE_STATUS:
+					LogFactory.d(TAG, "-------->Login Over");
+					break;
+				case IMOCommand.IMO_GET_EMPLOYEE_STATUS:
+					responseState(command);
+					break;
+				default:
+					break;
 			}
 		};
 	};
@@ -724,10 +629,8 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	 */
 	private void responseState(short command) {
 
-		LogFactory.d("EmployeeState",
-				"----------responseEmployeeState ---------");
-		GetEmployeesStatusInPacket inPacket = (GetEmployeesStatusInPacket) IMOApp
-				.getDataEngine().getInPacketByCommand(command);
+		LogFactory.d("EmployeeState", "----------responseEmployeeState ---------");
+		GetEmployeesStatusInPacket inPacket = (GetEmployeesStatusInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		if (inPacket == null) {
 			return;
 		}
@@ -746,8 +649,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 			Object[] idArrays = getRequestUserIdArray();
 			if (idArrays != null) {
-				doEmployeeState(((int[]) idArrays[0]).length,
-						((int[]) idArrays[0]), ((int[]) idArrays[1]));
+				doEmployeeState(((int[]) idArrays[0]).length, ((int[]) idArrays[0]), ((int[]) idArrays[1]));
 			}
 		} else {
 			LogFactory.d("EmployeeState", "状态请求完成。。。。。");
@@ -777,82 +679,36 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			requestCIds = new int[PARENT_MAX_STATE_REQUEST_COUNT];
 			requestUIds = new int[PARENT_MAX_STATE_REQUEST_COUNT];
 
-			LogFactory.d("State--HasRequestCount", "hasRequestCount = "
-					+ parent_hasRequestCount);
+			LogFactory.d("State--HasRequestCount", "hasRequestCount = " + parent_hasRequestCount);
 
-			System.arraycopy(mGlobal.getAllCidArray(), parent_hasRequestCount
-					* PARENT_MAX_STATE_REQUEST_COUNT, requestCIds, 0,
-					PARENT_MAX_STATE_REQUEST_COUNT);
-			System.arraycopy(mGlobal.getAllUidArray(), parent_hasRequestCount
-					* PARENT_MAX_STATE_REQUEST_COUNT, requestUIds, 0,
-					PARENT_MAX_STATE_REQUEST_COUNT);
+			System.arraycopy(mGlobal.getAllCidArray(), parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT, requestCIds, 0, PARENT_MAX_STATE_REQUEST_COUNT);
+			System.arraycopy(mGlobal.getAllUidArray(), parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT, requestUIds, 0, PARENT_MAX_STATE_REQUEST_COUNT);
 
 			this.parent_hasRequestCount++;
 
 		} else {
-			LogFactory.d("StateHasRequestCount",
-					" State has Request Completed !! hasRequestCount = "
-							+ parent_hasRequestCount);
+			LogFactory.d("StateHasRequestCount", " State has Request Completed !! hasRequestCount = " + parent_hasRequestCount);
 
-			requestCIds = new int[mGlobal.getAllCidArray().length
-					- parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT];
-			requestUIds = new int[mGlobal.getAllUidArray().length
-					- parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT];
+			requestCIds = new int[mGlobal.getAllCidArray().length - parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT];
+			requestUIds = new int[mGlobal.getAllUidArray().length - parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT];
 
-			System.arraycopy(mGlobal.getAllCidArray(), parent_hasRequestCount
-					* PARENT_MAX_STATE_REQUEST_COUNT, requestCIds, 0,
-					requestUIds.length);
-			System.arraycopy(mGlobal.getAllUidArray(), parent_hasRequestCount
-					* PARENT_MAX_STATE_REQUEST_COUNT, requestUIds, 0,
-					requestUIds.length);
+			System.arraycopy(mGlobal.getAllCidArray(), parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT, requestCIds, 0, requestUIds.length);
+			System.arraycopy(mGlobal.getAllUidArray(), parent_hasRequestCount * PARENT_MAX_STATE_REQUEST_COUNT, requestUIds, 0, requestUIds.length);
 
 			this.parent_hasRequestCount++;
 
 		}
 
-		return new Object[] { requestCIds, requestUIds };
+		return new Object[] {
+				requestCIds, requestUIds
+		};
 	}
 
 	// ==================状态重新获取==============================
-
 	@Override
 	public void NotifyHttpPacketArrived(String aConnectionId, ByteBuffer aBuffer) {
 		// TODO Auto-generated method stub
-
 	}
-
-	// @Override
-	// public void NotifyPacketProgress(String aConnectionId, short command,
-	// short aTotalLen, short aSendedLen) {
-	//
-	// if (EngineConst.IMO_CONNECTION_ID.equals(aConnectionId))
-	//
-	// switch (command) {
-	// case IMOCommand.IMO_EXIT:
-	// responseLogout(aTotalLen, aSendedLen);
-	// break;
-	// default:
-	// break;
-	// }
-	//
-	// }
-	//
-	// private void responseLogout(short aTotalLen, short aSendedLen) {
-	// LogFactory.d(TAG, "aTotalLen =" + aTotalLen);
-	// LogFactory.d(TAG, "aSendedLen =" + aSendedLen);
-	// if (aTotalLen == aSendedLen) {
-	// LogFactory.d(TAG, "-------->Logout");
-	// //需要删除前面堆栈中的Activity
-	// mGlobal.destoryActivityFrom("LoginActivity");
-	// AppService.getService().reset();
-	// IMOApp.getApp().resetGlobalData();
-	//
-	// LoginActivity.launch(mContext);
-	// }else {
-	// doRequestLogOut();
-	// }
-	// }
-	//
 
 	@Override
 	public void refresh(Object param) {
@@ -868,9 +724,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		if (mNIOThread != null) {
 			// 修改command
-			CommonOutPacket outPacket = new CommonOutPacket(
-					ByteBuffer.allocate(0), IMOCommand.IMO_UPDATE_STATUS,
-					EngineConst.cId, EngineConst.uId);
+			CommonOutPacket outPacket = new CommonOutPacket(ByteBuffer.allocate(0), IMOCommand.IMO_UPDATE_STATUS, EngineConst.cId, EngineConst.uId);
 
 			mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 		} else {
@@ -886,31 +740,20 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case TYPE_GETTREE:
-				getOrganizeTree();
-				break;
-			case TYPE_UPDATEPULLSTATE:
-				if (adapter != null)
-					adapter.notifyDataSetChanged();
-				break;
+				case TYPE_GETTREE:
+					getOrganizeTree();
+					break;
+				case TYPE_UPDATEPULLSTATE:
+					if (adapter != null)
+						adapter.notifyDataSetChanged();
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 
 		};
 	};
-
-	/**
-	 * 响应 部门Info 数据
-	 * 
-	 * @param command
-	 */
-	// 状态最大的请求长度
-	private int MAX_STATE_REQUEST_COUNT = 100;
-
-	// 统计在线总人数
-	private int onLineTotalCount = 0;
 
 	/**
 	 * All User IDs
@@ -918,120 +761,12 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	int[] mAllUserIds = null;
 	int[] mAllCIds = null;
 
-	/**
-	 * 首先得到所有的员工。得到请求的总次数。
-	 */
-	// private int initUserStateRequest(HashMap<Integer, int[]> deptUserIdsMap)
-	// {
-	//
-	// mAllUserIds = null;
-	//
-	// for (int i = 0; i < this.deptid.length; i++) {
-	//
-	// int[] temp_UserId = deptUserIdsMap.get(this.deptid[i]);
-	// // LogFactory.d("UID", Arrays.toString(temp_UserId));
-	//
-	// if (mAllUserIds == null) {
-	//
-	// mAllUserIds = temp_UserId;
-	// }else {
-	//
-	// mAllUserIds = mergeIntArray(mAllUserIds, temp_UserId);
-	// }
-	// // LogFactory.d("UID-mAllUserIds", Arrays.toString(mAllUserIds));
-	// }
-	//
-	//
-	// // ==============外部联系人的时候特殊对待======================
-	// mAllCIds = new int[mAllUserIds.length];
-	// for (int i = 0; i < mAllCIds.length; i++) {
-	// mAllCIds[i] = EngineConst.cId;
-	// }
-	//
-	// return mAllUserIds.length % MAX_STATE_REQUEST_COUNT == 0 ?
-	// mAllUserIds.length / MAX_STATE_REQUEST_COUNT
-	// : mAllUserIds.length / MAX_STATE_REQUEST_COUNT + 1;
-	// }
-
 	HashMap<Integer, Integer> curUserStateMap;
-
-	/**
-	 * 响应：员工的在线状态
-	 * 
-	 * 一次请求最大值为100 没有endFlag限制
-	 * 
-	 * 
-	 * @param command
-	 */
-	// private void responseEmployeeState(short command) {
-	//
-	// LogFactory.d(TAG +"3", "----------responseEmployeeState ---------" );
-	//
-	// GetEmployeesStatusInPacket inPacket = (GetEmployeesStatusInPacket)
-	// tcpConnection.getInPacketByCommand(command);
-	//
-	// // 获得当前请求包 数组
-	//
-	// // int[] cid = inPacket.getCid();
-	// int[] uid = inPacket.getUid();
-	// int[] status = inPacket.getStatus(); //状态
-	//
-	// for (int i = 0; i < uid.length; i++) {
-	//
-	// // 添加用户状态的映射
-	// userStateMap.put(uid[i], status[i]);
-	//
-	// if (status[i] == 1) {
-	// onLineTotalCount++;
-	// }
-	// }
-	//
-	// //当前请求的数据
-	// LogFactory.d(TAG, "responseEmployeeState single Response count =" +
-	// uid.length );
-	//
-	// //打印出当前请求返回的 员工状态 数据
-	// for (int i = 0; i < uid.length; i++) {
-	// LogFactory.d(TAG, " uid =" + uid[i] + "  state = " + status[i]);
-	// }
-	//
-	//
-	// // 当前部门的请求是否都已经完成了
-	// if (hasRequestCount < mStateRequestCount) {
-	//
-	// Object[] idArrays = getRequestUserIdArray();
-	// if (idArrays != null) {
-	// doRequestEmployeeState( ((int[])idArrays[0]).length,
-	// ((int[])idArrays[0]), ((int[])idArrays[1]));
-	//
-	// }
-	//
-	// } else {
-	// mPos = 0;
-	// LogFactory.d(TAG, "User State request has completed !!! \n " +
-	// "responseEmployeeState single Response count =" + uid.length);
-	//
-	// LogFactory.d(TAG, "onLineTotalCount = " + onLineTotalCount);
-	//
-	//
-	// mGlobal.updateStateMap((HashMap<Integer, Integer>)userStateMap.clone());
-	//
-	// handlerTree.sendEmptyMessage(TYPE_GETTREE);
-	//
-	// }
-	//
-	// }
-
-	// ==============================================
 
 	private void getOrganizeTree() {
 		get_special_hide_dept_ids(EngineConst.uId);
 
 		if (mGlobal.deptid != null) {
-
-			// rootDeptMask = mGlobal.deptInfoMap.get(0);
-			// buildTree(rootDeptMask,null);
-
 			buildOrganizeTree();
 
 			addUser2Tree();
@@ -1043,13 +778,9 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			mListView.setAdapter(adapter);
 
 			mListView.setOnItemClickListener(mItemClickListener);
-
 		}
-		// doRequestOwnState();
-
 		if (rootNodeDept != null) {
-			int size = rootNodeDept.getChildNodes() != null ? rootNodeDept
-					.getChildNodes().size() : 0;
+			int size = rootNodeDept.getChildNodes() != null ? rootNodeDept.getChildNodes().size() : 0;
 			LogFactory.d("rootNodeDept", "root child count = " + size);
 		}
 
@@ -1058,8 +789,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
 
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 			mSearchBar.updateCursorState(false);
 
@@ -1078,36 +808,17 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 					data.putString("name", curNode.getNodeData().nodeName);
 					data.putBoolean("sex", curNode.getNodeData().isBoy);
 
-					LogFactory.d(
-							"data",
-							"cid=" + EngineConst.cId + "  uid ="
-									+ curNode.getId() + "  mName= "
-									+ curNode.getNodeData().nodeName);
-					// ///////////////////////update
-					// RecentContact//////////////////////for Test begin
-					/*
-					 * RecentContactInfo info = new RecentContactInfo(
-					 * EngineConst.cId, curNode.getId(),
-					 * curNode.getNodeData().nodeName,///name
-					 * "",//item.getLastmsg()
-					 * RecentContactActivity.getActivity().getCurTime(), 11,
-					 * RecentContactInfo.NORMAL_TYPE ); if
-					 * (RecentContactActivity.getActivity()!=null) {
-					 * RecentContactActivity.getActivity().addOrUpdate(info);
-					 * }else { LogFactory.d(TAG,
-					 * "RecentContactActivity has not lunched ...."); }
-					 */
-					// ///////////////////////update
+					LogFactory.d("data", "cid=" + EngineConst.cId + "  uid =" + curNode.getId() + "  mName= " + curNode.getNodeData().nodeName);
+
+					// update
 					// RecentContact//////////////////////for Test end
 					Integer myMsgUserid = curNode.getId();
-					if (!mGlobal.sendMsgUserId.isEmpty()) {
-						if (mGlobal.sendMsgUserId.contains(curNode.getId())) {
-							mGlobal.sendMsgUserId.remove(myMsgUserid);
-							System.out.println("剩余的 msg id-----"
-									+ mGlobal.sendMsgUserId);
-							if (mGlobal.sendMsgUserId.isEmpty()) {
-								MainActivityGroup.getActivityGroup().mHandler
-										.sendEmptyMessage(0);
+					if (!IMOApp.sendMsgUserId.isEmpty()) {
+						if (IMOApp.sendMsgUserId.contains(curNode.getId())) {
+							IMOApp.sendMsgUserId.remove(myMsgUserid);
+							System.out.println("剩余的 msg id-----" + IMOApp.sendMsgUserId);
+							if (IMOApp.sendMsgUserId.isEmpty()) {
+								MainActivityGroup.getActivityGroup().mHandler.sendEmptyMessage(0);
 							}
 						}
 					}
@@ -1120,8 +831,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 				adapter.showChildNodes(curNode);
 				mListView.setSelection(0);// / for selected first node
 				if (mStructNavView.getViewGroupChildCount() == 0) {
-					mStructNavView.addItem(rootNodeDept.getNodeData().nodeName,
-							rootNodeDept);
+					mStructNavView.addItem(rootNodeDept.getNodeData().nodeName, rootNodeDept);
 				}
 				mStructNavView.addItem(curNode.getNodeData().nodeName, curNode);
 				// 实现导航点击事件的封装。
@@ -1131,58 +841,10 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		}
 	};
 
-	// private void getTree1(){
-	//
-	// rootDeptMask = deptInfoMap.get(0); // deptId = 0
-	//
-	// buildTree(rootDeptMask,null);
-	//
-	// addUser2Tree();
-	//
-	// rootNodeDept = nodeMap.get(0);
-	//
-	// adapter = new OrganizeAdapter(mContext,rootNodeDept);
-	//
-	// mListView.setAdapter(adapter);
-	//
-	// mListView.setOnItemClickListener(new OnItemClickListener() {
-	//
-	// @Override
-	// public void onItemClick(AdapterView<?> parent, View view,int position,
-	// long id) {
-	//
-	// mStructNavView.setVisibility(View.VISIBLE);
-	//
-	// Node curNode = adapter.getItem(position);
-	//
-	// if (NodeManager.isLeaf(curNode)) {
-	// Toast.makeText(mContext, "点击的是叶子节点", 1).show();
-	// }else {
-	// adapter.showChildNodes(curNode);
-	// if (mStructNavView.getViewGroupChildCount()==0) {
-	// mStructNavView.addItem(rootNodeDept.getNodeData().nodeName,rootNodeDept);
-	// }
-	// mStructNavView.addItem(curNode.getNodeData().nodeName,curNode);
-	// // 实现导航点击事件的封装。
-	// mStructNavView.setOnItemClickListener(adapter);
-	// }
-	//
-	// }
-	// });
-	//
-	// // doRequestOwnState();
-	//
-	// LogFactory.d("rootNodeDept", "root child count = " +
-	// rootNodeDept.getChildNodes().size());
-	//
-	// }
-
 	/**
 	 * 测试请求到的数据，开始构造组织架构树
 	 */
 	Node rootNodeDept;
-
-	// DeptMaskItem rootDeptMask ;
 
 	Node curNode;
 
@@ -1223,8 +885,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			// if (currentDeptNeedHide(id))
 			// deptNode.setNeedShow(false);
 			nodeMap.put(deptInfo.getDept_id(), deptNode);
-			deptNodeNextSiblingMap.put(deptInfo.getDept_id(),
-					deptInfo.getNext_sibling());
+			deptNodeNextSiblingMap.put(deptInfo.getDept_id(), deptInfo.getNext_sibling());
 			deptIdList.add(deptInfo.getDept_id());
 		}
 
@@ -1263,8 +924,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			}
 		}
 		// 显示自己
-		System.out.println("显示部门列表："
-				+ Arrays.toString(special_hide_dept_ids.toArray()));
+		System.out.println("显示部门列表：" + Arrays.toString(special_hide_dept_ids.toArray()));
 		for (Integer did : special_hide_dept_ids) {
 			if (nodeMap == null)
 				break;
@@ -1279,37 +939,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	}
 
 	private Integer findDidByUid(int uid) {
-//		Iterator<Entry<Integer, int[]>> iter = IMOApp.getApp().deptUserIdsMap
-//				.entrySet().iterator();
-//
-//		while (iter.hasNext()) {
-//			Map.Entry<Integer, int[]> entry = (Map.Entry<Integer, int[]>) iter
-//					.next();
-//			Integer key = entry.getKey();
-//			int[] val = entry.getValue();
-//			for (int i = 0; i < val.length; i++) {
-//				if (val[i] == uid)
-//					return key;
-//			}
-//		}
-//		return null;
 		return IMOApp.imoStorage.findDidByUid(uid);
-	}
-
-	/**
-	 * 判断当前部门是否需要隐藏
-	 * 
-	 * @param dept_id
-	 * @return
-	 */
-	private boolean currentDeptNeedHide(int dept_id) {
-		if (mGlobal.hide_dept_ids == null)
-			return false;
-		for (int i = 0; i < mGlobal.hide_dept_ids.size(); i++) {
-			if (dept_id == mGlobal.hide_dept_ids.get(i))
-				return true;
-		}
-		return false;
 	}
 
 	/**
@@ -1337,82 +967,6 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 				sortDeptNode(tempNode);
 			}
 		}
-
-	}
-
-	/**
-	 * 构建 :部门节点结构树
-	 * 
-	 * true 表示构建完成
-	 */
-	private boolean buildTree(DeptMaskItem deptInfo, Node curNode) {
-		// showAllData();
-		if (deptInfo == null) {
-			return true;
-		}
-
-		Node deptNode = null;
-
-		if (deptInfo.getDept_id() == 0) {
-			deptNode = new Node(new NodeData("组织结构", "（92/143）"));
-		} else {
-			deptNode = new Node(new NodeData(deptInfo.getName(), "（10/100）"));
-		}
-
-		// node.setId(deptInfo.getDept_id());
-		deptNode.setDept(true);
-		nodeMap.put(deptInfo.getDept_id(), deptNode);
-
-		deptIdList.add(deptInfo.getDept_id());
-
-		if (deptInfo.getDept_id() != 0) {
-			NodeManager.addChildNode(curNode, deptNode);
-		}
-
-		if (deptInfo.getFirst_child() == -1) {
-			if (deptInfo.getNext_sibling() == -1) {
-				if (curNode == null || NodeManager.isRoot(curNode)) {
-					return true;
-				}
-
-				Object[] args = getCurNode(deptInfo, deptNode.getParentNode());
-				if (args != null) {
-					return buildTree(
-							mGlobal.deptInfoMap.get((Integer) args[0]),
-							(Node) args[1]);
-				} else
-					return true;
-			} else {
-				curNode = deptNode.getParentNode();
-				return buildTree(
-						mGlobal.deptInfoMap.get(deptInfo.getNext_sibling()),
-						curNode);
-			}
-		} else {
-			return buildTree(
-					mGlobal.deptInfoMap.get(deptInfo.getFirst_child()),
-					deptNode);
-		}
-	}
-
-	private Object[] getCurNode(DeptMaskItem deptInfo, Node leafParent) {
-
-		Node curNode = null;
-
-		Integer id = mGlobal.deptInfoMap.get(deptInfo.getParent_dept_id())
-				.getNext_sibling();
-
-		if (id != -1) {
-			curNode = leafParent.getParentNode();
-		} else {
-			if (NodeManager.isRoot(leafParent)) {
-				return null;
-			}
-			return getCurNode(
-					mGlobal.deptInfoMap.get(deptInfo.getParent_dept_id()),
-					leafParent.getParentNode());
-		}
-		return new Object[] { id, curNode };
 	}
 
 	/**
@@ -1425,13 +979,9 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 			Node deptNode = nodeMap.get(deptIdList.get(i)); // 部门节点
 			deptNode.setId(deptIdList.get(i));
 
-			// =========================================||
-			if (mGlobal.deptUserInfoMap.get(deptIdList.get(i)) != null
-					&& mGlobal.deptUserInfoMap.get(deptIdList.get(i)).keySet()
-							.size() != 0) {
-				addDeptUser(deptNode,
-						mGlobal.deptInfoMap.get(deptIdList.get(i)));// 添加该部门下的所有User
-																	// leafNode
+			if (mGlobal.deptUserInfoMap.get(deptIdList.get(i)) != null && mGlobal.deptUserInfoMap.get(deptIdList.get(i)).keySet().size() != 0) {
+				addDeptUser(deptNode, mGlobal.deptInfoMap.get(deptIdList.get(i)));// 添加该部门下的所有User
+																					// leafNode
 
 				for (int j = 0; j < deptNode.getChildNodes().size(); j++) {
 					Node temNode = deptNode.getChildNodes().get(j);
@@ -1441,84 +991,29 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 					}
 				}
 			}
-			// =========================================||
-
-			/*
-			 * LogFactory.d("deptNameMapSize", "All dept count = " +
-			 * nodeMap.keySet().size()); // LogFactory.d("deptName",
-			 * "this dept id = " + nodeMap.get(this.deptid[i]));
-			 * 
-			 * // ==================================== //get first_user id int
-			 * dept_first_userId =
-			 * this.deptInfoMap.get(this.deptid[i]).getFfirst_user() ; //get
-			 * first_user userInfo EmployeeInfoItem curEmployeeInfo =
-			 * deptUserInfoMap.get(this.deptid[i]).get(dept_first_userId);
-			 * 
-			 * //build the first user node Node curNode = new Node(new
-			 * NodeData(isBoy
-			 * (curEmployeeInfo.getGender()),curEmployeeInfo.getName()));
-			 * //获得兄弟Node NodeManager.addChildNode(deptNode, curNode);
-			 * 
-			 * //添加单个部门的员工UserInfo Map //
-			 * HashMap<Integer,GetAllEmployeesInfoInPacket.EmployeeInfoItem>
-			 * userInfoMap = deptUserInfoMap.get(this.deptid[i]);
-			 * HashMap<Integer,GetAllEmployeesInfoInPacket.EmployeeInfoItem>
-			 * userInfoMap = deptUserInfoMap.get(deptIdList.get(i));
-			 * 
-			 * HashMap<Integer, Integer> deptUserSiblingMapItem =
-			 * deptUserSiblingMap.get(this.deptid[i]);
-			 * 
-			 * // Node leafNode; // int[] userIdArray =
-			 * this.deptUserIdsMap.get(this.deptid[i]);
-			 * 
-			 * //在该部门中依次添加用户节点 for (int j = 0; j <
-			 * this.deptUserIdsMap.get(this.deptid[i]).length -1; j++) {
-			 * curEmployeeInfo = addUserNode(deptNode, curEmployeeInfo,
-			 * userInfoMap,deptUserSiblingMapItem); if (curEmployeeInfo == null)
-			 * { break; } }
-			 */
 		}
 	}
-
-	// HashMap<Integer, HashMap<Integer, Node>> userNodeMap = new
-	// HashMap<Integer, HashMap<Integer,Node>>();//////
-
-	// HashMap<Integer, Node> userNodeMapItem = null;//////
 
 	private void addDeptUser(Node deptNode, DeptMaskItem deptMaskItem) {
 
 		int dept_first_userId = deptMaskItem.getFfirst_user();
 
-		if (dept_first_userId != -1) {// ////////
-
-			// userNodeMapItem = new HashMap<Integer, Node>();//////
-
-			EmployeeInfoItem curEmployeeInfo = mGlobal.deptUserInfoMap.get(
-					deptMaskItem.getDept_id()).get(dept_first_userId);
+		if (dept_first_userId != -1) {
+			EmployeeInfoItem curEmployeeInfo = mGlobal.deptUserInfoMap.get(deptMaskItem.getDept_id()).get(dept_first_userId);
 
 			// build the first user node
-			Node curNode = new Node(new NodeData(
-					isBoy(curEmployeeInfo.getGender()),
-					curEmployeeInfo.getName()));
-			curNode.setId(curEmployeeInfo.getUid());// ====
-			curNode.setOnLineState(mGlobal.userStateMap.get(curEmployeeInfo
-					.getUid()));
+			Node curNode = new Node(new NodeData(isBoy(curEmployeeInfo.getGender()), curEmployeeInfo.getName()));
+			curNode.setId(curEmployeeInfo.getUid());
+			curNode.setOnLineState(mGlobal.userStateMap.get(curEmployeeInfo.getUid()));
 			NodeManager.addChildNode(deptNode, curNode);
-
-			// userNodeMapItem.put(curEmployeeInfo.getUid(), curNode);//////
-
 			// 添加单个部门的员工UserInfo Map
-			HashMap<Integer, EmployeeInfoItem> userInfoMap = mGlobal.deptUserInfoMap
-					.get(deptMaskItem.getDept_id());
+			HashMap<Integer, EmployeeInfoItem> userInfoMap = mGlobal.deptUserInfoMap.get(deptMaskItem.getDept_id());
 
-			HashMap<Integer, Integer> deptUserSiblingMapItem = mGlobal.deptUserSiblingMap
-					.get(deptMaskItem.getDept_id());
+			HashMap<Integer, Integer> deptUserSiblingMapItem = mGlobal.deptUserSiblingMap.get(deptMaskItem.getDept_id());
 
 			// 在该部门中依次添加用户节点
-			for (int j = 0; j < mGlobal.deptUserIdsMap.get(deptMaskItem
-					.getDept_id()).length - 1; j++) {
-				curEmployeeInfo = addUserNode(deptNode, curEmployeeInfo,
-						userInfoMap, deptUserSiblingMapItem);
+			for (int j = 0; j < mGlobal.deptUserIdsMap.get(deptMaskItem.getDept_id()).length - 1; j++) {
+				curEmployeeInfo = addUserNode(deptNode, curEmployeeInfo, userInfoMap, deptUserSiblingMapItem);
 				if (curEmployeeInfo == null) {
 					break;
 				}
@@ -1531,19 +1026,13 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 	/**
 	 * @param parentNode
-	 *            部门节点
+	 *        部门节点
 	 * @param curEmployeeInfo
-	 *            当前的用户信息
+	 *        当前的用户信息
 	 * @param deptUserInfoMap
-	 *            部门UserInfoMap
+	 *        部门UserInfoMap
 	 */
-	private EmployeeInfoItem addUserNode(Node parentNode,
-			EmployeeInfoItem curEmployeeInfo,
-			HashMap<Integer, EmployeeInfoItem> deptUserInfoMap,
-			HashMap<Integer, Integer> deptUserSiblingMapItem) {
-
-		// int colleagueId = curEmployeeInfo.getColleague_uid();
-		int colleagueId = curEmployeeInfo.getUid();
+	private EmployeeInfoItem addUserNode(Node parentNode, EmployeeInfoItem curEmployeeInfo, HashMap<Integer, EmployeeInfoItem> deptUserInfoMap, HashMap<Integer, Integer> deptUserSiblingMapItem) {
 
 		int siblingId = deptUserSiblingMapItem.get(curEmployeeInfo.getUid());
 
@@ -1563,8 +1052,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 			Node leafNode = new Node(new NodeData(isBoy, nodeName));
 			if (mGlobal.userStateMap != null) {
-				leafNode.setOnLineState(mGlobal.userStateMap
-						.get(employeeInfoItem.getUid()));
+				leafNode.setOnLineState(mGlobal.userStateMap.get(employeeInfoItem.getUid()));
 			}
 
 			leafNode.setId(employeeInfoItem.getUid());
@@ -1592,16 +1080,10 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		ArrayList<Node> searchResultList = new ArrayList<Node>();
 
 		for (int i = 0; i < uidList.size(); i++) {
-
 			uid = uidList.get(i);
-
-			// if (mGlobal.mNodeMap.get(uid) != null) {
-			// searchResultList.add(mGlobal.mNodeMap.get(uid));
-			// }
 			Node node = mGlobal.mNodeMap.get(uid);
 
-			if (node != null && node.getParentNode() != null
-					&& node.getParentNode().isNeedShow()) {
+			if (node != null && node.getParentNode() != null && node.getParentNode().isNeedShow()) {
 				searchResultList.add(node);
 			}
 
@@ -1609,55 +1091,6 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 		}
 
 		return searchResultList;
-	}
-
-	/**
-	 * 数组的合并
-	 * 
-	 * @param curArray
-	 * @param tempArray
-	 * @return
-	 */
-	private int[] mergeIntArray(int[] curArray, int[] tempArray) {
-
-		int[] destArray = new int[curArray.length + tempArray.length];
-
-		System.arraycopy(curArray, 0, destArray, 0, curArray.length);
-		System.arraycopy(tempArray, 0, destArray, curArray.length,
-				tempArray.length);
-		curArray = tempArray = null;
-		System.gc();
-		return destArray;
-	}
-
-	/**
-	 * 合并员工数组
-	 * 
-	 * @param curArray
-	 * @param tempArray
-	 * @return
-	 */
-	private EmployeeInfoItem[] mergeUserArray(EmployeeInfoItem[] curArray,
-			EmployeeInfoItem[] tempArray) {
-
-		EmployeeInfoItem[] destArray = new EmployeeInfoItem[curArray.length
-				+ tempArray.length];
-
-		System.arraycopy(curArray, 0, destArray, 0, curArray.length);
-		System.arraycopy(tempArray, 0, destArray, curArray.length,
-				tempArray.length);
-		curArray = tempArray = null;
-		System.gc();
-		return destArray;
-	}
-
-	/**
-	 * 生成唯一的部门信息Map的key
-	 * 
-	 */
-	private Integer generateDeptKey(int deptId) {
-
-		return Integer.parseInt(EngineConst.cId + "" + deptId);
 	}
 
 	@Override
@@ -1682,15 +1115,14 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 				if (node != null) {
 					adapter.showChildNodes(node);
 				} else {
-					boolean keepOnline = (Boolean) PreferenceManager.get(
-							Globe.SP_FILE, new Object[] {
-									LoginActivity.LOGIN_KEEPONLINE, false });
+					boolean keepOnline = (Boolean) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+							LoginActivity.LOGIN_KEEPONLINE, false
+					});
 					if (!keepOnline) {
 						DialogFactory.promptExit(mContext).show();
 					} else {
 						IMOApp.getApp().hasRunInBackground = true;
-						NoticeManager
-								.updateRecoverAppNotice(notificationManager);
+						NoticeManager.updateRecoverAppNotice(notificationManager);
 						Functions.backToDesk(this);
 					}
 				}
@@ -1712,8 +1144,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		parent_hasRequestCount = 0;
 		int allSize = mGlobal.getAllUidArray().length;
-		parent_StateRequestCount = (allSize % PARENT_MAX_STATE_REQUEST_COUNT == 0) ? (allSize / PARENT_MAX_STATE_REQUEST_COUNT)
-				: (allSize / PARENT_MAX_STATE_REQUEST_COUNT + 1);
+		parent_StateRequestCount = (allSize % PARENT_MAX_STATE_REQUEST_COUNT == 0) ? (allSize / PARENT_MAX_STATE_REQUEST_COUNT) : (allSize / PARENT_MAX_STATE_REQUEST_COUNT + 1);
 
 		LogFactory.d("StateCount", "一共请求的次数 = " + parent_StateRequestCount);
 
@@ -1721,8 +1152,7 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 
 		if (idArrays != null) {
 			LogFactory.d("SendUid", Arrays.toString((int[]) idArrays[1]));
-			doEmployeeState(((int[]) idArrays[0]).length,
-					((int[]) idArrays[0]), ((int[]) idArrays[1]));
+			doEmployeeState(((int[]) idArrays[0]).length, ((int[]) idArrays[0]), ((int[]) idArrays[1]));
 		}
 	}
 }
