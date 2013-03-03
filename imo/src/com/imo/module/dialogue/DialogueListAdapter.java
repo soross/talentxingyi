@@ -4,13 +4,8 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import com.imo.R;
-import com.imo.util.Functions;
-import com.imo.util.ImageUtil;
-
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
+import com.imo.R;
+import com.imo.util.Functions;
+import com.imo.util.ImageUtil;
 
 public class DialogueListAdapter extends SimpleAdapter {
 	private List<Map<String, Object>> mData;
@@ -28,8 +27,7 @@ public class DialogueListAdapter extends SimpleAdapter {
 
 	private static final long space_time = 60 * 1000;
 
-	public DialogueListAdapter(Context context, List<Map<String, Object>> data,
-			int resource, String[] from, int[] to) {
+	public DialogueListAdapter(Context context, List<Map<String, Object>> data, int resource, String[] from, int[] to) {
 		super(context, data, resource, from, to);
 		this.context = context;
 		this.mInflater = LayoutInflater.from(context);
@@ -54,8 +52,7 @@ public class DialogueListAdapter extends SimpleAdapter {
 	private static final int FROM_ITEM_VIEW_TYPE = 0;
 	private static final int TO_ITEM_VIEW_TYPE = 1;
 
-	private static final int COUNT_ITEM_VIEW_TYPE = FROM_ITEM_VIEW_TYPE
-			+ TO_ITEM_VIEW_TYPE + 1;
+	private static final int COUNT_ITEM_VIEW_TYPE = FROM_ITEM_VIEW_TYPE + TO_ITEM_VIEW_TYPE + 1;
 
 	@Override
 	public int getItemViewType(int position) {
@@ -84,11 +81,9 @@ public class DialogueListAdapter extends SimpleAdapter {
 
 		if (convertView == null) {
 			if (viewType == FROM_ITEM_VIEW_TYPE) {
-				convertView = mInflater.inflate(R.layout.dialogue_list_iteml,
-						null);
+				convertView = mInflater.inflate(R.layout.dialogue_list_iteml, null);
 			} else {
-				convertView = mInflater.inflate(R.layout.dialogue_list_itemr,
-						null);
+				convertView = mInflater.inflate(R.layout.dialogue_list_itemr, null);
 			}
 
 			holder = new ViewHolder();
