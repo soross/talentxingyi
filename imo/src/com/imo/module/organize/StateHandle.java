@@ -10,9 +10,6 @@ import com.imo.util.LogFactory;
 
 /**
  * 状态驱动UI更新处理类
- * 
- * @author CaixiaoLong
- * 
  */
 public class StateHandle {
 
@@ -38,8 +35,8 @@ public class StateHandle {
 	 */
 	public void updateUI(Integer uid, Integer status) {
 
-		LogFactory.d("pull-state", "uid = "+ uid +" status =" + status);
-		
+		LogFactory.d("pull-state", "uid = " + uid + " status =" + status);
+
 		if (IMOApp.getApp().userStateMap.get(uid) != null) {
 			IMOApp.getApp().userStateMap.put(uid, status);
 		} else {
@@ -52,11 +49,9 @@ public class StateHandle {
 		if (!IMOApp.getApp().hasRunInBackground) {
 
 			if (IMOApp.getApp().mLastActivity instanceof RecentContactActivity) {
-				RecentContactActivity.getActivity().mContactHandle
-						.sendEmptyMessage(RecentContactActivity.TYPE_UPDATESTATEBYPULLSTATE);
+				RecentContactActivity.getActivity().mContactHandle.sendEmptyMessage(RecentContactActivity.TYPE_UPDATESTATEBYPULLSTATE);
 			} else if (IMOApp.getApp().mLastActivity instanceof ContactActivity) {
-				ContactActivity.getActivity().mContactHandler
-						.sendEmptyMessage(ContactActivity.TYPE_UPDATE_STATE);
+				ContactActivity.getActivity().mContactHandler.sendEmptyMessage(ContactActivity.TYPE_UPDATE_STATE);
 			} else if (IMOApp.getApp().mLastActivity instanceof DialogueActivity) {
 				Message msg = new Message();
 				msg.what = DialogueActivity.TYPE_UPDATEFACE;
@@ -64,8 +59,7 @@ public class StateHandle {
 				msg.obj = isOnlineForDialogue(status);
 				DialogueActivity.instance.mFaceHandler.sendMessage(msg);
 			} else if (IMOApp.getApp().mLastActivity instanceof OrganizeActivity) {
-				OrganizeActivity.getActivity().handlerTree
-						.sendEmptyMessage(OrganizeActivity.TYPE_UPDATEPULLSTATE);
+				OrganizeActivity.getActivity().handlerTree.sendEmptyMessage(OrganizeActivity.TYPE_UPDATEPULLSTATE);
 			}
 		}
 	}
@@ -81,11 +75,9 @@ public class StateHandle {
 		if (!IMOApp.getApp().hasRunInBackground) {
 
 			if (IMOApp.getApp().mLastActivity instanceof RecentContactActivity) {
-				RecentContactActivity.getActivity().mContactHandle
-						.sendEmptyMessage(RecentContactActivity.TYPE_UPDATESTATEBYPULLSTATE);
+				RecentContactActivity.getActivity().mContactHandle.sendEmptyMessage(RecentContactActivity.TYPE_UPDATESTATEBYPULLSTATE);
 			} else if (IMOApp.getApp().mLastActivity instanceof ContactActivity) {
-				ContactActivity.getActivity().mContactHandler
-						.sendEmptyMessage(ContactActivity.TYPE_UPDATE_STATE);
+				ContactActivity.getActivity().mContactHandler.sendEmptyMessage(ContactActivity.TYPE_UPDATE_STATE);
 			} else if (IMOApp.getApp().mLastActivity instanceof DialogueActivity) {
 				int uid = DialogueActivity.instance.aboutUid;
 				boolean isOnline = IMOApp.getApp().isOnlineFindByUid(uid);
@@ -96,8 +88,7 @@ public class StateHandle {
 				System.out.println("通知聊天界面状态：" + isOnline);
 				DialogueActivity.instance.mFaceHandler.sendMessage(msg);
 			} else if (IMOApp.getApp().mLastActivity instanceof OrganizeActivity) {
-				OrganizeActivity.getActivity().handlerTree
-						.sendEmptyMessage(OrganizeActivity.TYPE_UPDATEPULLSTATE);
+				OrganizeActivity.getActivity().handlerTree.sendEmptyMessage(OrganizeActivity.TYPE_UPDATEPULLSTATE);
 			}
 		}
 	}
