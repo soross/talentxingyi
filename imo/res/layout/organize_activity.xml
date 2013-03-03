@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffffff"
+    android:orientation="vertical" >
+
+    <!-- android:layout_marginBottom="@dimen/bottombar_height" -->
+
+    <com.imo.view.SearchBar
+        android:id="@+id/searchbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+<!--  <include layout="@layout/line" /> -->
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/organize"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <com.imo.module.organize.view.StructNavView
+                    android:id="@+id/structNavView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/imo_dept_gradual_bg"
+                    android:cacheColorHint="#00000000"
+                    android:drawSelectorOnTop="false"
+                    android:fadingEdgeLength="0.0sp"
+                    android:fastScrollEnabled="false"
+                    android:scrollbars="none"
+                    android:scrollingCache="false" />
+                <!--
+            @android:color/transparent 
+			android:layout_marginLeft="20px"
+                -->
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/organizeListView"
+                style="@style/imo_listview_style" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/searchResultListView"
+            style="@style/imo_listview_style"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/pop_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/pop_outside_bg"
+            android:visibility="gone" />
+    </FrameLayout>
+
+</LinearLayout>
+

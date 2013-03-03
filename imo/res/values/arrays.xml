@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!--TitleBar 个人设置  -->
+    <string-array name="my_profil">
+        <item >编辑工作签名</item>
+        <item >我的资料</item>
+        <item >系统设置</item>
+    </string-array>
+    
+</resources>

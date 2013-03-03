@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/tabhost"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0" />
+
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.0"
+            android:visibility="gone" />
+
+        <com.imo.view.BottomBar
+            android:id="@+id/mBottombar"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/bottombar_height"
+            android:layout_gravity="bottom" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/first_tip"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/imo_organize_tip"
+        android:visibility="gone" />
+
+</TabHost><!--
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="#ffffff"
+	android:orientation="vertical">
+
+	<com.imo.view.TitleBar android:id="@+id/titlebar" android:layout_width="fill_parent" 
+		android:layout_height="wrap_content" android:layout_alignParentTop="true" 
+		android:visibility="gone" > </com.imo.view.TitleBar> <com.imo.view.SearchBar 
+		android:id="@+id/searchbar" android:layout_width="fill_parent" android:layout_height="wrap_content" 
+		android:layout_below="@+id/titlebar" android:visibility="gone"> </com.imo.view.SearchBar>
+
+	<LinearLayout
+		android:id="@+id/center"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_above="@+id/bottombar"
+		android:layout_below="@+id/titlebar"
+		android:layout_weight="1.0"
+		android:background="@color/gray">
+
+		<LinearLayout
+			android:id="@+id/one"
+			android:layout_width="50dip"
+			android:layout_height="wrap_content"
+			android:background="@color/gray" />
+
+
+		<LinearLayout
+			android:id="@+id/two"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="#666666" />
+
+	</LinearLayout>
+
+	<com.imo.view.BottomBar
+		android:id="@+id/bottombar"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:visibility="gone" />
+
+
+</RelativeLayout>
+-->

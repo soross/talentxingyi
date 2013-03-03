@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/default_bg">
+
+    <com.imo.view.LinedEditText
+        android:id="@+id/et_work_sign"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/worksign_content_height"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="10px"
+        android:paddingRight="10px"
+        android:gravity="top|left"
+        android:background="@android:color/transparent"
+        android:lineSpacingExtra="13px"
+        android:textSize="22sp"
+        android:scrollbars="vertical" >
+
+        <requestFocus />
+    </com.imo.view.LinedEditText>
+
+    <!--
+         android:maxLines="7"
+         android:minLines="7"
+		android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+    -->
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="@dimen/worksign_delete_height"
+        android:layout_height="@dimen/worksign_delete_height"
+        android:layout_marginRight="5px"
+        android:layout_marginBottom="5px"
+        android:layout_marginTop="10dip"
+        android:layout_alignRight="@+id/et_work_sign"
+		android:layout_alignBottom="@+id/et_work_sign"
+        android:background="@drawable/login_delete_bg" 
+  />
+
+</RelativeLayout>
