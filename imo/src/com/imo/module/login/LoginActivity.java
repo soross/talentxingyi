@@ -3,12 +3,6 @@ package com.imo.module.login;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 
 import android.app.Dialog;
@@ -20,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,17 +31,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.imo.R;
 import com.imo.activity.AbsBaseActivityNetListener;
 import com.imo.activity.IAppUpdate;
 import com.imo.dataengine.DataEngine;
 import com.imo.dataengine.DataEngine.LOGICSTATUS;
-import com.imo.global.AppService;
 import com.imo.global.Globe;
 import com.imo.global.IMOApp;
-import com.imo.module.MainActivityGroup;
 import com.imo.module.organize.FirstLoadingActivity;
 import com.imo.module.organize.NormalLoadingActivity;
 import com.imo.network.Encrypt.StringUtils;
@@ -72,12 +62,8 @@ import com.imo.util.UpdateManager;
 
 /**
  * 登陆界面
- * 
- * @author CaixiaoLong
- * 
  */
-public class LoginActivity extends AbsBaseActivityNetListener implements
-		OnCheckedChangeListener, OnClickListener, IAppUpdate {
+public class LoginActivity extends AbsBaseActivityNetListener implements OnCheckedChangeListener, OnClickListener, IAppUpdate {
 
 	private static LoginActivity instance;
 
@@ -115,7 +101,9 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 
 	private CheckBox[] options;
 
-	private int[] optionIds = { R.id.cb_rember_pwd, R.id.cb_redirect_login, };
+	private int[] optionIds = {
+			R.id.cb_rember_pwd, R.id.cb_redirect_login,
+	};
 
 	private ImageButton btnLogin;
 
@@ -136,13 +124,6 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	public static void launch(Context c) {
 		Intent intent = new Intent(c, LoginActivity.class);
 		c.startActivity(intent);
-
-		// Intent intent = new Intent(c, LoginActivity.class);
-		// intent.setAction(Intent.ACTION_MAIN);
-		// intent.addCategory(Intent.CATEGORY_LAUNCHER);
-		// intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		// intent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-		// c.startActivity(intent);
 	}
 
 	@Override
@@ -154,8 +135,7 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 		instance = this;
 
 		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.rl_login_bg);
-		relativeLayout.setBackgroundDrawable(new BitmapDrawable(getResources()
-				.openRawResource(R.drawable.welcome_bg)));
+		relativeLayout.setBackgroundDrawable(new BitmapDrawable(getResources().openRawResource(R.drawable.welcome_bg)));
 
 		corpLogo = (ImageView) findViewById(R.id.iv_corpLogo);
 
@@ -172,8 +152,7 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 
 			@Override
 			public void onClick(View v) {
-				Functions.openBrowser(LoginActivity.this,
-						"http://www.imoffice.com/reg/");
+				Functions.openBrowser(LoginActivity.this, "http://www.imoffice.com/reg/");
 			}
 		});
 		options = new CheckBox[optionIds.length];
@@ -190,8 +169,7 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 		dialogKeyListener = new DialogInterface.OnKeyListener() {
 
 			@Override
-			public boolean onKey(DialogInterface dialog, int keyCode,
-					KeyEvent event) {
+			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_BACK) {
 					stopLogin();
 				}
@@ -204,7 +182,7 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	public void stopLogin() {
 		updateViewState(btnLogin, true);
 		EngineConst.isLoginSuccess = false;
-		
+
 		DataEngine.getInstance().setLogicStatus(LOGICSTATUS.DISCONNECTED);
 		isLoginFailed = true;
 		isAcceptData = false;
@@ -216,18 +194,27 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	 * 在记住密码的情况下，需要初始化数据
 	 */
 	private void initLoginData() {
-		isRemberPwd = (Boolean) PreferenceManager.get(Globe.SP_FILE,
-				new Object[] { LOGIN_REMBERPWD, isRemberPwd });
+		isRemberPwd = (Boolean) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+				LOGIN_REMBERPWD, isRemberPwd
+		});
 		if (isRemberPwd) {
-			loginPwd = (String) PreferenceManager.get(Globe.SP_FILE,
-					new String[] { LOGIN_PWD, new String() });
+			loginPwd = (String) PreferenceManager.get(Globe.SP_FILE, new String[] {
+					LOGIN_PWD, new String()
+			});
 		}
+		LogFactory.d(TAG, "isRemberPwd:" + isRemberPwd + ",loginPwd:" + loginPwd);
+
 		loginName = (String) PreferenceManager.get(Globe.SP_FILE, new String[] {
-				LOGIN_NAME, new String() });
-		autoLogin = (Boolean) PreferenceManager.get(Globe.SP_FILE,
-				new Object[] { LOGIN_AUTOLOGIN, autoLogin });
-		keepOnline = (Boolean) PreferenceManager.get(Globe.SP_FILE,
-				new Object[] { LOGIN_KEEPONLINE, keepOnline });
+				LOGIN_NAME, new String()
+		});
+		autoLogin = (Boolean) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+				LOGIN_AUTOLOGIN, autoLogin
+		});
+		keepOnline = (Boolean) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+				LOGIN_KEEPONLINE, keepOnline
+		});
+		LogFactory.d(TAG, "loginName:" + loginName + ",autoLogin:" + autoLogin + ",keepOnline:" + keepOnline);
+
 		if (null != loginName) {
 			login_edit_account.setText(loginName);
 			login_edit_account.setSelection(login_edit_account.length());
@@ -239,43 +226,41 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 		options[1].setChecked(autoLogin);
 
 		// 加载公司信息
-		String corp_name_temp = (String) PreferenceManager.get(Globe.SP_FILE,
-				new String[] { CORP_SHORT_NAME, new String() });
+		String corp_name_temp = (String) PreferenceManager.get(Globe.SP_FILE, new String[] {
+				CORP_SHORT_NAME, new String()
+		});
 		if (corp_name_temp != null && corp_name_temp.length() > 0)
 			organizationName.setText(corp_name_temp);
-		String name_temp = (String) PreferenceManager.get(Globe.SP_FILE,
-				new String[] { REAL_NAME, new String() });
+		String name_temp = (String) PreferenceManager.get(Globe.SP_FILE, new String[] {
+				REAL_NAME, new String()
+		});
 		if (name_temp != null && name_temp.length() > 0)
 			userName.setText(name_temp);
+		LogFactory.d(TAG, "corp_name_temp:" + corp_name_temp + ",name_temp:" + name_temp);
 
 		// 加载公司logo
 		byte[] b_logo = null;
 		try {
 			b_logo = IOUtil.readFile(Globe.corpLogo_file, this);
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 		if (b_logo != null && b_logo.length > 0) {
-			Bitmap bm_logo = BitmapFactory.decodeByteArray(b_logo, 0,
-					b_logo.length);
-			corpLogo.setImageBitmap(Functions.zoomImg(bm_logo, getResources()
-					.getDimension(R.dimen.login_logo_img)));
+			Bitmap bm_logo = BitmapFactory.decodeByteArray(b_logo, 0, b_logo.length);
+			corpLogo.setImageBitmap(Functions.zoomImg(bm_logo, getResources().getDimension(R.dimen.login_logo_img)));
 		}
 
-		login_edit_account
-				.setOnFocusChangeListener(new OnFocusChangeListener() {
+		login_edit_account.setOnFocusChangeListener(new OnFocusChangeListener() {
 
-					@Override
-					public void onFocusChange(View arg0, boolean arg1) {
-						if (arg1) {
-							btn_delete.setVisibility(View.VISIBLE);
-						} else {
-							if (login_edit_account.getText() != null
-									&& login_edit_account.getText().length() > 0) {
-								btn_delete.setVisibility(View.INVISIBLE);
-							}
-						}
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				if (arg1) {
+					btn_delete.setVisibility(View.VISIBLE);
+				} else {
+					if (login_edit_account.getText() != null && login_edit_account.getText().length() > 0) {
+						btn_delete.setVisibility(View.INVISIBLE);
 					}
-				});
+				}
+			}
+		});
 
 	}
 
@@ -286,14 +271,12 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 		login_edit_account.addTextChangedListener(new TextWatcher() {
 
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				// TODO Auto-generated method stub
 			}
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 				// TODO Auto-generated method stub
 			}
 
@@ -310,18 +293,6 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 
 			}
 		});
-		// login_edit_account.setOnKeyListener(new OnKeyListener() {
-		//
-		// @Override
-		// public boolean onKey(View v, int keyCode, KeyEvent event) {
-		// if (login_edit_account.getText().toString().length() >0) {
-		// btn_delete.setVisibility(View.VISIBLE);
-		// }else {
-		// btn_delete.setVisibility(View.INVISIBLE);
-		// }
-		// return false;
-		// }
-		// });
 
 		if (null != dialog) {
 			dialog.setOnDismissListener(new OnDismissListener() {
@@ -347,63 +318,55 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 			HashMap<String, Object> netData = (HashMap<String, Object>) msg.obj;
 			Short command = (Short) netData.get("cmd");
 			switch (command) {
-			case IMOCommand.IMO_LOGIN: {
-				if (0 == (Short) netData.get("ret")) {
-					if (!isAcceptData)
-						return;
-					getSelfInfo();
-					getCorpInfo();
-					getCorpLogo();
-					getSelfHeadPic();
-				} else if (115 == (Short) netData.get("ret")) {// 未测试
-					// String preUpdate_build = (String) netData
-					// .get("preUpdate_build");
-					// Message msg1 = new Message();
-					// msg1.obj = preUpdate_build;
-					// mUpdateAppHandler.sendMessage(msg1);
-				} else {
-					isLoginFailed = true;
-					updateViewState(btnLogin, false);
-					if (dialog != null && dialog.isShowing())
-						dialog.dismiss();
-					dialog = DialogFactory.alertDialog(mContext, "imo提示",
-							"用户名或密码错误", new String[] { "确定" },
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface arg0,
-										int arg1) {
-									updateViewState(btnLogin, true);
-								}
-
-							});
-					registerEvents();
-					if (mGlobal.hasRunInBackground) {
-						hasHappendPwdError = true;
+				case IMOCommand.IMO_LOGIN: {
+					if (0 == (Short) netData.get("ret")) {
+						if (!isAcceptData)
+							return;
+						getSelfInfo();
+						getCorpInfo();
+						getCorpLogo();
+						getSelfHeadPic();
+					} else if (115 == (Short) netData.get("ret")) {// 未测试
 					} else {
-						dialog.show();
+						isLoginFailed = true;
+						updateViewState(btnLogin, false);
+						if (dialog != null && dialog.isShowing())
+							dialog.dismiss();
+						dialog = DialogFactory.alertDialog(mContext, "imo提示", "用户名或密码错误", new String[] {
+							"确定"
+						}, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								updateViewState(btnLogin, true);
+							}
+						});
+						registerEvents();
+						if (mGlobal.hasRunInBackground) {
+							hasHappendPwdError = true;
+						} else {
+							dialog.show();
+						}
 					}
+
+					break;
+				}
+				case IMOCommand.IMO_GET_CORP_INFO: {
+					if (0 == (Short) netData.get("ret")) {
+						organizationName.setText(Globe.corp.getShort_name());
+					}
+					goMainActivity();
+					break;
+				}
+				case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
+					if (0 == (Short) netData.get("ret")) {
+						userName.setText(Globe.myself.getName());
+					}
+					goMainActivity();
+					break;
 				}
 
-				break;
-			}
-			case IMOCommand.IMO_GET_CORP_INFO: {
-				if (0 == (Short) netData.get("ret")) {
-					organizationName.setText(Globe.corp.getShort_name());
-				}
-				goMainActivity();
-				break;
-			}
-			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
-				if (0 == (Short) netData.get("ret")) {
-					userName.setText(Globe.myself.getName());
-				}
-				goMainActivity();
-				break;
-			}
-
-			default:
-				break;
+				default:
+					break;
 			}
 
 		}
@@ -424,12 +387,13 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	private void goMainActivity() {
 		if (!isAcceptData)
 			return;
-		// 控制是否跳转
+		// 控制是否跳转(有两处会调用到goMainActivity,以最后一次为主)
 		requestCount++;
 		if (requestCount < requestOk)
 			return;
-		String tag = (String) PreferenceManager.get("IMO-DATA"
-				+ EngineConst.uId, new String[] { "isFirst", "Yes" });
+		String tag = (String) PreferenceManager.get("IMO-DATA" + EngineConst.uId, new String[] {
+				"isFirst", "Yes"
+		});
 		if (tag.equals("Yes")) {
 			FirstLoadingActivity.launch(mContext);
 		} else {
@@ -440,119 +404,47 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 			if (dialog.isShowing())
 				dialog.dismiss();
 		}
-		
+
 		LoginActivity.this.finish();
 	}
 
 	private void getSelfInfo() {
-		int mask = 1 | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5)
-				| (1 << 6) | (1 << 7) | (1 << 8) | (1 << 9) | (1 << 10)
-				| (1 << 11) | (1 << 12) | (1 << 13) | (1 << 14);
-		ByteBuffer bodyBuffer = GetEmployeeProfileOutPacket
-				.GenerateEmployeeProfileBody(aUntransID, EngineConst.cId,
-						EngineConst.uId, mask);
-		GetEmployeeProfileOutPacket out = new GetEmployeeProfileOutPacket(
-				bodyBuffer, IMOCommand.IMO_GET_EMPLOYEE_PROFILE,
-				EngineConst.cId, EngineConst.uId);
+		int mask = 1 | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5) | (1 << 6) | (1 << 7) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11) | (1 << 12) | (1 << 13) | (1 << 14);
+		ByteBuffer bodyBuffer = GetEmployeeProfileOutPacket.GenerateEmployeeProfileBody(aUntransID, EngineConst.cId, EngineConst.uId, mask);
+		GetEmployeeProfileOutPacket out = new GetEmployeeProfileOutPacket(bodyBuffer, IMOCommand.IMO_GET_EMPLOYEE_PROFILE, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 	}
-
-	// private void getSelfInfo() {
-	// try {
-	// Globe.myself = IMOApp.imoStorage.getSelfInfo(nameAndDomain[0]);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// if (Globe.myself == null) {
-	// int mask = 1 | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5)
-	// | (1 << 6) | (1 << 7) | (1 << 8) | (1 << 9) | (1 << 10)
-	// | (1 << 11) | (1 << 12) | (1 << 13) | (1 << 14);
-	// ByteBuffer bodyBuffer = GetEmployeeProfileOutPacket
-	// .GenerateEmployeeProfileBody(aUntransID, EngineConst.cId,
-	// EngineConst.uId, mask);
-	// GetEmployeeProfileOutPacket out = new GetEmployeeProfileOutPacket(
-	// bodyBuffer, IMOCommand.IMO_GET_EMPLOYEE_PROFILE,
-	// EngineConst.cId, EngineConst.uId);
-	// mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
-	// } else {
-	// userName.setText(Globe.myself.getName());
-	// getCorpInfo();
-	// }
-	//
-	// }
 
 	private void getCorpInfo() {// 请求公司信息
-		int mask = 1 | (1 << 1) | (1 << 2) | (1 << 12) | (1 << 14) | (1 << 16)
-				| (1 << 17) | (1 << 20);// 公司账号，公司简称，公司中文名称，公司地址，公司简介，公司电话，公司传真，公司网址
-		ByteBuffer bodyBuffer = GetCorpInfoOutPacket.GenerateCorpInfoBody(
-				EngineConst.cId, mask);
-		GetCorpInfoOutPacket out = new GetCorpInfoOutPacket(bodyBuffer,
-				IMOCommand.IMO_GET_CORP_INFO, EngineConst.cId, EngineConst.uId);
+		int mask = 1 | (1 << 1) | (1 << 2) | (1 << 12) | (1 << 14) | (1 << 16) | (1 << 17) | (1 << 20);// 公司账号，公司简称，公司中文名称，公司地址，公司简介，公司电话，公司传真，公司网址
+		ByteBuffer bodyBuffer = GetCorpInfoOutPacket.GenerateCorpInfoBody(EngineConst.cId, mask);
+		GetCorpInfoOutPacket out = new GetCorpInfoOutPacket(bodyBuffer, IMOCommand.IMO_GET_CORP_INFO, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 	}
-
-	// private void getCorpInfo() {
-	// // 加载公司信息
-	// try {
-	// Globe.corp = IMOApp.imoStorage.getCorpInfo();
-	// } catch (Exception e1) {
-	// e1.printStackTrace();
-	// }
-	//
-	// // 数据库没有公司信息，则网络请求
-	// if (Globe.corp == null) {
-	// // 请求公司信息
-	// int mask = 1 | (1 << 1) | (1 << 2) | (1 << 12) | (1 << 14)
-	// | (1 << 16) | (1 << 17) | (1 <<
-	// 20);//公司账号，公司简称，公司中文名称，公司地址，公司简介，公司电话，公司传真，公司网址
-	// ByteBuffer bodyBuffer = GetCorpInfoOutPacket.GenerateCorpInfoBody(
-	// EngineConst.cId, mask);
-	// GetCorpInfoOutPacket out = new GetCorpInfoOutPacket(bodyBuffer,
-	// IMOCommand.IMO_GET_CORP_INFO, EngineConst.cId,
-	// EngineConst.uId);
-	// mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
-	// } else {
-	// organizationName.setText(Globe.corp.getShort_name());
-	// try {
-	// getCorpLogo();
-	// getSelfHeadPic();
-	// } catch (Exception e) {
-	// } finally {
-	// goMainActivity();
-	// }
-	// }
-	// }
 
 	private void getCorpLogo() {
 		// 加载公司logo
 		byte[] b_logo = null;
 		try {
 			b_logo = IOUtil.readFile(Globe.corpLogo_file, this);
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 		// 文件中没有公司logo，则网络请求
 		if (b_logo != null && b_logo.length > 0) {
-			Bitmap bm_logo = BitmapFactory.decodeByteArray(b_logo, 0,
-					b_logo.length);
-			corpLogo.setImageBitmap(Functions.zoomImg(bm_logo, getResources()
-					.getDimension(R.dimen.login_logo_img)));
+			Bitmap bm_logo = BitmapFactory.decodeByteArray(b_logo, 0, b_logo.length);
+			corpLogo.setImageBitmap(Functions.zoomImg(bm_logo, getResources().getDimension(R.dimen.login_logo_img)));
 		} else {
 			DownLoadLogoTask task = new DownLoadLogoTask();
 			task.execute("");
 		}
-		// goMainActivity();
 	}
 
 	class DownLoadLogoTask extends AsyncTask<String, Void, byte[]> {
 		@Override
 		protected byte[] doInBackground(String... params) {
 			try {
-				byte[] b_logo = Functions.http_get(Functions
-						.buildCorpLogoUrl(EngineConst.cId));
+				byte[] b_logo = Functions.http_get(Functions.buildCorpLogoUrl(EngineConst.cId));
 				if (b_logo != null) {
-					IOUtil.saveFile(Globe.corpLogo_file, b_logo,
-							IMOApp.getApp(), Context.MODE_PRIVATE);
+					IOUtil.saveFile(Globe.corpLogo_file, b_logo, IMOApp.getApp(), Context.MODE_PRIVATE);
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -561,35 +453,28 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 		}
 	}
 
+	/** 加载个人头像 */
 	private void getSelfHeadPic() {
-		// 加载个人头像
 		byte[] b_head = null;
 		try {
 			b_head = IOUtil.readFile(Globe.selfHeadPic_file, this);
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 		// 文件中没有个人头像，则网络请求
 		if (b_head != null && b_head.length > 0) {
-			Globe.bm_head = BitmapFactory.decodeByteArray(b_head, 0,
-					b_head.length);
+			Globe.bm_head = BitmapFactory.decodeByteArray(b_head, 0, b_head.length);
 		} else {
 			DownLoadHeadPicTask task = new DownLoadHeadPicTask();
 			task.execute("");
 		}
-
-		// goMainActivity();
-
 	}
 
 	class DownLoadHeadPicTask extends AsyncTask<String, Void, byte[]> {
 		@Override
 		protected byte[] doInBackground(String... params) {
 			try {
-				byte[] b_head = Functions.http_get(Functions.buildPersonPicUrl(
-						EngineConst.cId, EngineConst.uId));
+				byte[] b_head = Functions.http_get(Functions.buildPersonPicUrl(EngineConst.cId, EngineConst.uId));
 				if (b_head != null) {
-					IOUtil.saveFile(Globe.selfHeadPic_file, b_head,
-							IMOApp.getApp(), Context.MODE_PRIVATE);
+					IOUtil.saveFile(Globe.selfHeadPic_file, b_head, IMOApp.getApp(), Context.MODE_PRIVATE);
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -620,49 +505,48 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 		// <1> 非空验证
 		if (Functions.isEmpty(loginName)) {
 			updateViewState(btnLogin, false);
-			dialog = DialogFactory.alertDialog(mContext, "imo提示", "用户名不能为空！",
-					new String[] { "确定" },
-					new DialogInterface.OnClickListener() {
+			dialog = DialogFactory.alertDialog(mContext, "imo提示", "用户名不能为空！", new String[] {
+				"确定"
+			}, new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							updateViewState(btnLogin, true);
-						}
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					updateViewState(btnLogin, true);
+				}
 
-					});
+			});
 			registerEvents();
 			dialog.show();
 			return;
 		}
 		if (Functions.isEmpty(loginPwd)) {
 			updateViewState(btnLogin, false);
-			dialog = DialogFactory.alertDialog(mContext, "imo提示", "密码不能为空！",
-					new String[] { "确定" },
-					new DialogInterface.OnClickListener() {
+			dialog = DialogFactory.alertDialog(mContext, "imo提示", "密码不能为空！", new String[] {
+				"确定"
+			}, new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							updateViewState(btnLogin, true);
-						}
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					updateViewState(btnLogin, true);
+				}
 
-					});
+			});
 			registerEvents();
 			dialog.show();
 			return;
 		}
 		int index = loginName.indexOf("@");
-		if (index <= 0 || index == loginName.length() - 1 || index > 60
-				|| loginName.length() - index >= 34) {
+		if (index <= 0 || index == loginName.length() - 1 || index > 60 || loginName.length() - index >= 34) {
 			updateViewState(btnLogin, false);
-			dialog = DialogFactory.alertDialog(mContext, "imo提示", "用户名格式不正确！",
-					new String[] { "确定" },
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							updateViewState(btnLogin, true);
-						}
+			dialog = DialogFactory.alertDialog(mContext, "imo提示", "用户名格式不正确！", new String[] {
+				"确定"
+			}, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					updateViewState(btnLogin, true);
+				}
 
-					});
+			});
 			registerEvents();
 			dialog.show();
 			return;
@@ -678,28 +562,27 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 		}
 
 		if (currentUserIsFirstLogin && !Functions.isWifi()) {
-			dialog = DialogFactory.alertDialog(this, "imo提示",
-					"初次登录需要加载的数据量较大，会产生流量费用，建议使用Wi-Fi网络", new String[] { "继续",
-							"取消" }, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							updateViewState(btnLogin, true);
-							dialog = DialogFactory.progressDialog(mContext,
-									"正在验证，请稍后...");
-							dialog.setOnKeyListener(dialogKeyListener);
-							dialog.show();
-							LoginTask loginTask = new LoginTask();
-							loginTask.execute("");
-						}
+			dialog = DialogFactory.alertDialog(this, "imo提示", "初次登录需要加载的数据量较大，会产生流量费用，建议使用Wi-Fi网络", new String[] {
+					"继续", "取消"
+			}, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					updateViewState(btnLogin, true);
+					dialog = DialogFactory.progressDialog(mContext, "正在验证，请稍后...");
+					dialog.setOnKeyListener(dialogKeyListener);
+					dialog.show();
+					LoginTask loginTask = new LoginTask();
+					loginTask.execute("");
+				}
 
-					}, new DialogInterface.OnClickListener() {
+			}, new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							updateViewState(btnLogin, true);
-						}
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					updateViewState(btnLogin, true);
+				}
 
-					});
+			});
 			dialog.show();
 			dialog.setOnDismissListener(new OnDismissListener() {
 
@@ -720,7 +603,6 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	}
 
 	private void startLoginConnection() {
-		// <2> 判断当前网络的状态.
 		if (!ConnectionChangeReceiver.checkNet()) {
 			Globe.canConnect = false;
 			return;
@@ -744,24 +626,20 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 			updateViewState(btnLogin, true);
 			return;
 		}
-		// <3> 登录
 		if (!isAcceptData)
 			return;
-		nameAndDomain = loginName.split("@");
+		nameAndDomain = loginName.split("@");// {"admin","4948997"}
 		EngineConst.password = loginPwd;
-		// 0代表公司账号登录，1代表域名登录
-		byte flag = 0;
+		byte flag = 0;// 0代表公司账号登录，1代表域名登录
 		if (nameAndDomain[1].indexOf(".") > -1)
 			flag = 1;
-		ByteBuffer bodyBuffer = LoginOutPacket.GenerateLoginBody(flag,
-				nameAndDomain[1], nameAndDomain[0].toLowerCase(),
-				nameAndDomain[0].toLowerCase());
 
-		LoginOutPacket out = new LoginOutPacket(bodyBuffer,
-				IMOCommand.IMO_LOGIN, 0, 0);
+		LogFactory.d(TAG, "flag:" + flag + ",nameAndDomain[1]:" + nameAndDomain[1] + ",nameAndDomain[0]:" + nameAndDomain[0]);
+		ByteBuffer bodyBuffer = LoginOutPacket.GenerateLoginBody(flag, nameAndDomain[1], nameAndDomain[0].toLowerCase(), nameAndDomain[0].toLowerCase());
+		LoginOutPacket out = new LoginOutPacket(bodyBuffer, IMOCommand.IMO_LOGIN, 0, 0);
 		IMOApp.getDataEngine().addToObserverList(LoginActivity.this);
-		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 
+		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 	}
 
 	private void updateViewState(View view, boolean clickable) {
@@ -771,24 +649,24 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	@Override
 	public void onCheckedChanged(CompoundButton view, boolean state) {
 		switch (view.getId()) {
-		case R.id.cb_rember_pwd:
-			// 记住密码
-			isRemberPwd = state;
-			if (!isRemberPwd) {
-				autoLogin = false;
-				options[1].setChecked(autoLogin);
-			}
-			break;
-		case R.id.cb_redirect_login:
-			// 直接登录
-			autoLogin = state;
-			if (autoLogin) {
-				isRemberPwd = true;
-				options[0].setChecked(isRemberPwd);
-			}
-			break;
-		default:
-			break;
+			case R.id.cb_rember_pwd:
+				// 记住密码
+				isRemberPwd = state;
+				if (!isRemberPwd) {
+					autoLogin = false;
+					options[1].setChecked(autoLogin);
+				}
+				break;
+			case R.id.cb_redirect_login:
+				// 直接登录
+				autoLogin = state;
+				if (autoLogin) {
+					isRemberPwd = true;
+					options[0].setChecked(isRemberPwd);
+				}
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -802,30 +680,37 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	 */
 	private void saveLoginData() {
 		if (isRemberPwd)
-			PreferenceManager.save(Globe.SP_FILE, new String[] { LOGIN_PWD,
-					loginPwd });
+			PreferenceManager.save(Globe.SP_FILE, new String[] {
+					LOGIN_PWD, loginPwd
+			});
 
-		PreferenceManager.save(Globe.SP_FILE, new String[] { LOGIN_NAME,
-				loginName });
-		PreferenceManager.save(Globe.SP_FILE, new Object[] { LOGIN_REMBERPWD,
-				isRemberPwd });
-		PreferenceManager.save(Globe.SP_FILE, new Object[] { LOGIN_AUTOLOGIN,
-				autoLogin });
-		PreferenceManager.save(Globe.SP_FILE, new Object[] { LOGIN_KEEPONLINE,
-				keepOnline });
-		PreferenceManager.save(Globe.SP_FILE, new String[] { CORP_SHORT_NAME,
-				Globe.corp.getShort_name() });
-		PreferenceManager.save(Globe.SP_FILE, new String[] { REAL_NAME,
-				Globe.myself.getName() });
+		PreferenceManager.save(Globe.SP_FILE, new String[] {
+				LOGIN_NAME, loginName
+		});
+		PreferenceManager.save(Globe.SP_FILE, new Object[] {
+				LOGIN_REMBERPWD, isRemberPwd
+		});
+		PreferenceManager.save(Globe.SP_FILE, new Object[] {
+				LOGIN_AUTOLOGIN, autoLogin
+		});
+		PreferenceManager.save(Globe.SP_FILE, new Object[] {
+				LOGIN_KEEPONLINE, keepOnline
+		});
+		PreferenceManager.save(Globe.SP_FILE, new String[] {
+				CORP_SHORT_NAME, Globe.corp.getShort_name()
+		});
+		PreferenceManager.save(Globe.SP_FILE, new String[] {
+				REAL_NAME, Globe.myself.getName()
+		});
 	}
 
-	private void saveUId() {
-		PreferenceManager.save(resources.getString(R.string.init_file),
-				new Object[] { resources.getString(R.string.uId),
-						EngineConst.uId });
-		PreferenceManager.save(resources.getString(R.string.init_file),
-				new Object[] { resources.getString(R.string.cId),
-						EngineConst.cId });
+	private void saveUIdAndCID() {
+		PreferenceManager.save(resources.getString(R.string.init_file), new Object[] {
+				resources.getString(R.string.uId), EngineConst.uId
+		});
+		PreferenceManager.save(resources.getString(R.string.init_file), new Object[] {
+				resources.getString(R.string.cId), EngineConst.cId
+		});
 	}
 
 	/**
@@ -835,14 +720,15 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	 */
 	private void saveAccount() throws JSONException {
 		// 这里保存关键信息是用户的名字
-		String accountInfo = Globe.myself.getName() + "+"
-				+ Globe.corp.getShort_name() + "+" + EngineConst.cId;
-		PreferenceManager.save(Globe.ACCOUNT_FILE, new Object[] { loginName,
-				accountInfo });
+		String accountInfo = Globe.myself.getName() + "+" + Globe.corp.getShort_name() + "+" + EngineConst.cId;
+		PreferenceManager.save(Globe.ACCOUNT_FILE, new Object[] {
+				loginName, accountInfo
+		});
 		// 这里保存的关键信息是用户的公司简称和公司Cid
 		String corpInfo = Globe.corp.getShort_name() + "*" + EngineConst.cId;
 		PreferenceManager.save(Globe.ACCOUNT_FILE, new Object[] {
-				nameAndDomain[1], corpInfo });
+				nameAndDomain[1], corpInfo
+		});
 
 	}
 
@@ -855,10 +741,10 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	 */
 	private void loadAccount(String name) {
 		try {
-			String account = (String) PreferenceManager.get(Globe.ACCOUNT_FILE,
-					new Object[] { name, "" });
-			if (account != null && account.length() > 1
-					&& !account.contains("*")) {
+			String account = (String) PreferenceManager.get(Globe.ACCOUNT_FILE, new Object[] {
+					name, ""
+			});
+			if (account != null && account.length() > 1 && !account.contains("*")) {
 				currentUserIsFirstLogin = false;
 				String[] accountInfo = account.split("\\+");
 				userName.setText(accountInfo[0]);
@@ -876,8 +762,9 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 				String corpAccount = name.substring(index + 1);
 				if (name == corpName)
 					return;
-				String corpInfo = (String) PreferenceManager.get(
-						Globe.ACCOUNT_FILE, new Object[] { corpAccount, "" });
+				String corpInfo = (String) PreferenceManager.get(Globe.ACCOUNT_FILE, new Object[] {
+						corpAccount, ""
+				});
 				if (corpInfo != null && corpInfo.length() > 1) {
 					String[] accountInfo = corpInfo.split("\\*");
 					organizationName.setText(accountInfo[0]);
@@ -891,12 +778,8 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 
 					}
 					if (b_logo != null && b_logo.length > 0) {
-						Bitmap bm_logo = BitmapFactory.decodeByteArray(b_logo,
-								0, b_logo.length);
-						corpLogo.setImageBitmap(Functions.zoomImg(
-								bm_logo,
-								getResources().getDimension(
-										R.dimen.login_logo_img)));
+						Bitmap bm_logo = BitmapFactory.decodeByteArray(b_logo, 0, b_logo.length);
+						corpLogo.setImageBitmap(Functions.zoomImg(bm_logo, getResources().getDimension(R.dimen.login_logo_img)));
 					}
 					corpName = corpAccount;
 				} else {
@@ -924,13 +807,13 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 
-		case R.id.btn_delete:
-			login_edit_account.setText("");
-			login_edit_pwd.setText("");
-			break;
+			case R.id.btn_delete:
+				login_edit_account.setText("");
+				login_edit_pwd.setText("");
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 	}
 
@@ -943,59 +826,57 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	public boolean CanAcceptPacket(int command) {
 		super.CanAcceptPacket(command);
 		switch (command) {
-		case IMOCommand.IMO_LOGIN:
-			return true;
-		case IMOCommand.IMO_GET_CORP_INFO:
-			return true;
-		case IMOCommand.IMO_GET_EMPLOYEE_PROFILE:
-			return true;
-		default:
-			return false;
+			case IMOCommand.IMO_LOGIN:
+				return true;
+			case IMOCommand.IMO_GET_CORP_INFO:
+				return true;
+			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE:
+				return true;
+			default:
+				return false;
 		}
 	}
 
 	@Override
 	public void NotifyPacketArrived(String aConnectionId, short command) {
+		LogFactory.d(TAG, "NotifyPacketArrived and aConnectionId:" + aConnectionId + ",command:" + command);
 		super.NotifyPacketArrived(aConnectionId, command);
 		if (EngineConst.IMO_CONNECTION_ID.equals(aConnectionId))
 			switch (command) {
-			case IMOCommand.IMO_LOGIN: {
-				if (isAcceptData)
-					analysisLoginPacket(command);
-				break;
-			}
-			case IMOCommand.IMO_GET_CORP_INFO: {
-				if (isAcceptData)
-					analysisCorpInfoPacket(command);
-				break;
-			}
-			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
-				if (isAcceptData)
-					analysisMyselfPacket(command);
-				break;
-			}
-			default:
-				break;
+				case IMOCommand.IMO_LOGIN: {
+					if (isAcceptData)
+						analysisLoginPacket(command);
+					break;
+				}
+				case IMOCommand.IMO_GET_CORP_INFO: {
+					if (isAcceptData)
+						analysisCorpInfoPacket(command);
+					break;
+				}
+				case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
+					if (isAcceptData)
+						analysisMyselfPacket(command);
+					break;
+				}
+				default:
+					break;
 			}
 
 	}
 
 	private void analysisLoginPacket(short command) {
-		// dialog.dismiss();
-		LoginInPacket loginInPacket = (LoginInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		LoginInPacket loginInPacket = (LoginInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		ByteBuffer buffer = loginInPacket.getBodyBuffer();
 
 		short ret = buffer.getShort();
 		try {
-
 			if (ret == 0) {// 正常登录
 				Globe.customList.clear();
 				// 解析登陆结果
 				EngineConst.cId = buffer.getInt();
 				EngineConst.uId = buffer.getInt();
-				LogFactory.e("登录成功", "cid: " + EngineConst.cId + ",uid: "
-						+ EngineConst.uId);
+				LogFactory.d(TAG, "Login Success! cid: " + EngineConst.cId + ",uid: " + EngineConst.uId);
+
 				// 初始化SP存储文件名
 				Globe.SP_FILE = "SP" + EngineConst.uId;
 				// 初始化公司logo存储文件名
@@ -1009,25 +890,24 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 				for (int i = 0; i < num; i++) {
 					long ip = buffer.getInt() & 0xFFFFFFFFL;
 					int port = buffer.getShort();
-					Globe.ips[i] = ip / 256 / 256 / 256 % 256 + "." + ip / 256
-							/ 256 % 256 + "." + ip / 256 % 256 + "." + ip % 256;
+					Globe.ips[i] = ip / 256 / 256 / 256 % 256 + "." + ip / 256 / 256 % 256 + "." + ip / 256 % 256 + "." + ip % 256;
 					Globe.ports[i] = port;
+					LogFactory.d(TAG, "Login Success! ip[" + i + "]:" + Globe.ips[i] + ",Globe.ports[" + i + "]:" + Globe.ports[i]);
 				}
 				buffer.clear();
-				saveUId();
+				saveUIdAndCID();
 
 				// 初始化数据库(由于数据库名称由UID组成，所以在这里初始化数据库)
 				IMOApp.imoStorage.close();
 				IMOApp.imoStorage.open(EngineConst.uId);
 				EngineConst.isLoginSuccess = true;
-				
+
 				DataEngine.getInstance().setLogicStatus(LOGICSTATUS.LOGINOVER);
 			} else if (ret == 115) {// 强制更新{未测试}
 				int temp_nameLen = buffer.getInt();
 				byte[] temp_name_buffer = new byte[temp_nameLen];
 				buffer.get(temp_name_buffer);
-				String preUpdate_build = StringUtils
-						.UNICODE_TO_UTF8(temp_name_buffer);
+				String preUpdate_build = StringUtils.UNICODE_TO_UTF8(temp_name_buffer);
 				Message msg1 = new Message();
 				msg1.obj = preUpdate_build;
 				mUpdateAppHandler.sendMessage(msg1);
@@ -1047,8 +927,7 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	private void analysisCorpInfoPacket(short command) {
 		short ret = -1;
 		try {
-			GetCorpInfoInPacket getCorpInfoInPacket = (GetCorpInfoInPacket) IMOApp
-					.getDataEngine().getInPacketByCommand(command);
+			GetCorpInfoInPacket getCorpInfoInPacket = (GetCorpInfoInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 			CorpMaskItem maskItem = getCorpInfoInPacket.getMaskItem();
 			ret = getCorpInfoInPacket.getRet();
 			if (ret == 0) {
@@ -1070,16 +949,13 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	private void analysisMyselfPacket(short command) {
 		short ret = -1;
 		try {
-			GetEmployeeProfileInPacket getEmployeeProfileInPacket = (GetEmployeeProfileInPacket) IMOApp
-					.getDataEngine().getInPacketByCommand(command);
-			EmployeeProfileItem employeeProfileItem = getEmployeeProfileInPacket
-					.getEmployeeItem();
+			GetEmployeeProfileInPacket getEmployeeProfileInPacket = (GetEmployeeProfileInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
+			EmployeeProfileItem employeeProfileItem = getEmployeeProfileInPacket.getEmployeeItem();
 			ret = getEmployeeProfileInPacket.getRet();
 			if (ret == 0) {
 				Globe.myself = employeeProfileItem;
 				getHide_dept_ids(employeeProfileItem.getHide_dept_list());
-				LogFactory.d(TAG,
-						"隐藏的部门:" + employeeProfileItem.getHide_dept_list());
+				LogFactory.d(TAG, "隐藏的部门:" + employeeProfileItem.getHide_dept_list());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1107,8 +983,7 @@ public class LoginActivity extends AbsBaseActivityNetListener implements
 	}
 
 	@Override
-	public void NotifyPacketProgress(String aConnectionId, short command,
-			short aTotalLen, short aSendedLen) {
+	public void NotifyPacketProgress(String aConnectionId, short command, short aTotalLen, short aSendedLen) {
 
 	}
 
