@@ -2,8 +2,6 @@ package com.imo.db.entity;
 
 /**
  * Ó³ÉäÊı¾İ¿â±íUserBaseInfo
- * 
- * @author fengxiaowei
  */
 public class User {
 	private Integer uId;

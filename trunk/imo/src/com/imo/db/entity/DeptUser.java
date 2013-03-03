@@ -2,9 +2,6 @@ package com.imo.db.entity;
 
 /**
  * ”≥…‰ ˝æ›ø‚±ÌDeptUserInfo
- * 
- * @author fengxiaowei
- * 
  */
 public class DeptUser {
 	private Integer dId;

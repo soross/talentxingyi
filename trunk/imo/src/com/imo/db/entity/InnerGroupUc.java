@@ -2,9 +2,6 @@ package com.imo.db.entity;
 
 /**
  * Ó³ÉäÊı¾İ¿â±íInnerGroupUC
- * 
- * @author fengxiaowei
- * 
  */
 public class InnerGroupUc {
 	private Integer innerGroupUC;

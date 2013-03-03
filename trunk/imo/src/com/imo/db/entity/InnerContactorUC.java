@@ -2,9 +2,6 @@ package com.imo.db.entity;
 
 /**
  * Ó³ÉäÊı¾İ¿â±íInnerContactUC
- * 
- * @author fengxiaowei
- * 
  */
 public class InnerContactorUC {
 	private Integer innerContactUC;

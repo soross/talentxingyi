@@ -1,9 +1,7 @@
 package com.imo.db.entity;
+
 /**
  * ”≥…‰ ˝æ›ø‚±ÌExternalContactUC
- * 
- * @author fengxiaowei
- * 
  */
 public class ExternalContactorUC {
 
