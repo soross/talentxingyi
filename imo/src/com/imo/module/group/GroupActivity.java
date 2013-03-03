@@ -4,12 +4,10 @@ import java.nio.ByteBuffer;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.imo.R;
 import com.imo.activity.AbsBaseActivityNetListener;
-import com.imo.global.AppService;
 import com.imo.global.Globe;
 import com.imo.global.IMOApp;
 import com.imo.module.login.LoginActivity;
@@ -23,9 +21,6 @@ import com.imo.util.PreferenceManager;
 
 /**
  * Ⱥ
- * 
- * @author CaixiaoLong
- * 
  */
 public class GroupActivity extends AbsBaseActivityNetListener {
 
