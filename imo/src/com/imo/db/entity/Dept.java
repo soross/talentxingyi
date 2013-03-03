@@ -2,9 +2,6 @@ package com.imo.db.entity;
 
 /**
  * ”≥…‰ ˝æ›ø‚±ÌDeptInfo
- * 
- * @author fengxiaowei
- * 
  */
 public class Dept {
 	private Integer cId;
@@ -27,8 +24,7 @@ public class Dept {
 
 	}
 
-	public Dept(Integer cId, Integer dId, String name, Integer pDid, Integer uC, Integer deptUserUC, Integer firstChild, Integer nextSibling,
-			String desp, String fax, String hideDeptList, String addr, String tel, String website, Integer firstChildUser) {
+	public Dept(Integer cId, Integer dId, String name, Integer pDid, Integer uC, Integer deptUserUC, Integer firstChild, Integer nextSibling, String desp, String fax, String hideDeptList, String addr, String tel, String website, Integer firstChildUser) {
 		this.cId = cId;
 		this.dId = dId;
 		this.name = name;
@@ -168,8 +164,7 @@ public class Dept {
 
 	@Override
 	public String toString() {
-		return cId + "  " + dId + "  " + name + "  " + pDid + "  " + uC + "  " + deptUserUC + "  " + firstChild + "  " + nextSibling + "  " + desp
-				+ "  " + fax + "  " + hideDeptList + "  " + addr + "  " + tel + "  " + website + "  " + firstChildUser;
+		return cId + "  " + dId + "  " + name + "  " + pDid + "  " + uC + "  " + deptUserUC + "  " + firstChild + "  " + nextSibling + "  " + desp + "  " + fax + "  " + hideDeptList + "  " + addr + "  " + tel + "  " + website + "  " + firstChildUser;
 	}
 
 	@Override

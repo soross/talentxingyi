@@ -2,9 +2,6 @@ package com.imo.db.entity;
 
 /**
  * Ó³ÉäÊı¾İ¿â±íOuterGroupInfo
- * 
- * @author fengxiaowei
- * 
  */
 public class OuterGroup {
 	private Integer gId;

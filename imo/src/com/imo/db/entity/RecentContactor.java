@@ -2,9 +2,6 @@ package com.imo.db.entity;
 
 /**
  * ”≥…‰ ˝æ›ø‚±ÌRecentContact
- * 
- * @author fengxiaowei
- * 
  */
 public class RecentContactor {
 	private Integer type;

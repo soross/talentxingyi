@@ -2,9 +2,6 @@ package com.imo.db.entity;
 
 /**
  * ”≥…‰ ˝æ›ø‚±ÌExternalGroupUC
- * 
- * @author fengxiaowei
- * 
  */
 public class ExternalGroupUc {
 	private Integer externalGroupUC;

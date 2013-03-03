@@ -1,9 +1,7 @@
 package com.imo.db.entity;
+
 /**
  * Ó³ÉäÊı¾İ¿â±íInnerGroupInfo
- * 
- * @author fengxiaowei
- * 
  */
 public class InnerGroup {
 	private Integer gId;

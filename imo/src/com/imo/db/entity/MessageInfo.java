@@ -3,21 +3,17 @@ package com.imo.db.entity;
 public class MessageInfo {
 	public static final int MessageInfo_To = 1;
 	public static final int MessageInfo_From = 0;
-	
+
 	public static final int MessageInfo_UnRead = 0;
 	public static final int MessageInfo_Readed = 1;
-	
+
 	public static final int MessageInfo_UnFailed = 0;
 	public static final int MessageInfo_Failed = 1;
 	/**
 	 * È±Ê¡µÄID
 	 */
 	public static final int MessageInfo_MsgId = -1;
-	
-	
-	
-	
-	
+
 	private int sessionId;
 	private int fromUid;
 	private String fromName;
@@ -34,11 +30,7 @@ public class MessageInfo {
 	public MessageInfo() {
 	}
 
-	
-
-	public MessageInfo(int sessionId, int fromUid, String fromName, int toUid,
-			String toName, String date, String time, String text, int type,
-			int msgId, int isRead,int isFailed) {
+	public MessageInfo(int sessionId, int fromUid, String fromName, int toUid, String toName, String date, String time, String text, int type, int msgId, int isRead, int isFailed) {
 		super();
 		this.sessionId = sessionId;
 		this.fromUid = fromUid;
@@ -53,8 +45,6 @@ public class MessageInfo {
 		this.isRead = isRead;
 		this.isFailed = isFailed;
 	}
-
-
 
 	public int getSessionId() {
 		return sessionId;
@@ -127,11 +117,10 @@ public class MessageInfo {
 	public void setType(int type) {
 		this.type = type;
 	}
-	
+
 	@Override
 	public String toString() {
-		return  sessionId+ "   "+fromUid+ "   "+fromName+ "   "+toUid+"   "+
-				 toName+  "   "+date+ "   "+time+ "   "+text+ "   "+type;
+		return sessionId + "   " + fromUid + "   " + fromName + "   " + toUid + "   " + toName + "   " + date + "   " + time + "   " + text + "   " + type;
 	}
 
 	public int getMsgId() {
@@ -150,13 +139,9 @@ public class MessageInfo {
 		this.isRead = isRead;
 	}
 
-
-
 	public int getIsFailed() {
 		return isFailed;
 	}
-
-
 
 	public void setIsFailed(int isFailed) {
 		this.isFailed = isFailed;

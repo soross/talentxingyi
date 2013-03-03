@@ -2,9 +2,6 @@ package com.imo.db.entity;
 
 /**
  * ”≥…‰ ˝æ›ø‚±ÌExternalContactListInfo
- * 
- * @author fengxiaowei
- * 
  */
 public class ExternalContactList {
 	private Integer gId;
