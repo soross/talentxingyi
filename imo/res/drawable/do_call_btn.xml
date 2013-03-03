@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:drawable="@drawable/do_call_enable" android:state_enabled="true" android:state_pressed="false"/>
-    <item android:drawable="@drawable/do_call_enable_pressed"  android:state_enabled="true" android:state_pressed="true"/>
-    <item android:drawable="@drawable/do_call_disenable"  android:state_enabled="false"/>
-
-</selector>
