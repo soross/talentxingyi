@@ -64,16 +64,18 @@ public class NIOThread implements Runnable {
 	 * 注册一个IConnection到NIOThread中
 	 * 
 	 * @param port
-	 *        IConnection实现
+	 *            IConnection实现
 	 * @throws ClosedChannelException
-	 *         如果注册失败
+	 *             如果注册失败
 	 */
 	public void register(IConnection port) throws ClosedChannelException {
 		SelectableChannel channel = port.channel();
 		if (channel instanceof SocketChannel) {
-			channel.register(selector, SelectionKey.OP_CONNECT, port.getNIOHandler());
+			channel.register(selector, SelectionKey.OP_CONNECT,
+					port.getNIOHandler());
 		} else if (channel instanceof DatagramChannel) {
-			channel.register(selector, SelectionKey.OP_READ, port.getNIOHandler());
+			channel.register(selector, SelectionKey.OP_READ,
+					port.getNIOHandler());
 		}
 		if (!ports.contains(port))
 			ports.add(port);
@@ -86,7 +88,8 @@ public class NIOThread implements Runnable {
 	 * @param ops
 	 * @throws ClosedChannelException
 	 */
-	public void register(IConnection port, int ops) throws ClosedChannelException {
+	public void register(IConnection port, int ops)
+			throws ClosedChannelException {
 		SelectableChannel channel = port.channel();
 		if (channel instanceof SocketChannel)
 			channel.register(selector, ops, port.getNIOHandler());
@@ -117,7 +120,7 @@ public class NIOThread implements Runnable {
 	 * 发送错误事件到所有IConnection
 	 * 
 	 * @param e
-	 *        包含错误信息的Exception
+	 *            包含错误信息的Exception
 	 */
 	private void dispatchErrorToAll(Exception e, short aErrorCode) {
 		for (IConnection port : ports)
@@ -131,6 +134,7 @@ public class NIOThread implements Runnable {
 	 */
 	private void notifySend() {
 		int size = ports.size();
+		LogFactory.d(TAG, "ports size:" + ports.size());
 		for (int i = 0; i < size; i++) {
 			INIOHandler handler = null;
 			handler = (ports.get(i)).getNIOHandler();
@@ -173,7 +177,8 @@ public class NIOThread implements Runnable {
 
 						// 如果select返回大于0，处理事件
 						if (n > 0) {
-							for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();) {
+							for (Iterator<SelectionKey> i = selector
+									.selectedKeys().iterator(); i.hasNext();) {
 								// 得到下一个Key
 								SelectionKey sk = i.next();
 								i.remove();
@@ -182,7 +187,8 @@ public class NIOThread implements Runnable {
 									continue;
 
 								// 处理
-								INIOHandler handler = (INIOHandler) sk.attachment();
+								INIOHandler handler = (INIOHandler) sk
+										.attachment();
 								try {
 									if (sk.isConnectable()) {
 										LogFactory.d(TAG, "sk.isConnectable()");
@@ -197,7 +203,6 @@ public class NIOThread implements Runnable {
 									e.printStackTrace();
 								}
 							}
-
 							n = 0;
 						}
 
@@ -225,7 +230,8 @@ public class NIOThread implements Runnable {
 		synchronized (disposeQueue) {
 			disposeQueue.offer(p);
 
-			LogFactory.e("disposeQueue", "name --->" + "disposeQueue size :" + disposeQueue.size());
+			LogFactory.e("disposeQueue", "name --->" + "disposeQueue size :"
+					+ disposeQueue.size());
 		}
 	}
 
@@ -236,6 +242,7 @@ public class NIOThread implements Runnable {
 
 	private void checkNewConnection() {
 		synchronized (lock_checkNewConnection) {
+			LogFactory.d(TAG, "newConnections size:" + newConnections.size());
 			while (!newConnections.isEmpty()) {
 				Object handler = newConnections.remove(0);
 				if (handler instanceof IConnection) {
@@ -259,6 +266,7 @@ public class NIOThread implements Runnable {
 	 */
 	private void processDisposeQueue() {
 		synchronized (disposeQueue) {
+			LogFactory.d(TAG, "disposeQueue size:" + disposeQueue.size());
 			while (!disposeQueue.isEmpty()) {
 				Object obj = disposeQueue.poll();
 				if (obj instanceof IConnection)
@@ -320,12 +328,15 @@ public class NIOThread implements Runnable {
 			if (con == null)
 				return;
 
-			Iterator<Map.Entry<IConnection, Integer>> it = references.entrySet().iterator();
+			Iterator<Map.Entry<IConnection, Integer>> it = references
+					.entrySet().iterator();
 			while (it.hasNext()) {
-				Map.Entry<IConnection, Integer> entry = (Map.Entry<IConnection, Integer>) it.next();
+				Map.Entry<IConnection, Integer> entry = (Map.Entry<IConnection, Integer>) it
+						.next();
 				IConnection iCon = (IConnection) entry.getKey();
 
-				if (iCon.getId().equals(EngineConst.IMO_CONNECTION_ID) && allRelease == false) {
+				if (iCon.getId().equals(EngineConst.IMO_CONNECTION_ID)
+						&& allRelease == false) {
 
 				} else {
 					references.remove(iCon);
@@ -348,7 +359,8 @@ public class NIOThread implements Runnable {
 
 			IConnection con = getConnection(id);
 			release(con, allRelease);
-			LogFactory.e("NIOThread", "release registry size :" + registry.size());
+			LogFactory.e("NIOThread",
+					"release registry size :" + registry.size());
 		}
 	}
 
@@ -393,32 +405,38 @@ public class NIOThread implements Runnable {
 	 * 使用指定的port发送一个包
 	 * 
 	 * @param name
-	 *        port name
+	 *            port name
 	 * @param packet
-	 *        OutPacket子类
+	 *            OutPacket子类
 	 * @param keepSent
-	 *        true表示保存发出的包，这种需要是因为有些协议的返回包没有什么可用信息，需要使用发出包来 触发事件
+	 *            true表示保存发出的包，这种需要是因为有些协议的返回包没有什么可用信息，需要使用发出包来 触发事件
 	 * @return true表示包发送成功，false表示失败
 	 */
 	public void send(String id, OutPacket packet, boolean keepSent) {
 		IConnection port = getConnection(id);
 		if (port != null) {
 			DataEngine.getInstance().getOutQueue().add(packet);
-			LogFactory.e(TAG, "id:" + id + ",add packet <" + packet.getCommand() + "> to port,and isStartRelogin = " + EngineConst.isStartRelogin);
+			LogFactory.i(TAG,
+					"id:" + id + ",add packet <" + packet.getCommand()
+							+ "> to port,and isStartRelogin = "
+							+ EngineConst.isStartRelogin);
 		} else {
-			LogFactory.e(TAG, "send port is null");
+			LogFactory.i(TAG, "send port is null");
 		}
 	}
 
-	public synchronized IConnection newUDPConnection(String id, InetSocketAddress server, boolean start) {
+	public synchronized IConnection newUDPConnection(String id,
+			InetSocketAddress server, boolean start) {
 		return null;
 	}
 
 	private Object lock_newTCPConnection = new Object();
 
-	public IConnection newTCPConnection(String id, InetSocketAddress server, boolean start) {
+	public IConnection newTCPConnection(String id, InetSocketAddress server,
+			boolean start) {
 		synchronized (lock_newTCPConnection) {
-			LogFactory.d(TAG, "hasConnection(id:+" + id + "+):" + hasConnection(id));
+			LogFactory.d(TAG, "hasConnection(id:" + id + "):"
+					+ hasConnection(id));
 			if (hasConnection(id)) {
 				IConnection con = getConnection(id);
 				increaseReference(con);
@@ -440,7 +458,8 @@ public class NIOThread implements Runnable {
 		}
 	}
 
-	public synchronized IConnection newHTTPConnection(String id, String server, int port, String host, boolean start, PacketsObserver aObserver) {
+	public synchronized IConnection newHTTPConnection(String id, String server,
+			int port, String host, boolean start, PacketsObserver aObserver) {
 		// if (hasConnection(id)) {
 		// IConnection con = getConnection(id);
 		// increaseReference(con);

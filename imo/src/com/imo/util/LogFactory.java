@@ -46,6 +46,17 @@ public class LogFactory {
 	}
 	
 	/**
+	 * 打印i 调试日志
+	 * @param tag
+	 * @param msg
+	 */
+	public static void i(String tag, String msg){
+		if (IMOApp.getApp().getAppMode()) {
+			Log.i(tag, msg);
+		}
+	}
+	
+	/**
 	 * 测试View
 	 * @param tag
 	 * @param msg
