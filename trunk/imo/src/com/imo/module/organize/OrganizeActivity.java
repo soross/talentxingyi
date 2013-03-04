@@ -163,12 +163,6 @@ public class OrganizeActivity extends AbsBaseActivityNetListener {
 	 * ¸üÐÂÍ·Ïñ
 	 */
 	private void updateFace(boolean networkIsConnected) {
-		/*
-		 * if( DataEngine.getInstance().getLogicStatus() ==
-		 * LOGICSTATUS.LOGINOVER ) { networkIsConnected = true; } else {
-		 * networkIsConnected = false; }
-		 */
-
 		LogFactory.e("updateFace", "" + DataEngine.getInstance().getLogicStatus());
 
 		mTitleBar.updateStateIcon(networkIsConnected);

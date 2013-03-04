@@ -9,14 +9,14 @@ import com.imo.dataengine.DataEngine;
 import com.imo.dataengine.DataEngine.LOGICSTATUS;
 
 public class EngineConst {
-    public static short HEARTBEAT_SEND_COUNT = 0;
-    
+	public static short HEARTBEAT_SEND_COUNT = 0;
+
 	public static boolean isConnected = false;
-	
+
 	public static boolean isNetworkValid = true;
-	
+
 	public static boolean isReloginSuccess = true;
-	
+
 	public static boolean isStartRelogin = true;
 
 	public static byte version = 0x00;
@@ -24,7 +24,7 @@ public class EngineConst {
 	public static final short IMO_HTTP_REQUEST = 0x00;
 	/** 心跳数据标识 */
 	public static final short IMO_TCP_HEARTBEAT = 0x01;
-	
+
 	public static final short IMO_TCP_CONNECT_TIMEOUT = 0x02;
 	/** 心跳时间间隔 */
 	public static final int IMO_TCP_HEARTBEAT_INTERVAL = 30 * 1000;
@@ -38,16 +38,16 @@ public class EngineConst {
 	public static final int IMO_SEND_TIME_NOACK_PACKET = 3;
 	/** 单位: ms */
 	public static final long IMO_TIMEOUT_SEND_WIFI = 60 * 1000;
-	
+
 	public static final long IMO_TIMEOUT_SEND_GPRS = 60 * 1000;
-	
+
 	public static final long IMO_TIMEOUT_GET_OFFLINE_CONTENTS = 120 * 1000;
 
 	/** TCP连接的ID */
 	public static String IMO_CONNECTION_ID = "TCP_CONNECTION_";
-	
+
 	public static int IMO_CONNETION_COUNT = 0;
-	
+
 	public static int CONCURRENT_MAX_VALUE = 50;
 
 	/* 取logo链接 */
@@ -82,43 +82,44 @@ public class EngineConst {
 	/** 服务器端返回的sessionKey,主要为了加/解密使用 */
 	public static byte[] sessionKey = new byte[16];
 	
-//	public static int[] portArray = new int[]{9999/*8889**/,8899,8999};
-	public static int[] portArray = new int[]{5186,1863,8000};
-	
-    public static String performDNSLookup(String aHostName) throws UnknownHostException{  
-        
-        try {  
-        	// 设置状态机状态为CHECKING
-            DataEngine.getInstance().setLogicStatus(LOGICSTATUS.CHECKING);
-            
-            InetAddress inetHost = InetAddress.getByName(aHostName);  
-            
-            String hostName = inetHost.getHostName();  
-            String hostAddress = inetHost.getHostAddress();
-            
-              
-            return hostAddress;
-        } catch(UnknownHostException ex) {  
-        	// 地址无法达到，设置状态机状态为DISCONNECTED
-        	DataEngine.getInstance().setLogicStatus(LOGICSTATUS.DISCONNECTED);
-        	
-            throw ex;
-        }  
-    }
+	public static int[] portArray = new int[] {
+			5186, 1863, 8000
+	};
 
-//    public static final String hostName = "m1.imoffice.cn";
-    public static final String hostName = "m1.imoffice.com";
-    
-    public static final String serverInfo = "http://errortip.app.imoffice.cn/message/error_tip.txt";
-	
-//    public static final String hostIP = "222.73.31.9";
-    public static final String hostIP = "114.80.66.75";
-    
-    
-//	public static final InetSocketAddress IMO_SERVER_ADDRESS = new InetSocketAddress(hostIP, 8899);
+	public static String performDNSLookup(String aHostName) throws UnknownHostException {
+
+		try {
+			// 设置状态机状态为CHECKING
+			DataEngine.getInstance().setLogicStatus(LOGICSTATUS.CHECKING);
+
+			InetAddress inetHost = InetAddress.getByName(aHostName);
+
+			String hostName = inetHost.getHostName();
+			String hostAddress = inetHost.getHostAddress();
+
+			return hostAddress;
+		} catch (UnknownHostException ex) {
+			// 地址无法达到，设置状态机状态为DISCONNECTED
+			DataEngine.getInstance().setLogicStatus(LOGICSTATUS.DISCONNECTED);
+
+			throw ex;
+		}
+	}
+
+	// public static final String hostName = "m1.imoffice.cn";
+	public static final String hostName = "m1.imoffice.com";
+
+	public static final String serverInfo = "http://errortip.app.imoffice.cn/message/error_tip.txt";
+
+	// public static final String hostIP = "222.73.31.9";
+	public static final String hostIP = "114.80.66.75";
+
+	// public static final InetSocketAddress IMO_SERVER_ADDRESS = new
+	// InetSocketAddress(hostIP, 8899);
 	public static final InetSocketAddress IMO_SERVER_ADDRESS = new InetSocketAddress(hostIP, 5186);
 
 	public static final int COCURRENT_MAX_VALUE = 0;
-    
-//    public static final InetSocketAddress IMO_SERVER_ADDRESS = new InetSocketAddress("112.65.254.24", 5186);
+
+	// public static final InetSocketAddress IMO_SERVER_ADDRESS = new
+	// InetSocketAddress("112.65.254.24", 5186);
 }
