@@ -984,7 +984,7 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 
 	@Override
 	public void NotifyPacketProgress(String aConnectionId, short command, short aTotalLen, short aSendedLen) {
-
+		LogFactory.d(TAG, "NotifyPacketProgress, aConnectionId:" + aConnectionId + ",command:" + command + ",aTotalLen:" + aTotalLen + ",aSendedLen:" + aSendedLen);
 	}
 
 	@Override

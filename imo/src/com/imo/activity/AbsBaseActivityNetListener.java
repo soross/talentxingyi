@@ -420,9 +420,7 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 
 	@Override
 	public void NotifyPacketProgress(String aConnectionId, short command, short aTotalLen, short aSendedLen) {
-
 		if (EngineConst.IMO_CONNECTION_ID.equals(aConnectionId))
-
 			switch (command) {
 				case IMOCommand.IMO_EXIT:
 					LogFactory.e("Logout time3:", "" + System.currentTimeMillis());
@@ -435,7 +433,6 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 				default:
 					break;
 			}
-
 	}
 
 	public void responseLogout(short aTotalLen, short aSendedLen) {
@@ -610,13 +607,8 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 
 				switch (msg.what) {
 					case FORCE_EXIT:
-						// mGlobal.destoryActivityFrom("LoginActivity");
-						// AppService.getService().reset();
-						// LoginActivity.launch(mContext);
 						EngineConst.isLoginSuccess = false;
-
 						DataEngine.getInstance().setLogicStatus(LOGICSTATUS.DISCONNECTED);
-
 						IMOApp.getApp().turn2LoginForLogout();
 						break;
 					case NotifyPacketTimeOut:
