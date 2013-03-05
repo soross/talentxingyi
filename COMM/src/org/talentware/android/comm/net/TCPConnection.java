@@ -75,6 +75,7 @@ public class TCPConnection extends ConnectionImp {
 	boolean isConnected = false;
 
 	public void start() {
+		// TODO:below
 		// 第一次会把最近一次保存的最优的服务器给拿出来，若没有择取应用中默认ip
 		// ipAddress = (String)
 		// PreferenceManager.get(IMOApp.getApp().getResources().getString(R.string.init_file),
@@ -86,7 +87,7 @@ public class TCPConnection extends ConnectionImp {
 		if (testPortNum < 3) {
 			try {
 				testPortNum++;
-				// 端口每个类型的服务端只有一个，所以此处省略，暂时测试2860
+				// TODO:端口每个类型的服务端只有一个，所以此处省略，暂时测试2860
 				int port = 2860;// EngineConst.portArray[testPortNum++];
 				InetSocketAddress address = new InetSocketAddress(ipAddress, port);
 
@@ -118,14 +119,12 @@ public class TCPConnection extends ConnectionImp {
 						isConnected = channel.connect(EngineConst.IMO_SERVER_ADDRESS);
 						LogFactory.e("isConnected", "isConnected :" + isConnected);
 
-						// 暂时去掉
+						// TODO:暂时去掉
 						// PreferenceManager.save(IMOApp.getApp().getResources().getString(R.string.init_file),
 						// new String[] { TCPConnection.DNS_IP, "" });
 
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						processError(e1, IMOCommand.ERROR_CONNECTION_BROKEN);
-
 						e1.printStackTrace();
 					}
 				} else {
@@ -300,6 +299,7 @@ public class TCPConnection extends ConnectionImp {
 	 */
 	public void send() {
 		if (!DataEngine.getInstance().getTimeoutQueue().isEmpty()) {// 超时队列不为空
+			LogFactory.i(TAG, "TimeoutQueue is not empty , size:" + DataEngine.getInstance().getTimeoutQueue().size());
 			Iterator<Map.Entry<Integer, OutPacket>> it = DataEngine.getInstance().getTimeoutQueue().entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry<Integer, OutPacket> entry = (Map.Entry<Integer, OutPacket>) it.next();
@@ -323,11 +323,12 @@ public class TCPConnection extends ConnectionImp {
 		}
 
 		if (DataEngine.getInstance().isEmpty()) {// 发送队列为空
+			LogFactory.i(TAG, "SendQueue is empty");
 			/** 在连接存在的情况下，如果30s内还没有数据发送，就发送心跳数据包到服务器 */
 			if (EngineConst.isLoginSuccess /* && EngineConst.isReloginSuccess* */) {
 				if (System.currentTimeMillis() - heartControlTime > 30 * 1000) {
 					if (EngineConst.HEARTBEAT_SEND_COUNT < 5) {
-						// 暂时去掉
+						// TODO:暂时去掉
 						// HeartBeatOutPacket heartbeatPackage = new
 						// HeartBeatOutPacket(ByteBuffer.wrap("".getBytes()),
 						// IMOCommand.IMO_HEART_BEAT, EngineConst.cId,
@@ -344,10 +345,10 @@ public class TCPConnection extends ConnectionImp {
 
 			}
 		} else {
+			LogFactory.i(TAG, "SendQueue is not empty , size:" + DataEngine.getInstance().getOutQueue().size());
 			heartControlTime = System.currentTimeMillis();// 记录心跳时间
 		}
-
-		LogFactory.d(NIOThread.class.getSimpleName(), "OutQueueSize:" + DataEngine.getInstance().getOutQueue().size());
+		
 		while (!DataEngine.getInstance().isEmpty()) {// 发送队列不为空
 			sendBuf.clear();
 			short sendedLen = 0;
@@ -492,8 +493,8 @@ public class TCPConnection extends ConnectionImp {
 	 * (non-Javadoc)
 	 */
 	public void processWrite() {
-		LogFactory.d(NIOThread.class.getSimpleName(), "isConnected():" + isConnected());
 		if (isConnected()) {
+			LogFactory.d(NIOThread.class.getSimpleName(), "isConnected:");
 			send();
 		}
 	}
