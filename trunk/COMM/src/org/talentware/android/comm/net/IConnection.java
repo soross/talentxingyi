@@ -33,26 +33,15 @@ public interface IConnection {
 
 	// [Add Observer Operation]
 	/*
-	 * public InPacket getInPacketByCommand(short command);
-	 * 
-	 * public void addToObserverList(PacketsObserver aObserver);
-	 * 
-	 * public boolean hasExistObserver(PacketsObserver aObserver);
-	 * 
-	 * public void removeFromObserverList(PacketsObserver aObserver);
-	 * 
-	 * public void observerNotifyPacketArrived(String aConnectionId,short
-	 * command);
-	 * 
-	 * public void observerNotifyHttpPacketArrived(String
-	 * aConnectionId,ByteBuffer buffer);
-	 * 
-	 * public void observerNotifyPacketProgress(String aConnectionId, short
-	 * command,short aTotalLen,short aSendedLen);
-	 * 
-	 * public void observerNotifyPacketTimeOut(String aConnectionId,short
-	 * aErrorCode);
-	 * 
+	 * public InPacket getInPacketByCommand(short command); public void
+	 * addToObserverList(PacketsObserver aObserver); public boolean
+	 * hasExistObserver(PacketsObserver aObserver); public void
+	 * removeFromObserverList(PacketsObserver aObserver); public void
+	 * observerNotifyPacketArrived(String aConnectionId,short command); public
+	 * void observerNotifyHttpPacketArrived(String aConnectionId,ByteBuffer
+	 * buffer); public void observerNotifyPacketProgress(String aConnectionId,
+	 * short command,short aTotalLen,short aSendedLen); public void
+	 * observerNotifyPacketTimeOut(String aConnectionId,short aErrorCode);
 	 * public void observerNotifyPacketFailed(String aConnectionId,short
 	 * aErrorCode);
 	 */

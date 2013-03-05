@@ -82,7 +82,9 @@ public class EngineConst {
 	/** 服务器端返回的sessionKey,主要为了加/解密使用 */
 	public static byte[] sessionKey = new byte[16];
 
-	public static int[] portArray = new int[] { 5186, 1863, 8000 };
+	public static int[] portArray = new int[] {
+			5186, 1863, 8000
+	};
 
 	public static String performDNSLookup(String aHostName) throws UnknownHostException {
 

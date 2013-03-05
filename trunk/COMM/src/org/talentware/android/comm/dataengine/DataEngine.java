@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.talentware.android.comm.net.EngineConst;
-import org.talentware.android.comm.packet.CommonInPacket;
 import org.talentware.android.comm.packet.InPacket;
 import org.talentware.android.comm.packet.OutPacket;
 import org.talentware.android.comm.packet.command.IMOCommand;
@@ -35,18 +34,18 @@ public class DataEngine {
 
 		public String toString() {
 			switch (this) {
-			case DISCONNECTED:
-				return "DISCONNECTED";
-			case CHECKING:
-				return "CHECKING";
-			case CONNECTING:
-				return "CONNECTING";
-			case CONNECTED:
-				return "CONNECTED";
-			case LOGINOVER:
-				return "LOGINOVER";
-			default:
-				return "Unknow";
+				case DISCONNECTED:
+					return "DISCONNECTED";
+				case CHECKING:
+					return "CHECKING";
+				case CONNECTING:
+					return "CONNECTING";
+				case CONNECTED:
+					return "CONNECTED";
+				case LOGINOVER:
+					return "LOGINOVER";
+				default:
+					return "Unknow";
 			}
 		}
 	}
@@ -314,7 +313,7 @@ public class DataEngine {
 		LogFactory.e("parseIncoming packet: ", "" + commandRet);
 
 		return null;
-		
+
 		// ÔÝÊ±È¥µô
 		// ConnectionLog.MusicLogInstance().addLog("parseIncoming packet: ," +
 		// commandRet);
