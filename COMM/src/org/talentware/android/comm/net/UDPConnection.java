@@ -24,11 +24,11 @@ public class UDPConnection extends ConnectionImp {
 	 * 构造函数
 	 * 
 	 * @param policy
-	 *            端口策略
+	 *        端口策略
 	 * @param address
-	 *            服务器地址
+	 *        服务器地址
 	 * @throws IOException
-	 *             如果构造端口失败
+	 *         如果构造端口失败
 	 */
 	public UDPConnection(String id, InetSocketAddress address) throws IOException {
 		super(id);
@@ -101,8 +101,7 @@ public class UDPConnection extends ConnectionImp {
 			sendBuf.clear();
 			channel.write(ByteBuffer.wrap(packet.getBody()));
 			Log.d("debug", "have sended packet - " + packet.toString());
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 	}
 
 	/*
@@ -111,8 +110,7 @@ public class UDPConnection extends ConnectionImp {
 	public void send(ByteBuffer buffer) {
 		try {
 			channel.write(buffer);
-		} catch (IOException e) {
-		}
+		} catch (IOException e) {}
 	}
 
 	/*
@@ -121,8 +119,7 @@ public class UDPConnection extends ConnectionImp {
 	public void dispose() {
 		try {
 			channel.close();
-		} catch (IOException e) {
-		}
+		} catch (IOException e) {}
 	}
 
 	/*

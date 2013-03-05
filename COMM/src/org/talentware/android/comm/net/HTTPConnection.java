@@ -62,9 +62,9 @@ public class HTTPConnection extends ConnectionImp {
 	 * 构造一个连接到指定地址的TCPPort.
 	 * 
 	 * @param address
-	 *            连接到的地址.
+	 *        连接到的地址.
 	 * @throws IOException
-	 *             端口打开/端口配置/连接到地址出错.
+	 *         端口打开/端口配置/连接到地址出错.
 	 */
 	public HTTPConnection(String id, InetSocketAddress address, String host) throws IOException {
 		super(id);
@@ -230,31 +230,31 @@ public class HTTPConnection extends ConnectionImp {
 		// 判断状态
 		String replyCode = response.substring(9, 12);
 		switch (status) {
-		case STATUS_INIT:
-			if (SUCCESS.equals(replyCode)) {
-				/* 成功 */
-				Log.d("debug", "连接成功");
-				status = STATUS_READY;
-				int bodyStart = response.indexOf("\r\n\r\n");
-				byte[] bodyTemp = new byte[b.length - bodyStart - 4];
-				System.arraycopy(b, bodyStart + 4, bodyTemp, 0, b.length - bodyStart - 4);
-				DataEngine.getInstance().observerNotifyHttpPacketArrived(this.name, ByteBuffer.wrap(bodyTemp));
+			case STATUS_INIT:
+				if (SUCCESS.equals(replyCode)) {
+					/* 成功 */
+					Log.d("debug", "连接成功");
+					status = STATUS_READY;
+					int bodyStart = response.indexOf("\r\n\r\n");
+					byte[] bodyTemp = new byte[b.length - bodyStart - 4];
+					System.arraycopy(b, bodyStart + 4, bodyTemp, 0, b.length - bodyStart - 4);
+					DataEngine.getInstance().observerNotifyHttpPacketArrived(this.name, ByteBuffer.wrap(bodyTemp));
 
-				bodyTemp = null;
-				b = null;
-				response = null;
-				dispose();
-			} else if (NEED_AUTH.equals(replyCode)) {
-				/* 需要验证 */
-				Log.d("debug", "需要验证，但是未提供用户名密码");
-				dispose();
-			} else {
-				Log.d("debug", "未知的回复码");
-				dispose();
-			}
-			break;
-		default:
-			break;
+					bodyTemp = null;
+					b = null;
+					response = null;
+					dispose();
+				} else if (NEED_AUTH.equals(replyCode)) {
+					/* 需要验证 */
+					Log.d("debug", "需要验证，但是未提供用户名密码");
+					dispose();
+				} else {
+					Log.d("debug", "未知的回复码");
+					dispose();
+				}
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -264,8 +264,7 @@ public class HTTPConnection extends ConnectionImp {
 	public void processWrite() {
 		if (isConnected()) {
 			init();
-		} else {
-		}
+		} else {}
 	}
 
 	public void processError(Exception e, short aErrorCode) {

@@ -55,9 +55,9 @@ public class TCPConnection extends ConnectionImp {
 	 * 构造一个连接到指定地址的TCPPort.
 	 * 
 	 * @param address
-	 *            连接到的地址.
+	 *        连接到的地址.
 	 * @throws IOException
-	 *             端口打开/端口配置/连接到地址出错.
+	 *         端口打开/端口配置/连接到地址出错.
 	 */
 	public TCPConnection(String id, InetSocketAddress address) throws IOException {
 		super(id);
