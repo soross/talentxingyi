@@ -56,6 +56,15 @@ public abstract class Packet {
 
 	}
 
+	// ***********************************新加测试方法*******************************************//
+	public Packet(ByteBuffer aBody, short aCommand) {
+		this.body = aBody;
+		this.command = aCommand;
+		this.dataLen = (short) aBody.capacity();
+	}
+
+	// ***********************************新加测试方法*******************************************//
+
 	public Packet(ByteBuffer aData, int aBodyLen) {
 		// 解析头部
 		parseHeader(aData);

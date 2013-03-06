@@ -17,6 +17,7 @@ import java.util.Queue;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Logger;
 
 import org.talentware.android.comm.dataengine.DataEngine;
 import org.talentware.android.comm.packet.OutPacket;
@@ -130,6 +131,7 @@ public class NIOThread implements Runnable {
 	 */
 	private void notifySend() {
 		int size = ports.size();
+		LogFactory.d(TAG, "ports size:" + ports.size());
 		for (int i = 0; i < size; i++) {
 			INIOHandler handler = null;
 			handler = (ports.get(i)).getNIOHandler();
@@ -152,57 +154,54 @@ public class NIOThread implements Runnable {
 			while (!shutdown) {
 				try {
 					Thread.sleep(80);
-					if (true) {
-						// do select
-						try {
-							if (selector != null)
-								n = selector.select(10);
+					try {
+						if (selector != null)
+							n = selector.select(10);
 
-							// 如果要shutdown，关闭selector退出
-							if (shutdown) {
-								selector.close();
-								break;
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
+						// 如果要shutdown，关闭selector退出
+						if (shutdown) {
+							selector.close();
+							break;
 						}
-
-						// 处理连接释放请求
-						processDisposeQueue();
-
-						// 如果select返回大于0，处理事件
-						if (n > 0) {
-							LogFactory.d(TAG, "select n > 0 , n = " + n);
-							for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();) {
-								// 得到下一个Key
-								SelectionKey sk = i.next();
-								i.remove();
-								// 检查其是否还有效
-								if (!sk.isValid())
-									continue;
-
-								// 处理
-								INIOHandler handler = (INIOHandler) sk.attachment();
-								try {
-									if (sk.isConnectable()) {
-										LogFactory.d(TAG, "sk.isConnectable()");
-										handler.processConnect(sk);
-									} else if (sk.isReadable()) {
-										LogFactory.d(TAG, "sk.isReadable()");
-										handler.processRead(sk);
-									}
-								} catch (IOException e) {
-									e.printStackTrace();
-								} catch (RuntimeException e) {
-									e.printStackTrace();
-								}
-							}
-							n = 0;
-						}
-
-						checkNewConnection();
-						notifySend();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
+
+					// 处理连接释放请求
+					processDisposeQueue();
+
+					// 如果select返回大于0，处理事件
+					if (n > 0) {
+						LogFactory.d(TAG, "selector n > 0 , n = " + n);
+						for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();) {
+							// 得到下一个Key
+							SelectionKey sk = i.next();
+							i.remove();
+							// 检查其是否还有效
+							if (!sk.isValid())
+								continue;
+
+							// 处理
+							INIOHandler handler = (INIOHandler) sk.attachment();
+							try {
+								if (sk.isConnectable()) {
+									LogFactory.d(TAG, "Can Connect");
+									handler.processConnect(sk);
+								} else if (sk.isReadable()) {
+									LogFactory.d(TAG, "Can Read");
+									handler.processRead(sk);
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							} catch (RuntimeException e) {
+								e.printStackTrace();
+							}
+						}
+						n = 0;
+					}
+
+					checkNewConnection();
+					notifySend();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -235,8 +234,11 @@ public class NIOThread implements Runnable {
 
 	private void checkNewConnection() {
 		synchronized (lock_checkNewConnection) {
+			if (!newConnections.isEmpty()) {
+				LogFactory.d(TAG, "newConnections is not empty , size:" + newConnections.size());
+			}
+
 			while (!newConnections.isEmpty()) {
-				LogFactory.d(TAG, "newConnections is not empty , size = " + newConnections.size());
 				Object handler = newConnections.remove(0);
 				if (handler instanceof IConnection) {
 					try {
@@ -259,7 +261,10 @@ public class NIOThread implements Runnable {
 	 */
 	private void processDisposeQueue() {
 		synchronized (disposeQueue) {
-			LogFactory.d(TAG, "disposeQueue size:" + disposeQueue.size());
+			if (!disposeQueue.isEmpty()) {
+				LogFactory.d(TAG, "disposeQueue is not empty , size:" + disposeQueue.size());
+			}
+
 			while (!disposeQueue.isEmpty()) {
 				Object obj = disposeQueue.poll();
 				if (obj instanceof IConnection)
@@ -419,7 +424,7 @@ public class NIOThread implements Runnable {
 
 	public IConnection newTCPConnection(String id, InetSocketAddress server, boolean start) {
 		synchronized (lock_newTCPConnection) {
-			LogFactory.d(TAG, "hasConnection id = " + id + " : " + hasConnection(id));
+			LogFactory.d(TAG, "hasConnection(id:" + id + "):" + hasConnection(id));
 			if (hasConnection(id)) {
 				IConnection con = getConnection(id);
 				increaseReference(con);
@@ -428,13 +433,14 @@ public class NIOThread implements Runnable {
 
 			TCPConnection tcpConnection;
 			try {
+				LogFactory.d(NIOThread.class.getSimpleName(), "id = " + id + ",server = " + server.toString());
 				tcpConnection = new TCPConnection(id, server);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;
 			}
 			registry.put(id, tcpConnection);
-			LogFactory.d(TAG, "registry size :" + registry.size());
+			LogFactory.d(NIOThread.class.getSimpleName(), "registry size :" + registry.size());
 			references.put(tcpConnection, 1);
 			wakeup(tcpConnection);
 			return tcpConnection;
