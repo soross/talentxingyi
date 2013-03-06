@@ -100,7 +100,7 @@ public class TCPConnection extends ConnectionImp {
 
 				isConnected = channel.connect(address);
 
-				LogFactory.d(TAG, "isConnected :" + isConnected);
+				LogFactory.d(NIOThread.class.getSimpleName(), "isConnected :" + isConnected);
 
 				ConnectionLog.MusicLogInstance().addLog("ServerIPAddress:" + ipAddress + ":" + port);
 
@@ -117,7 +117,7 @@ public class TCPConnection extends ConnectionImp {
 						DataEngine.getInstance().setLogicStatus(LOGICSTATUS.CONNECTING);
 
 						isConnected = channel.connect(EngineConst.IMO_SERVER_ADDRESS);
-						LogFactory.e("isConnected", "isConnected :" + isConnected);
+						LogFactory.e(NIOThread.class.getSimpleName(), "isConnected :" + isConnected);
 
 						// TODO:暂时去掉
 						// PreferenceManager.save(IMOApp.getApp().getResources().getString(R.string.init_file),
@@ -161,7 +161,6 @@ public class TCPConnection extends ConnectionImp {
 			return;
 		// 接收数据
 		int oldPos = receiveBuf.position();
-		LogFactory.d(TAG, "oldPos:" + oldPos);
 
 		for (int r = readBuffer(); r > 0; r = readBuffer()) {
 			// buffer length不大于2则连个长度字段都没有 int
@@ -224,7 +223,7 @@ public class TCPConnection extends ConnectionImp {
 						receiveBuf.position(relocateLen);
 					}
 
-					LogFactory.d(NIOThread.class.getSimpleName(), "packet.getCommand():" + packet.getCommand());
+					LogFactory.d(NIOThread.class.getSimpleName(), "receive packet , command = " + packet.getCommand());
 					boolean isAdded = DataEngine.getInstance().getInQueue().add(packet);
 					if (isAdded) {
 						DataEngine.getInstance().observerNotifyPacketArrived(this.name, packet.getCommand());
@@ -299,7 +298,7 @@ public class TCPConnection extends ConnectionImp {
 	 */
 	public void send() {
 		if (!DataEngine.getInstance().getTimeoutQueue().isEmpty()) {// 超时队列不为空
-			LogFactory.i(TAG, "TimeoutQueue is not empty , size:" + DataEngine.getInstance().getTimeoutQueue().size());
+			LogFactory.d(NIOThread.class.getSimpleName(), "TimeoutQueue is not empty , size = " + DataEngine.getInstance().getTimeoutQueue().size());
 			Iterator<Map.Entry<Integer, OutPacket>> it = DataEngine.getInstance().getTimeoutQueue().entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry<Integer, OutPacket> entry = (Map.Entry<Integer, OutPacket>) it.next();
@@ -310,10 +309,12 @@ public class TCPConnection extends ConnectionImp {
 					long timeLeft = out.getTimeout() - System.currentTimeMillis();
 
 					if (timeLeft < 0) {
-						if (out.getResendCountDown() > 0) {
+						if (out.getResendCountDown() > 0) {// 重新加入发送队列
+							LogFactory.d(NIOThread.class.getSimpleName(), "Resend packet , packet's command = " + out.getCommand());
 							DataEngine.getInstance().add(out);
 							DataEngine.getInstance().removePacketFromTimeoutQueue(seq);
-						} else {
+						} else {// 通知界面请求包超时
+							LogFactory.d(NIOThread.class.getSimpleName(), "Packet Timeout , packet's command = " + out.getCommand());
 							DataEngine.getInstance().removePacketFromTimeoutQueue(seq);
 							DataEngine.getInstance().observerNotifyPacketTimeOut(name, out.getCommand());
 						}
@@ -323,7 +324,6 @@ public class TCPConnection extends ConnectionImp {
 		}
 
 		if (DataEngine.getInstance().isEmpty()) {// 发送队列为空
-			LogFactory.i(TAG, "SendQueue is empty");
 			/** 在连接存在的情况下，如果30s内还没有数据发送，就发送心跳数据包到服务器 */
 			if (EngineConst.isLoginSuccess /* && EngineConst.isReloginSuccess* */) {
 				if (System.currentTimeMillis() - heartControlTime > 30 * 1000) {
@@ -345,10 +345,10 @@ public class TCPConnection extends ConnectionImp {
 
 			}
 		} else {
-			LogFactory.i(TAG, "SendQueue is not empty , size:" + DataEngine.getInstance().getOutQueue().size());
 			heartControlTime = System.currentTimeMillis();// 记录心跳时间
 		}
-		
+
+		LogFactory.d(NIOThread.class.getSimpleName(), "OutQueueSize:" + DataEngine.getInstance().getOutQueue().size());
 		while (!DataEngine.getInstance().isEmpty()) {// 发送队列不为空
 			sendBuf.clear();
 			short sendedLen = 0;
@@ -362,14 +362,17 @@ public class TCPConnection extends ConnectionImp {
 			}
 
 			OutPacket packet = DataEngine.getInstance().remove();
-			ByteBuffer body = ByteBuffer.allocate(packet.getHeader().length + packet.getBody().length);
-			body.put(packet.getHeader());
+			ByteBuffer body = ByteBuffer.allocate(packet.getBody().length);
+			// TODO:暂时去掉，不知道有没有影响
+			// ByteBuffer body = ByteBuffer.allocate(packet.getHeader().length +
+			// packet.getBody().length);
+			// body.put(packet.getHeader());
 			body.put(packet.getBody());
 			body.flip();
 			try {
 				while (sendedLen < body.limit()) {
 					sendedLen += (short) channel.write(body);
-					LogFactory.e("TCPConnection", "command :" + packet.getCommand() + ", bodyLength :" + body.limit() + ", remaining :" + body.remaining() + ", sendedLen :" + sendedLen);
+					LogFactory.d(NIOThread.class.getSimpleName(), "Send Packet Success!!! command :" + packet.getCommand() + ", bodyLength :" + body.limit() + ", remaining :" + body.remaining() + ", sendedLen :" + sendedLen);
 				}
 				DataEngine.getInstance().observerNotifyPacketProgress(this.name, packet.getCommand(), (short) body.limit(), sendedLen);
 			} catch (Exception e) {
@@ -384,7 +387,8 @@ public class TCPConnection extends ConnectionImp {
 				}
 
 			} finally {
-				packet.setResendCountDown(packet.getResendCountDown() - 1);
+				packet.setResendCountDown(100);
+//				packet.setResendCountDown(packet.getResendCountDown() - 1);
 				body = null;
 			}
 
@@ -479,7 +483,7 @@ public class TCPConnection extends ConnectionImp {
 			channel.finishConnect();
 		}
 		sk.interestOps(SelectionKey.OP_READ);
-		LogFactory.d(TAG, "have connected to server");
+		LogFactory.d(NIOThread.class.getSimpleName(), "Connect To Server Success!!!");
 	}
 
 	/*
@@ -494,7 +498,7 @@ public class TCPConnection extends ConnectionImp {
 	 */
 	public void processWrite() {
 		if (isConnected()) {
-			LogFactory.d(NIOThread.class.getSimpleName(), "isConnected:");
+			LogFactory.d(NIOThread.class.getSimpleName(), "CanWrite");
 			send();
 		}
 	}

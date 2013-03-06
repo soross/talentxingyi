@@ -2,6 +2,12 @@ package org.talentware.android.module.base;
 
 import java.nio.ByteBuffer;
 
+import org.talentware.android.comm.net.EngineConst;
+import org.talentware.android.comm.packet.OutPacket;
+import org.talentware.android.comm.packet.Packet;
+import org.talentware.android.comm.packet.QuoteLinuxPackets;
+import org.talentware.android.comm.packet.ServerTimePacket;
+import org.talentware.android.comm.packet.command.EMCommand;
 import org.talentware.android.comm.util.LogFactory;
 import org.talentware.android.global.Globe;
 import org.talentware.android.service.AppService;
@@ -29,6 +35,12 @@ public class HomeActivity extends AbsBaseActivityNetListener {
 				if (!thread.isAlive()) {
 					thread.start();
 				}
+				
+				ServerTimePacket packet = new ServerTimePacket(ServerTimePacket.GenerateServerTimeOutPacket(), EMCommand.COMM_SERVER_TIME);
+				Packet[] packets = new Packet[1];
+				packets[0] = packet;
+				OutPacket sendpacket = new QuoteLinuxPackets(packets);
+				mNIOThread.send(EngineConst.IMO_CONNECTION_ID, sendpacket, false);
 			}
 		};
 
