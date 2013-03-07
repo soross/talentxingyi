@@ -342,6 +342,16 @@ public class DataEngine {
 		}
 	}
 
+	/***
+	 * 解析响应包
+	 * 
+	 * @param buf
+	 *        返回Buffer
+	 * @param length
+	 *        返回Buffer长度
+	 * @return
+	 * @throws PacketParseException
+	 */
 	public InPacket parseIn(ByteBuffer buf, int length) throws PacketParseException {
 		// 保存当前位置
 		int offset = buf.position() + 2;

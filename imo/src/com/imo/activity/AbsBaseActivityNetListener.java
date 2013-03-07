@@ -113,16 +113,13 @@ public abstract class AbsBaseActivityNetListener extends AbsBaseActivity impleme
 	}
 
 	protected void resetConnection() {
-
 		if (AppService.getService() != null) {
 			AppService.getService().reset();
 			mNIOThread = AppService.getService().getNIOThreadInstance();
-			// tcpConnection = AppService.getService().getTcpConnection();
 			getTcpConnection();
 		}
 
 		EngineConst.isStartRelogin = true;
-		LogFactory.e("AbsBaseActivity", "isStartRelogin :" + EngineConst.isStartRelogin);
 	}
 
 	static {

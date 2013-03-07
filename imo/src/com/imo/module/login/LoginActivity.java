@@ -17,7 +17,6 @@ import android.os.AsyncTask;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,6 +42,7 @@ import com.imo.module.organize.FirstLoadingActivity;
 import com.imo.module.organize.NormalLoadingActivity;
 import com.imo.network.Encrypt.StringUtils;
 import com.imo.network.net.EngineConst;
+import com.imo.network.net.NIOThread;
 import com.imo.network.netchange.ConnectionChangeReceiver;
 import com.imo.network.packages.CorpMaskItem;
 import com.imo.network.packages.EmployeeProfileItem;
@@ -128,8 +128,6 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 
 	@Override
 	public void installViews() {
-		Log.e("LoginActivity time1", "" + System.currentTimeMillis());
-
 		setContentView(R.layout.login_activity);
 
 		instance = this;
@@ -368,9 +366,7 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 				default:
 					break;
 			}
-
 		}
-
 	}
 
 	@Override
@@ -500,8 +496,6 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 		loginName = login_edit_account.getText().toString();
 		loginPwd = login_edit_pwd.getText().toString();
 
-		// LogFactory.e("LoginActivity", "name :"+loginName+", pwd :"+loginPwd);
-
 		// <1> 非空验证
 		if (Functions.isEmpty(loginName)) {
 			updateViewState(btnLogin, false);
@@ -574,18 +568,14 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 					LoginTask loginTask = new LoginTask();
 					loginTask.execute("");
 				}
-
 			}, new DialogInterface.OnClickListener() {
-
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
 					updateViewState(btnLogin, true);
 				}
-
 			});
 			dialog.show();
 			dialog.setOnDismissListener(new OnDismissListener() {
-
 				@Override
 				public void onDismiss(DialogInterface dialog) {
 					updateViewState(btnLogin, true);
@@ -599,7 +589,6 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 			LoginTask loginTask = new LoginTask();
 			loginTask.execute("");
 		}
-
 	}
 
 	private void startLoginConnection() {
@@ -630,12 +619,12 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 			return;
 		nameAndDomain = loginName.split("@");// {"admin","4948997"}
 		EngineConst.password = loginPwd;
-		byte flag = 0;// 0代表公司账号登录，1代表域名登录
+		byte LoginType = 0;// 0代表公司账号登录，1代表域名登录
 		if (nameAndDomain[1].indexOf(".") > -1)
-			flag = 1;
+			LoginType = 1;
 
-		LogFactory.d(TAG, "flag:" + flag + ",nameAndDomain[1]:" + nameAndDomain[1] + ",nameAndDomain[0]:" + nameAndDomain[0]);
-		ByteBuffer bodyBuffer = LoginOutPacket.GenerateLoginBody(flag, nameAndDomain[1], nameAndDomain[0].toLowerCase(), nameAndDomain[0].toLowerCase());
+		LogFactory.d(TAG, "LoginType:" + LoginType + ",nameAndDomain[1]:" + nameAndDomain[1] + ",nameAndDomain[0]:" + nameAndDomain[0]);
+		ByteBuffer bodyBuffer = LoginOutPacket.GenerateLoginBody(LoginType, nameAndDomain[1], nameAndDomain[0].toLowerCase(), nameAndDomain[0].toLowerCase());
 		LoginOutPacket out = new LoginOutPacket(bodyBuffer, IMOCommand.IMO_LOGIN, 0, 0);
 		IMOApp.getDataEngine().addToObserverList(LoginActivity.this);
 
@@ -806,12 +795,10 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-
 			case R.id.btn_delete:
 				login_edit_account.setText("");
 				login_edit_pwd.setText("");
 				break;
-
 			default:
 				break;
 		}
@@ -839,7 +826,7 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 
 	@Override
 	public void NotifyPacketArrived(String aConnectionId, short command) {
-		LogFactory.d(TAG, "NotifyPacketArrived and aConnectionId:" + aConnectionId + ",command:" + command);
+		LogFactory.d(NIOThread.class.getSimpleName(), "NotifyPacketArrived and aConnectionId:" + aConnectionId + ",command:" + command);
 		super.NotifyPacketArrived(aConnectionId, command);
 		if (EngineConst.IMO_CONNECTION_ID.equals(aConnectionId))
 			switch (command) {
@@ -932,7 +919,6 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 			ret = getCorpInfoInPacket.getRet();
 			if (ret == 0) {
 				Globe.corp = maskItem;
-				// IMOApp.imoStorage.addCorpInfo(Globe.corp);
 			}
 			saveLoginData();
 			saveAccount();
@@ -964,7 +950,6 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 			netData.put("cmd", command);
 			netData.put("ret", ret);
 			sendMessage(NotifyPacketArrived, netData);
-
 		}
 	}
 
@@ -984,7 +969,7 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 
 	@Override
 	public void NotifyPacketProgress(String aConnectionId, short command, short aTotalLen, short aSendedLen) {
-		LogFactory.d(TAG, "NotifyPacketProgress, aConnectionId:" + aConnectionId + ",command:" + command + ",aTotalLen:" + aTotalLen + ",aSendedLen:" + aSendedLen);
+		LogFactory.d(NIOThread.class.getSimpleName(), "NotifyPacketProgress, aConnectionId = " + aConnectionId + ", command = " + command);
 	}
 
 	@Override
