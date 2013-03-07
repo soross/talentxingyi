@@ -497,7 +497,7 @@ public class TCPConnection extends ConnectionImp {
 			channel.finishConnect();
 		}
 		sk.interestOps(SelectionKey.OP_READ);
-		LogFactory.d(TAG, "have connected to server");
+		LogFactory.d(TAG, "Success To Connect Server!!!");
 	}
 
 	/*
@@ -511,8 +511,8 @@ public class TCPConnection extends ConnectionImp {
 	 * (non-Javadoc)
 	 */
 	public void processWrite() {
-		LogFactory.d(NIOThread.class.getSimpleName(), "isConnected():" + isConnected());
 		if (isConnected()) {
+			LogFactory.d(TAG, "Can Write");
 			send();
 		}
 	}
