@@ -1,10 +1,8 @@
 package com.imo.module.welcome;
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -16,7 +14,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -52,12 +49,8 @@ import com.imo.util.UpdateManager;
 
 /**
  * 欢迎界面
- * 
- * @author CaixiaoLong
- * 
  */
-public class WelcomeActivity extends AbsBaseActivityNetListener implements
-		IAppUpdate {
+public class WelcomeActivity extends AbsBaseActivityNetListener implements IAppUpdate {
 
 	private final int basicId = 100;
 
@@ -83,8 +76,7 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.getWindow().setFormat(PixelFormat.RGBA_8888);
 		mGlobal.mScale = new SystemInfoManager().getScale(WelcomeActivity.this);
 		super.onCreate(savedInstanceState);
@@ -112,26 +104,22 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 		final double scale = IMOApp.getApp().mScale;
 
 		rl_welcome = new RelativeLayout(this);
-		rl_welcome.setBackgroundDrawable(new BitmapDrawable(getResources()
-				.openRawResource(R.drawable.welcome_bg)));
-		rl_welcome.setLayoutParams(new RelativeLayout.LayoutParams(
-				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		rl_welcome.setBackgroundDrawable(new BitmapDrawable(getResources().openRawResource(R.drawable.welcome_bg)));
+		rl_welcome.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
 		RelativeLayout rl_logo = new RelativeLayout(this);
 		int iv_logo_id = basicId + 1;
 		iv_logo = new ImageView(this);
 		iv_logo.setId(iv_logo_id);
 		iv_logo.setImageResource(R.drawable.welcome_logo);
-		RelativeLayout.LayoutParams rl_params = new RelativeLayout.LayoutParams(
-				(int) (108 * scale), (int) (117 * scale));
+		RelativeLayout.LayoutParams rl_params = new RelativeLayout.LayoutParams((int) (108 * scale), (int) (117 * scale));
 		rl_params.topMargin = (int) (32 * scale);
 		rl_params.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		rl_logo.addView(iv_logo, rl_params);
 
 		ImageView Beta = new ImageView(this);
 		Beta.setImageResource(R.drawable.welcome_beta);
-		rl_params = new RelativeLayout.LayoutParams((int) (56 * scale),
-				(int) (31 * scale));
+		rl_params = new RelativeLayout.LayoutParams((int) (56 * scale), (int) (31 * scale));
 		rl_params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 		rl_params.addRule(RelativeLayout.RIGHT_OF, iv_logo_id);
 		rl_logo.addView(Beta, rl_params);
@@ -140,18 +128,15 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 		tv_text1 = new TextView(this);
 		tv_text1.setText("i'm office");
 		tv_text1.setTextSize(26);
-		tv_text1.setTextColor(getResources().getColor(
-				R.color.welcome_tv_text1_color));
+		tv_text1.setTextColor(getResources().getColor(R.color.welcome_tv_text1_color));
 
-		rl_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
+		rl_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		rl_params.topMargin = (int) (10 * scale);
 		rl_params.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		rl_params.addRule(RelativeLayout.BELOW, iv_logo_id);
 		rl_logo.addView(tv_text1, rl_params);
 
-		rl_params = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.WRAP_CONTENT);
+		rl_params = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		rl_params.topMargin = (int) (200 * scale);
 		rl_welcome.addView(rl_logo, rl_params);
 
@@ -162,11 +147,9 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 
 		tv_text3.setText(getResources().getString(R.string.copyright_info1));
 		tv_text3.setTextSize(14);
-		tv_text3.setTextColor(getResources().getColor(
-				R.color.welcome_tv_text3_color));
+		tv_text3.setTextColor(getResources().getColor(R.color.welcome_tv_text3_color));
 
-		rl_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
+		rl_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		rl_params.bottomMargin = (int) (6 * scale);
 		rl_params.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		rl_params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -176,11 +159,9 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 		tv_text2 = new TextView(this);
 		tv_text2.setText("易睦网络·版权所有");
 		tv_text2.setTextSize(14);
-		tv_text2.setTextColor(getResources().getColor(
-				R.color.welcome_tv_text2_color));
+		tv_text2.setTextColor(getResources().getColor(R.color.welcome_tv_text2_color));
 
-		rl_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
+		rl_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		rl_params.bottomMargin = (int) (6 * scale);
 		rl_params.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		rl_params.addRule(RelativeLayout.ABOVE, tv_text3_id);
@@ -191,34 +172,40 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 
 	private void loadInitData() {
 		// 控制是否为第一次运行软件。
-		curState = (String) com.imo.util.PreferenceManager.get(fileName,
-				new String[] { isFirstLogin, stateFalse });
-		EngineConst.uId = (Integer) com.imo.util.PreferenceManager
-				.get(fileName, new Object[] {
-						resources.getString(R.string.uId), 0 });
-		EngineConst.cId = (Integer) com.imo.util.PreferenceManager
-				.get(fileName, new Object[] {
-						resources.getString(R.string.cId), 0 });
+		curState = (String) com.imo.util.PreferenceManager.get(fileName, new String[] {
+				isFirstLogin, stateFalse
+		});
+		EngineConst.uId = (Integer) com.imo.util.PreferenceManager.get(fileName, new Object[] {
+				resources.getString(R.string.uId), 0
+		});
+		EngineConst.cId = (Integer) com.imo.util.PreferenceManager.get(fileName, new Object[] {
+				resources.getString(R.string.cId), 0
+		});
 
 		Globe.SP_FILE = "SP" + EngineConst.uId;
 		Globe.corpLogo_file = "corpLogo" + EngineConst.cId;
 		Globe.selfHeadPic_file = "selfHeadPic" + EngineConst.uId;
 
-		Globe.is_shock = (Boolean) PreferenceManager.get(Globe.SP_FILE,
-				new Object[] { SystemSetActivity.IS_SHOCK, Globe.is_shock });
-		Globe.is_sound = (Boolean) PreferenceManager.get(Globe.SP_FILE,
-				new Object[] { SystemSetActivity.IS_SOUND, Globe.is_sound });
+		Globe.is_shock = (Boolean) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+				SystemSetActivity.IS_SHOCK, Globe.is_shock
+		});
+		Globe.is_sound = (Boolean) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+				SystemSetActivity.IS_SOUND, Globe.is_sound
+		});
 		Functions.initSoundPool();
-		Globe.is_notification = (Boolean) PreferenceManager.get(Globe.SP_FILE,
-				new Object[] { SystemSetActivity.IS_NOTIFICATION,
-						Globe.is_notification });
+		Globe.is_notification = (Boolean) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+				SystemSetActivity.IS_NOTIFICATION, Globe.is_notification
+		});
 
 		loginName = (String) PreferenceManager.get(Globe.SP_FILE, new String[] {
-				LoginActivity.LOGIN_NAME, new String() });
+				LoginActivity.LOGIN_NAME, new String()
+		});
 		loginPwd = (String) PreferenceManager.get(Globe.SP_FILE, new String[] {
-				LoginActivity.LOGIN_PWD, new String() });
-		autoLogin = (Boolean) PreferenceManager.get(Globe.SP_FILE,
-				new Object[] { LoginActivity.LOGIN_AUTOLOGIN, autoLogin });
+				LoginActivity.LOGIN_PWD, new String()
+		});
+		autoLogin = (Boolean) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+				LoginActivity.LOGIN_AUTOLOGIN, autoLogin
+		});
 	}
 
 	@Override
@@ -247,8 +234,7 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 		public void onAnimationEnd(Animation animation) {
 			if (stateTrue.equals(curState)) {// 不是第一次
 				if (autoLogin) {// 自动登录
-					dialog = DialogFactory.progressDialog(mContext,
-							"正在验证，请稍后...");
+					dialog = DialogFactory.progressDialog(mContext, "正在验证，请稍后...");
 					dialog.show();
 					waitServiceStart();
 					autoLogin();
@@ -258,7 +244,8 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 				}
 			} else {// 第一次使用软件
 				com.imo.util.PreferenceManager.save(fileName, new String[] {
-						isFirstLogin, stateTrue });
+						isFirstLogin, stateTrue
+				});
 				NewFeaturesActivity.launch(mContext);
 				finish();
 			}
@@ -283,14 +270,14 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 	public boolean CanAcceptPacket(int command) {
 		super.CanAcceptPacket(command);
 		switch (command) {
-		case IMOCommand.IMO_LOGIN:
-			return true;
-		case IMOCommand.IMO_GET_CORP_INFO:
-			return true;
-		case IMOCommand.IMO_GET_EMPLOYEE_PROFILE:
-			return true;
-		default:
-			return false;
+			case IMOCommand.IMO_LOGIN:
+				return true;
+			case IMOCommand.IMO_GET_CORP_INFO:
+				return true;
+			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE:
+				return true;
+			default:
+				return false;
 		}
 	}
 
@@ -317,19 +304,15 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 		byte flag = 0;
 		if (nameAndDomain[1].indexOf(".") > -1)
 			flag = 1;
-		ByteBuffer bodyBuffer = LoginOutPacket.GenerateLoginBody(flag,
-				nameAndDomain[1], nameAndDomain[0].toLowerCase(),
-				nameAndDomain[0].toLowerCase());
-		LoginOutPacket out = new LoginOutPacket(bodyBuffer,
-				IMOCommand.IMO_LOGIN, 0, 0);
+		ByteBuffer bodyBuffer = LoginOutPacket.GenerateLoginBody(flag, nameAndDomain[1], nameAndDomain[0].toLowerCase(), nameAndDomain[0].toLowerCase());
+		LoginOutPacket out = new LoginOutPacket(bodyBuffer, IMOCommand.IMO_LOGIN, 0, 0);
 		IMOApp.getDataEngine().addToObserverList(this);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 	}
 
 	private void analysisLoginPacket(short command) {
 		dialog.dismiss();
-		LoginInPacket loginInPacket = (LoginInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		LoginInPacket loginInPacket = (LoginInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		ByteBuffer buffer = loginInPacket.getBodyBuffer();
 		short ret = buffer.getShort();
 		try {
@@ -351,8 +334,7 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 				for (int i = 0; i < num; i++) {
 					long ip = buffer.getInt() & 0xFFFFFFFFL;
 					int port = buffer.getShort();
-					Globe.ips[i] = ip / 256 / 256 / 256 % 256 + "." + ip / 256
-							/ 256 % 256 + "." + ip / 256 % 256 + "." + ip % 256;
+					Globe.ips[i] = ip / 256 / 256 / 256 % 256 + "." + ip / 256 / 256 % 256 + "." + ip / 256 % 256 + "." + ip % 256;
 					Globe.ports[i] = port;
 				}
 				buffer.clear();
@@ -360,14 +342,13 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 				// 初始化数据库(由于数据库名称由UID组成，所以在这里初始化数据库)
 				IMOApp.imoStorage.open(EngineConst.uId);
 				EngineConst.isLoginSuccess = true;
-				
+
 				DataEngine.getInstance().setLogicStatus(LOGICSTATUS.LOGINOVER);
 			} else if (ret == 115) {// 强制更新{未测试}
 				int temp_nameLen = buffer.getInt();
 				byte[] temp_name_buffer = new byte[temp_nameLen];
 				buffer.get(temp_name_buffer);
-				String preUpdate_build = StringUtils
-						.UNICODE_TO_UTF8(temp_name_buffer);
+				String preUpdate_build = StringUtils.UNICODE_TO_UTF8(temp_name_buffer);
 				Message msg1 = new Message();
 				msg1.obj = preUpdate_build;
 				mUpdateAppHandler.sendMessage(msg1);
@@ -385,23 +366,16 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 	}
 
 	private void getSelfInfo() {
-		int mask = 1 | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5)
-				| (1 << 6) | (1 << 7) | (1 << 8) | (1 << 9) | (1 << 10)
-				| (1 << 11) | (1 << 12) | (1 << 13) | (1 << 14);
-		ByteBuffer bodyBuffer = GetEmployeeProfileOutPacket
-				.GenerateEmployeeProfileBody(aUntransID, EngineConst.cId,
-						EngineConst.uId, mask);
-		GetEmployeeProfileOutPacket out = new GetEmployeeProfileOutPacket(
-				bodyBuffer, IMOCommand.IMO_GET_EMPLOYEE_PROFILE,
-				EngineConst.cId, EngineConst.uId);
+		int mask = 1 | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5) | (1 << 6) | (1 << 7) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11) | (1 << 12) | (1 << 13) | (1 << 14);
+		ByteBuffer bodyBuffer = GetEmployeeProfileOutPacket.GenerateEmployeeProfileBody(aUntransID, EngineConst.cId, EngineConst.uId, mask);
+		GetEmployeeProfileOutPacket out = new GetEmployeeProfileOutPacket(bodyBuffer, IMOCommand.IMO_GET_EMPLOYEE_PROFILE, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 	}
 
 	private void analysisCorpInfoPacket(short command) {
 		short ret = -1;
 		try {
-			GetCorpInfoInPacket getCorpInfoInPacket = (GetCorpInfoInPacket) IMOApp
-					.getDataEngine().getInPacketByCommand(command);
+			GetCorpInfoInPacket getCorpInfoInPacket = (GetCorpInfoInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 			CorpMaskItem maskItem = getCorpInfoInPacket.getMaskItem();
 			ret = getCorpInfoInPacket.getRet();
 			if (ret == 0) {
@@ -425,10 +399,8 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 	private void analysisMyselfPacket(short command) {
 		short ret = -1;
 		try {
-			GetEmployeeProfileInPacket getEmployeeProfileInPacket = (GetEmployeeProfileInPacket) IMOApp
-					.getDataEngine().getInPacketByCommand(command);
-			EmployeeProfileItem employeeProfileItem = getEmployeeProfileInPacket
-					.getEmployeeItem();
+			GetEmployeeProfileInPacket getEmployeeProfileInPacket = (GetEmployeeProfileInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
+			EmployeeProfileItem employeeProfileItem = getEmployeeProfileInPacket.getEmployeeItem();
 			ret = getEmployeeProfileInPacket.getRet();
 			if (ret == 0) {
 				Globe.myself = employeeProfileItem;
@@ -441,12 +413,9 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 	}
 
 	private void getCorpInfo() {// 请求公司信息
-		int mask = 1 | (1 << 1) | (1 << 2) | (1 << 12) | (1 << 14) | (1 << 16)
-				| (1 << 17) | (1 << 20);// 公司账号，公司简称，公司中文名称，公司地址，公司简介，公司电话，公司传真，公司网址
-		ByteBuffer bodyBuffer = GetCorpInfoOutPacket.GenerateCorpInfoBody(
-				EngineConst.cId, mask);
-		GetCorpInfoOutPacket out = new GetCorpInfoOutPacket(bodyBuffer,
-				IMOCommand.IMO_GET_CORP_INFO, EngineConst.cId, EngineConst.uId);
+		int mask = 1 | (1 << 1) | (1 << 2) | (1 << 12) | (1 << 14) | (1 << 16) | (1 << 17) | (1 << 20);// 公司账号，公司简称，公司中文名称，公司地址，公司简介，公司电话，公司传真，公司网址
+		ByteBuffer bodyBuffer = GetCorpInfoOutPacket.GenerateCorpInfoBody(EngineConst.cId, mask);
+		GetCorpInfoOutPacket out = new GetCorpInfoOutPacket(bodyBuffer, IMOCommand.IMO_GET_CORP_INFO, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 	}
 
@@ -455,21 +424,21 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 		super.NotifyPacketArrived(aConnectionId, command);
 		if (EngineConst.IMO_CONNECTION_ID.equals(aConnectionId))
 			switch (command) {
-			case IMOCommand.IMO_LOGIN: {
-				LogFactory.e("WelcomeActivity", "IMO_LOGIN");
-				analysisLoginPacket(command);
-				break;
-			}
-			case IMOCommand.IMO_GET_CORP_INFO: {
-				analysisCorpInfoPacket(command);
-				break;
-			}
-			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
-				analysisMyselfPacket(command);
-				break;
-			}
-			default:
-				break;
+				case IMOCommand.IMO_LOGIN: {
+					LogFactory.e("WelcomeActivity", "IMO_LOGIN");
+					analysisLoginPacket(command);
+					break;
+				}
+				case IMOCommand.IMO_GET_CORP_INFO: {
+					analysisCorpInfoPacket(command);
+					break;
+				}
+				case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
+					analysisMyselfPacket(command);
+					break;
+				}
+				default:
+					break;
 			}
 
 	}
@@ -489,8 +458,7 @@ public class WelcomeActivity extends AbsBaseActivityNetListener implements
 	}
 
 	@Override
-	public void NotifyPacketProgress(String aConnectionId, short command,
-			short aTotalLen, short aSendedLen) {
+	public void NotifyPacketProgress(String aConnectionId, short command, short aTotalLen, short aSendedLen) {
 
 	}
 
