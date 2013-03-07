@@ -158,7 +158,6 @@ public class NIOThread implements Runnable {
 						try {
 							if (selector != null)
 								n = selector.select(10);
-							LogFactory.d(TAG, "selector.select n:" + n);
 							// 如果要shutdown，关闭selector退出
 							if (shutdown) {
 								selector.close();
@@ -173,6 +172,7 @@ public class NIOThread implements Runnable {
 
 						// 如果select返回大于0，处理事件
 						if (n > 0) {
+							LogFactory.d(TAG, "selector n > 0 , n = " + n);
 							for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();) {
 								// 得到下一个Key
 								SelectionKey sk = i.next();
@@ -185,10 +185,10 @@ public class NIOThread implements Runnable {
 								INIOHandler handler = (INIOHandler) sk.attachment();
 								try {
 									if (sk.isConnectable()) {
-										LogFactory.d(TAG, "sk.isConnectable()");
+										LogFactory.d(TAG, "Can Connect");
 										handler.processConnect(sk);
 									} else if (sk.isReadable()) {
-										LogFactory.d(TAG, "sk.isReadable()");
+										LogFactory.d(TAG, "Can Read");
 										handler.processRead(sk);
 									}
 								} catch (IOException e) {
