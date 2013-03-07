@@ -223,8 +223,6 @@ public class NIOThread implements Runnable {
 	public void addDisposeRequest(IConnection p) {
 		synchronized (disposeQueue) {
 			disposeQueue.offer(p);
-
-			LogFactory.e("disposeQueue", "name --->" + "disposeQueue size :" + disposeQueue.size());
 		}
 	}
 
@@ -259,7 +257,9 @@ public class NIOThread implements Runnable {
 	 */
 	private void processDisposeQueue() {
 		synchronized (disposeQueue) {
-			LogFactory.d(TAG, "disposeQueue size:" + disposeQueue.size());
+			if (!disposeQueue.isEmpty()) {
+				LogFactory.d(TAG, "disposeQueue size is not empty , size = " + disposeQueue.size());
+			}
 			while (!disposeQueue.isEmpty()) {
 				Object obj = disposeQueue.poll();
 				if (obj instanceof IConnection)
@@ -405,7 +405,7 @@ public class NIOThread implements Runnable {
 		IConnection port = getConnection(id);
 		if (port != null) {
 			DataEngine.getInstance().getOutQueue().add(packet);
-			LogFactory.d(TAG, "id:" + id + ",add packet <" + packet.getCommand() + "> to port,and isStartRelogin = " + EngineConst.isStartRelogin);
+			LogFactory.d(TAG, "Add Packet To OutQueue , ConnId = " + id + ",Packet's Command = " + packet.getCommand() + ",and isStartRelogin = " + EngineConst.isStartRelogin);
 		} else {
 			LogFactory.d(TAG, "send port is null");
 		}
@@ -419,7 +419,7 @@ public class NIOThread implements Runnable {
 
 	public IConnection newTCPConnection(String id, InetSocketAddress server, boolean start) {
 		synchronized (lock_newTCPConnection) {
-			LogFactory.d(TAG, "hasConnection(id:" + id + "):" + hasConnection(id));
+			LogFactory.d(TAG, "hasConnection id = " + id + " = " + hasConnection(id));
 			if (hasConnection(id)) {
 				IConnection con = getConnection(id);
 				increaseReference(con);
@@ -434,7 +434,6 @@ public class NIOThread implements Runnable {
 				return null;
 			}
 			registry.put(id, tcpConnection);
-			LogFactory.e(TAG, "registry size :" + registry.size());
 			references.put(tcpConnection, 1);
 			wakeup(tcpConnection);
 			return tcpConnection;
