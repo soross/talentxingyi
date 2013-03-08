@@ -112,7 +112,7 @@ public class EngineConst {
 	public static final String serverInfo = "http://errortip.app.imoffice.cn/message/error_tip.txt";
 
 	// 123.129.204.227:2860
-	public static final String hostIP = "202.104.236.72";// "123.129.204.227";// 即时行情服务器
+	public static final String hostIP = "123.129.204.227";// 即时行情服务器
 
 	public static final InetSocketAddress IMO_SERVER_ADDRESS = new InetSocketAddress(hostIP, 2860);
 
