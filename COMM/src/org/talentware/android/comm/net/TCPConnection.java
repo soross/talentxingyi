@@ -12,10 +12,9 @@ import java.util.Map;
 
 import org.talentware.android.comm.dataengine.DataEngine;
 import org.talentware.android.comm.dataengine.DataEngine.LOGICSTATUS;
-import org.talentware.android.comm.packet.InPacket;
 import org.talentware.android.comm.packet.OutPacket;
+import org.talentware.android.comm.packet.QuoteLinuxInPacket;
 import org.talentware.android.comm.packet.command.IMOCommand;
-import org.talentware.android.comm.packet.exception.PacketParseException;
 import org.talentware.android.comm.util.ConnectionLog;
 import org.talentware.android.comm.util.LogFactory;
 
@@ -147,6 +146,7 @@ public class TCPConnection extends ConnectionImp {
 			return temp;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			LogFactory.e(NIOThread.class.getSimpleName(), "readBuffer Err");
 			e.printStackTrace();
 		}
 		return 0;
@@ -156,23 +156,29 @@ public class TCPConnection extends ConnectionImp {
 	 * (non-Javadoc)
 	 */
 	public void receive() throws IOException {
-
+		// TODO:Linux 响应先这个么写，测试下
+		LogFactory.d(NIOThread.class.getSimpleName(), "Receive Packet");
 		if (remoteClosed)
 			return;
-		// 接收数据
+
 		int oldPos = receiveBuf.position();
+		short packetLen = -1;
 
-		for (int r = readBuffer(); r > 0; r = readBuffer()) {
-			// buffer length不大于2则连个长度字段都没有 int
+		// int i = readBuffer();
+		// for (int j = 0; j < i; j++) {
+		// int bbb = receiveBuf.get(j);
+		// int sss = 0001;
+		// }
+
+		// TODO:如果一开始不是0怎么办
+		for (int i = readBuffer(); i > 0; i = readBuffer()) {
 			int bufferLength = receiveBuf.position() - oldPos;
-			if (bufferLength < 2)
-				continue;
+			// TODO:'{'和7不能硬编码,如果接受buffer 0 不为'{'
+			if (receiveBuf.get(0) == '{' && receiveBuf.position() > 6) {// 如果已经读到开始符且长度大于7(说明已经读到长度字段)
+				packetLen = receiveBuf.getShort(5);
+			}
 
-			// 如果可读内容小于包长，则这个包还没收完
-			short length = receiveBuf.getShort(oldPos);// TODO:怀疑开头short为包长度
-			ConnectionLog.MusicLogInstance().addLog("Recevied : bufferLength = " + bufferLength + ", length = " + length);
-
-			if (bufferLength < length) {
+			if (packetLen != -1 && bufferLength < packetLen + 8) {
 				continue;
 			}
 		}
@@ -188,60 +194,140 @@ public class TCPConnection extends ConnectionImp {
 		}
 
 		receiveBuf.flip();
-		ConnectionLog.MusicLogInstance().addLog(this.name + " TCPConnection Received:, Length = " + receiveBuf.limit());
+		
+//		QuoteLinuxInPacket
 
-		// 一直循环到无包可读
-		while (true) {
-			/* 如果有完整的包，则添加这个包，调整各个参数 */
-			// 解析出一个包
-			InPacket packet = null;
-			int packageLen = checkTCP(receiveBuf);
-			ConnectionLog.MusicLogInstance().addLog("packageLen = " + packageLen + ",position = " + receiveBuf.position());
+		//
+		// // **********包类型*********//
+		// int v2 = head[1] = readBuffer();// inputStream.read();
+		// int v1 = head[2] = readBuffer();// inputStream.read();
+		// if ((v1 | v2) < 0) {
+		// throw new EOFException();
+		// }
+		//
+		// int pkg_type = (v1 << 8) + (v2 << 0);
+		// // **********包类型*********//
+		//
+		// // *************包属性 byte[2]****************//
+		// int arr1 = head[3] = readBuffer();// inputStream.read(); // 0 标志位
+		// int arr2 = head[4] = readBuffer();// inputStream.read(); // 0 标志位
+		//
+		// // **************正文长度******************//
+		// int len2 = head[5] = readBuffer();// inputStream.read();
+		// int len1 = head[6] = readBuffer();// inputStream.read();
+		// if ((v1 | v2) < 0) {
+		// throw new EOFException();
+		// }
+		// int pkg_size = (len1 << 8) + (len2 << 0);
+		//
+		// LogFactory.d(NIOThread.class.getSimpleName(), "Receive Packet Size:"
+		// + pkg_size);
+		//
+		// buffer = ByteBuffer.allocate(pkg_size + 7);
+		//
+		// for (int i = 0; i < head.length; i++) {//把之前已读过的投字段压倒buffer中
+		// buffer.put((byte) head[i]);
+		// }
+		//
+		// for (int i = 0; i < pkg_size; i++) {
+		// buffer.put((byte) readBuffer());
+		// }
+		//
+		// int EndFlag = readBuffer();
+		// if (EndFlag == '}') {
+		// buffer.put((byte) EndFlag);
+		// }
 
-			if (packageLen > 0) {
-				try {
-					packet = DataEngine.getInstance().parseIn(receiveBuf, packageLen);
-				} catch (PacketParseException e) {
-					e.printStackTrace();
-					adjustBuffer(pos);
-				}
-			}
-
-			if (-2 == packageLen) {
-				processError(new Exception("receive exception!"), IMOCommand.ERROR_REMOTE_DATA);
-				return;
-			}
-
-			if (packet != null) {
-
-				if (IMOCommand.IMO_ERROR_PACKET == packet.getCommand()) {
-					processError(new Exception("Error Packet!"), IMOCommand.ERROR_REMOTE_DATA);
-					return;
-				} else {
-					int relocateLen = packet.relocate(receiveBuf);
-					if (relocateLen != 0) {
-						receiveBuf.position(relocateLen);
-					}
-
-					LogFactory.d(NIOThread.class.getSimpleName(), "receive packet , command = " + packet.getCommand());
-					boolean isAdded = DataEngine.getInstance().getInQueue().add(packet);
-					if (isAdded) {
-						DataEngine.getInstance().observerNotifyPacketArrived(this.name, packet.getCommand());
-					}
-				}
-
-			}
-
-			if (packet == null) {
-				/*
-				 * packet为null有三种情况: 一是缓冲内的数据都已经解析完， 二是数据还没有解析完，但是不是一个完整的包，
-				 * 三是服务器返回的是一个错误包，这种情况下断线重连
-				 */
-				break;
-			}
-		}
-
-		adjustBuffer(pos);
+		// // 接收数据
+		// int oldPos = receiveBuf.position();
+		//
+		// for (int r = readBuffer(); r > 0; r = readBuffer()) {
+		// // buffer length不大于2则连个长度字段都没有 int
+		// int bufferLength = receiveBuf.position() - oldPos;
+		// if (bufferLength < 2)
+		// continue;
+		//
+		// // 如果可读内容小于包长，则这个包还没收完
+		// short length = receiveBuf.getShort(oldPos);// TODO:怀疑开头short为包长度
+		// ConnectionLog.MusicLogInstance().addLog("Recevied : bufferLength = "
+		// + bufferLength + ", length = " + length);
+		//
+		// if (bufferLength < length) {
+		// continue;
+		// }
+		// }
+		//
+		// // 得到当前位置
+		// int pos = receiveBuf.position();
+		// // 检查是否读了0字节，这种情况一般表示远程已经关闭了这个连接
+		// if (oldPos == pos) {
+		// return;
+		// } else {
+		// heartControlTime = System.currentTimeMillis();
+		// EngineConst.HEARTBEAT_SEND_COUNT = 0;
+		// }
+		//
+		// receiveBuf.flip();
+		// ConnectionLog.MusicLogInstance().addLog(this.name +
+		// " TCPConnection Received:, Length = " + receiveBuf.limit());
+		//
+		// // 一直循环到无包可读
+		// while (true) {
+		// /* 如果有完整的包，则添加这个包，调整各个参数 */
+		// // 解析出一个包
+		// InPacket packet = null;
+		// int packageLen = checkTCP(receiveBuf);
+		// ConnectionLog.MusicLogInstance().addLog("packageLen = " + packageLen
+		// + ",position = " + receiveBuf.position());
+		//
+		// if (packageLen > 0) {
+		// try {
+		// packet = DataEngine.getInstance().parseIn(receiveBuf, packageLen);
+		// } catch (PacketParseException e) {
+		// e.printStackTrace();
+		// adjustBuffer(pos);
+		// }
+		// }
+		//
+		// if (-2 == packageLen) {
+		// processError(new Exception("receive exception!"),
+		// IMOCommand.ERROR_REMOTE_DATA);
+		// return;
+		// }
+		//
+		// if (packet != null) {
+		//
+		// if (IMOCommand.IMO_ERROR_PACKET == packet.getCommand()) {
+		// processError(new Exception("Error Packet!"),
+		// IMOCommand.ERROR_REMOTE_DATA);
+		// return;
+		// } else {
+		// int relocateLen = packet.relocate(receiveBuf);
+		// if (relocateLen != 0) {
+		// receiveBuf.position(relocateLen);
+		// }
+		//
+		// LogFactory.d(NIOThread.class.getSimpleName(),
+		// "receive packet , command = " + packet.getCommand());
+		// boolean isAdded = DataEngine.getInstance().getInQueue().add(packet);
+		// if (isAdded) {
+		// DataEngine.getInstance().observerNotifyPacketArrived(this.name,
+		// packet.getCommand());
+		// }
+		// }
+		//
+		// }
+		//
+		// if (packet == null) {
+		// /*
+		// * packet为null有三种情况: 一是缓冲内的数据都已经解析完， 二是数据还没有解析完，但是不是一个完整的包，
+		// * 三是服务器返回的是一个错误包，这种情况下断线重连
+		// */
+		// break;
+		// }
+		// }
+		//
+		// adjustBuffer(pos);
 	}
 
 	/**
@@ -385,10 +471,8 @@ public class TCPConnection extends ConnectionImp {
 					}
 					processError(e, IMOCommand.ERROR_NETWORK);
 				}
-
 			} finally {
-				packet.setResendCountDown(100);
-//				packet.setResendCountDown(packet.getResendCountDown() - 1);
+				packet.setResendCountDown(packet.getResendCountDown() - 1);
 				body = null;
 			}
 

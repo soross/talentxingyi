@@ -2,6 +2,7 @@ package org.talentware.android.comm.net;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public abstract class ConnectionImp implements IConnection, INIOHandler {
 
@@ -27,6 +28,7 @@ public abstract class ConnectionImp implements IConnection, INIOHandler {
 		this.name = connectionID;
 		sendBuf = ByteBuffer.allocateDirect(EngineConst.IMO_MAX_PACKET_SIZE);
 		receiveBuf = ByteBuffer.allocateDirect(EngineConst.IMO_MAX_PACKET_SIZE);
+		receiveBuf.order(ByteOrder.LITTLE_ENDIAN);
 	}
 
 	public String getId() {

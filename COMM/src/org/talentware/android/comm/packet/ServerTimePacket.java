@@ -9,14 +9,11 @@ public class ServerTimePacket extends Packet {
 	}
 
 	public static ByteBuffer GenerateServerTimeOutPacket() {
-		ByteBuffer bodyBuffer = ByteBuffer.allocate(4);
-		bodyBuffer.putInt(0);
-
+		ByteBuffer bodyBuffer = ByteBuffer.allocate(0);
 		bodyBuffer.flip();
 
 		byte[] data = new byte[bodyBuffer.limit() - bodyBuffer.position()];
 		bodyBuffer.get(data);
-
 		bodyBuffer = null;
 
 		return ByteBuffer.wrap(data);

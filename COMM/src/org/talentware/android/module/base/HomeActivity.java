@@ -36,6 +36,9 @@ public class HomeActivity extends AbsBaseActivityNetListener {
 					thread.start();
 				}
 				
+//				ByteBuffer bodyBuffer = LoginOutPacket.GenerateLoginBody((byte)0, "4948997", "admin", "admin");
+//				LoginOutPacket out = new LoginOutPacket(bodyBuffer, IMOCommand.IMO_LOGIN, 0, 0);
+				
 				ServerTimePacket packet = new ServerTimePacket(ServerTimePacket.GenerateServerTimeOutPacket(), EMCommand.COMM_SERVER_TIME);
 				Packet[] packets = new Packet[1];
 				packets[0] = packet;

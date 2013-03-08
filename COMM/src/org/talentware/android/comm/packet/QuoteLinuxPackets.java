@@ -3,6 +3,7 @@ package org.talentware.android.comm.packet;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.zip.Deflater;
 
 import org.talentware.android.comm.util.LogFactory;
@@ -18,16 +19,19 @@ public class QuoteLinuxPackets extends OutPacket {
 
 	private static final int MIN_LEN_TO_COMPRESS = 64;
 
+	private static final short MUTIPACKETS_FLAG = 5000;
+
 	public QuoteLinuxPackets(final Packet[] packets) {
 		final boolean MultiPackets = (packets != null && packets.length > 1) ? true : false;
 
 		ByteBuffer buffer = ByteBuffer.allocate(computePacketsTotalLength(packets));
-		
+		buffer.order(ByteOrder.LITTLE_ENDIAN);
 		try {
 			buffer.put(START_FLAG);
 			for (int i = 0, size = packets.length; i < size; i++) {
-				buffer.put((byte)(packets[i].getCommand() & 0xFF));
-				buffer.put((byte)((packets[i].getCommand() >>> 8) & 0xFF));
+				buffer.putShort((short) packets[i].getCommand());
+				// buffer.put((byte)(packets[i].getCommand() & 0xFF));
+				// buffer.put((byte)((packets[i].getCommand() >>> 8) & 0xFF));
 				final byte[] content = packets[i].getBody();
 				final int len = content.length;
 				final boolean shouldCompress = !MultiPackets && len >= MIN_LEN_TO_COMPRESS;
@@ -35,8 +39,9 @@ public class QuoteLinuxPackets extends OutPacket {
 				buffer.put((byte) attr);
 				buffer.put((byte) 0);
 				final byte[] compressedData = (shouldCompress && !MultiPackets) ? compress(content) : content;
-				buffer.put((byte)(compressedData.length & 0xFF));
-				buffer.put((byte)((compressedData.length >>> 8) & 0xFF));
+				buffer.putShort((short) compressedData.length);
+				// buffer.put((byte)(compressedData.length & 0xFF));
+				// buffer.put((byte)((compressedData.length >>> 8) & 0xFF));
 				buffer.put(compressedData);
 
 				if (i < size - 1) {
@@ -48,8 +53,9 @@ public class QuoteLinuxPackets extends OutPacket {
 				byte[] tempBytes = buffer.array();
 				buffer.rewind();
 				buffer.put(START_FLAG);
-				buffer.put((byte)(5000 & 0xFF));
-				buffer.put((byte)((5000 >>> 8) & 0xFF));
+				buffer.putShort(MUTIPACKETS_FLAG);
+				// buffer.put((byte)(5000 & 0xFF));
+				// buffer.put((byte)((5000 >>> 8) & 0xFF));
 
 				final int len = tempBytes.length - 1;
 				final boolean shouldCompress = len >= MIN_LEN_TO_COMPRESS;// 子包不压缩
@@ -57,8 +63,9 @@ public class QuoteLinuxPackets extends OutPacket {
 				buffer.put((byte) attr);
 				buffer.put((byte) 0);
 				final byte[] bytes = shouldCompress ? compress(tempBytes) : tempBytes;
-				buffer.put((byte)(bytes.length & 0xFF));
-				buffer.put((byte)((bytes.length >>> 8) & 0xFF));
+				buffer.putShort((short) bytes.length);
+				// buffer.put((byte)(bytes.length & 0xFF));
+				// buffer.put((byte)((bytes.length >>> 8) & 0xFF));
 				buffer.put(bytes);
 			}
 			buffer.put(END_FLAG); // 校验符
@@ -70,14 +77,14 @@ public class QuoteLinuxPackets extends OutPacket {
 		buffer.flip();
 		byte[] data = new byte[buffer.limit() - buffer.position()];
 		data = buffer.array();
-		
-        String bbString = "";
-        for (int j = 0; j < data.length; j++) {
-            bbString += data[j];
-            bbString += " ";
-        }
-        Log.e("ccccccc", "ccString:" + bbString);
-		
+
+//		String bbString = "";
+//		for (int j = 0; j < data.length; j++) {
+//			bbString += data[j];
+//			bbString += " ";
+//		}
+//		Log.e("ccccccc", "ccString:" + bbString);
+
 		body = ByteBuffer.wrap(data);
 		body.flip();
 	}
@@ -129,5 +136,9 @@ public class QuoteLinuxPackets extends OutPacket {
 		System.arraycopy(bytes, 0, result, 4, compressedSize);
 
 		return result;
+	}
+
+	private void ContructPacketsTest() {
+		
 	}
 }
