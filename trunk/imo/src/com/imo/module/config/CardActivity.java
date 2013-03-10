@@ -6,8 +6,6 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.ClipboardManager;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,23 +31,17 @@ import com.imo.network.packages.GetEmployeeProfileInPacket;
 import com.imo.network.packages.GetEmployeeProfileOutPacket;
 import com.imo.network.packages.IMOCommand;
 import com.imo.util.Functions;
-import com.imo.util.IOUtil;
 import com.imo.util.ImageUtil;
 import com.imo.util.LogFactory;
-import com.imo.view.TitleBar;
 
 /**
  * 名片
- * 
- * @author CaixiaoLong
- * 
  */
-public class CardActivity extends AbsBaseActivityNetListener implements
-		OnClickListener {
+public class CardActivity extends AbsBaseActivityNetListener implements OnClickListener {
 
 	private static final int PRIVACY_FLAG_PUBLIC = 0;// 名片对所有人公开
 	private static final int PRIVACY_FLAG_INNER_PUBLIC = 1;// 名片对内部联系人公开
-	private static final int PRIVACY_FLAG_PRIVATE = 2;// 名片不公开
+	// private static final int PRIVACY_FLAG_PRIVATE = 2;// 名片不公开
 
 	private ImageView iv_userFace;
 
@@ -74,9 +65,9 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 
 	private TextView[] tv_infos = new TextView[7];
 
-	private int[] tv_ids = { R.id.tv_company_name, R.id.tv_address,
-			R.id.tv_tel, R.id.tv_mobilephone, R.id.tv_fax,
-			R.id.tv_user_account, R.id.tv_email };
+	private int[] tv_ids = {
+			R.id.tv_company_name, R.id.tv_address, R.id.tv_tel, R.id.tv_mobilephone, R.id.tv_fax, R.id.tv_user_account, R.id.tv_email
+	};
 
 	private String[] tv_content = new String[7];
 	// {
@@ -127,18 +118,10 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 			tv_infos[i] = (TextView) findViewById(tv_ids[i]);
 		}
 
-//		mTitleBar.initDefaultTitleBarForNameCard(resources.getString(R.string.back),
-//				resources.getString(R.string.card),
-//				resources.getString(R.string.copy), R.drawable.titlebar_btn_back_bg2);
+		mTitleBar.initDefaultTitleBarForNameCard(resources.getString(R.string.back), resources.getString(R.string.card), null, R.drawable.titlebar_btn_back_bg2);
 
-		mTitleBar.initDefaultTitleBarForNameCard(resources.getString(R.string.back),
-				resources.getString(R.string.card),
-				null, R.drawable.titlebar_btn_back_bg2);
-
-		
 		mTitleBar.setLeftBtnListene(this);
-//		mTitleBar.setRightBtnListener(this);
-		
+
 		initIntentData();
 		if (aboutUid != EngineConst.uId) {
 			loadHeadPic();
@@ -187,13 +170,9 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 			Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		int mask = (1 << 4) | 1 | (1 << 1) | (1 << 2) | (1 << 5) | (1 << 6)
-				| (1 << 9) | (1 << 11) | (1 << 12);// 签名，用户账户，公司账户，姓名，手机，电子邮件，标志，职务，电话
-		ByteBuffer bodyBuffer = GetEmployeeProfileOutPacket
-				.GenerateEmployeeProfileBody(aUntransID, cid, uid, mask);
-		GetEmployeeProfileOutPacket out = new GetEmployeeProfileOutPacket(
-				bodyBuffer, IMOCommand.IMO_GET_EMPLOYEE_PROFILE,
-				EngineConst.cId, EngineConst.uId);
+		int mask = (1 << 4) | 1 | (1 << 1) | (1 << 2) | (1 << 5) | (1 << 6) | (1 << 9) | (1 << 11) | (1 << 12);// 签名，用户账户，公司账户，姓名，手机，电子邮件，标志，职务，电话
+		ByteBuffer bodyBuffer = GetEmployeeProfileOutPacket.GenerateEmployeeProfileBody(aUntransID, cid, uid, mask);
+		GetEmployeeProfileOutPacket out = new GetEmployeeProfileOutPacket(bodyBuffer, IMOCommand.IMO_GET_EMPLOYEE_PROFILE, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 		Toast.makeText(this, "正在加载个人详情", Toast.LENGTH_SHORT).show();
 	}
@@ -201,12 +180,9 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 	private void getCorpInfo(int cid) {
 		CorpMaskItem corpMaskItem = Globe.corpMaskItems.get(cid);
 		if (corpMaskItem != null) {
-			tv_content[0] = corpMaskItem.getCn_name() != null ? corpMaskItem
-					.getCn_name() : "";// 公司名称
-			tv_content[1] = corpMaskItem.getAddr() != null ? corpMaskItem
-					.getAddr() : "";// 地址
-			tv_content[4] = corpMaskItem.getFax() != null ? corpMaskItem
-					.getFax() : "";// 传真-取公司
+			tv_content[0] = corpMaskItem.getCn_name() != null ? corpMaskItem.getCn_name() : "";// 公司名称
+			tv_content[1] = corpMaskItem.getAddr() != null ? corpMaskItem.getAddr() : "";// 地址
+			tv_content[4] = corpMaskItem.getFax() != null ? corpMaskItem.getFax() : "";// 传真-取公司
 			updateUI();
 			return;
 		}
@@ -216,10 +192,8 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 		}
 
 		int mask = (1 << 2) | (1 << 12) | (1 << 17);// 公司中文名称，公司地址，公司传真
-		ByteBuffer bodyBuffer = GetCorpInfoOutPacket.GenerateCorpInfoBody(cid,
-				mask);
-		GetCorpInfoOutPacket out = new GetCorpInfoOutPacket(bodyBuffer,
-				IMOCommand.IMO_GET_CORP_INFO, EngineConst.cId, EngineConst.uId);
+		ByteBuffer bodyBuffer = GetCorpInfoOutPacket.GenerateCorpInfoBody(cid, mask);
+		GetCorpInfoOutPacket out = new GetCorpInfoOutPacket(bodyBuffer, IMOCommand.IMO_GET_CORP_INFO, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 		Toast.makeText(this, "正在加载名片", Toast.LENGTH_LONG).show();
 	}
@@ -232,28 +206,19 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 		CorpMaskItem corp = Globe.corp;
 
 		if (loginUserInfo != null) {
-			tv_userName.setText(loginUserInfo.getName() != null ? loginUserInfo
-					.getName() : "");
-			tv_userPosition
-					.setText(loginUserInfo.getPos() != null ? loginUserInfo
-							.getPos() : "");
-			tv_worksign_content.setText("签名："
-					+ (loginUserInfo.getSign() != null ? loginUserInfo
-							.getSign() : ""));
+			tv_userName.setText(loginUserInfo.getName() != null ? loginUserInfo.getName() : "");
+			tv_userPosition.setText(loginUserInfo.getPos() != null ? loginUserInfo.getPos() : "");
+			tv_worksign_content.setText("签名：" + (loginUserInfo.getSign() != null ? loginUserInfo.getSign() : ""));
 		}
 
 		if (loginUserInfo != null) {
 			tv_content[0] = corp.getCn_name() != null ? corp.getCn_name() : "";// 公司名称
 			tv_content[1] = corp.getAddr() != null ? corp.getAddr() : "";// 地址
-			tv_content[2] = loginUserInfo.getTel() != null ? loginUserInfo
-					.getTel() : "";// 电话
-			tv_content[3] = loginUserInfo.getMobile() != null ? Functions
-					.formatPhone(loginUserInfo.getMobile()) : "";// 手机
+			tv_content[2] = loginUserInfo.getTel() != null ? loginUserInfo.getTel() : "";// 电话
+			tv_content[3] = loginUserInfo.getMobile() != null ? Functions.formatPhone(loginUserInfo.getMobile()) : "";// 手机
 			tv_content[4] = corp.getFax() != null ? corp.getFax() : "";// 传真-取公司
-			tv_content[5] = loginUserInfo.getUser_account() + "@"
-					+ loginUserInfo.getCorp_account();// imo
-			tv_content[6] = loginUserInfo.getEmail() != null ? loginUserInfo
-					.getEmail() : "";// E-mail
+			tv_content[5] = loginUserInfo.getUser_account() + "@" + loginUserInfo.getCorp_account();// imo
+			tv_content[6] = loginUserInfo.getEmail() != null ? loginUserInfo.getEmail() : "";// E-mail
 			updateUI();
 		}
 
@@ -269,41 +234,32 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 		Map<String, Object> result = (Map<String, Object>) msg.obj;
 		if (NotifyPacketArrived == msg.what) {
 			switch ((Short) result.get("cmd")) {
-			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
-				if ((Short) result.get("ret") == 0) {
-					EmployeeProfileItem employeeProfileItem = (EmployeeProfileItem) result
-							.get("employeeProfileItem");
-					LogFactory.d(
-							TAG,
-							"得到的Privacy_flag："
-									+ employeeProfileItem.getPrivacy_flag());
-					setEmployeeProfile(employeeProfileItem);
+				case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
+					if ((Short) result.get("ret") == 0) {
+						EmployeeProfileItem employeeProfileItem = (EmployeeProfileItem) result.get("employeeProfileItem");
+						LogFactory.d(TAG, "得到的Privacy_flag：" + employeeProfileItem.getPrivacy_flag());
+						setEmployeeProfile(employeeProfileItem);
 
-					updateUI();
-					Globe.employeeProfileItems.put(aboutUid,
-							employeeProfileItem);
-				} else {
-					Toast.makeText(this, "读取个人资料失败", Toast.LENGTH_SHORT).show();
+						updateUI();
+						Globe.employeeProfileItems.put(aboutUid, employeeProfileItem);
+					} else {
+						Toast.makeText(this, "读取个人资料失败", Toast.LENGTH_SHORT).show();
+					}
+					break;
 				}
-				break;
-			}
-			case IMOCommand.IMO_GET_CORP_INFO: {
-				if ((Short) result.get("ret") == 0) {
-					CorpMaskItem corpMaskItem = (CorpMaskItem) result
-							.get("corpMaskItem");
-					tv_content[0] = corpMaskItem.getCn_name() != null ? corpMaskItem
-							.getCn_name() : "";// 公司名称
-					tv_content[1] = corpMaskItem.getAddr() != null ? corpMaskItem
-							.getAddr() : "";// 地址
-					tv_content[4] = corpMaskItem.getFax() != null ? corpMaskItem
-							.getFax() : "";// 传真-取公司
-					updateUI();
-					Globe.corpMaskItems.put(aboutCid, corpMaskItem);
-				} else {
-					Toast.makeText(this, "读取公司资料失败", Toast.LENGTH_SHORT).show();
+				case IMOCommand.IMO_GET_CORP_INFO: {
+					if ((Short) result.get("ret") == 0) {
+						CorpMaskItem corpMaskItem = (CorpMaskItem) result.get("corpMaskItem");
+						tv_content[0] = corpMaskItem.getCn_name() != null ? corpMaskItem.getCn_name() : "";// 公司名称
+						tv_content[1] = corpMaskItem.getAddr() != null ? corpMaskItem.getAddr() : "";// 地址
+						tv_content[4] = corpMaskItem.getFax() != null ? corpMaskItem.getFax() : "";// 传真-取公司
+						updateUI();
+						Globe.corpMaskItems.put(aboutCid, corpMaskItem);
+					} else {
+						Toast.makeText(this, "读取公司资料失败", Toast.LENGTH_SHORT).show();
+					}
+					break;
 				}
-				break;
-			}
 			}
 		}
 	}
@@ -316,18 +272,14 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 		// 全部隐藏
 		System.out.println(privacy_flag);
 		if (isShowCard(privacy_flag)) {
-			tv_content[3] = employeeProfileItem.getMobile() != null ? Functions
-					.formatPhone(employeeProfileItem.getMobile()) : "";// 手机
-			tv_content[6] = employeeProfileItem.getEmail() != null ? employeeProfileItem
-					.getEmail() : "";// E-mail
+			tv_content[3] = employeeProfileItem.getMobile() != null ? Functions.formatPhone(employeeProfileItem.getMobile()) : "";// 手机
+			tv_content[6] = employeeProfileItem.getEmail() != null ? employeeProfileItem.getEmail() : "";// E-mail
 		} else {
 			tv_content[3] = "（未公开）";// 手机
 			tv_content[6] = "（未公开）";// E-mail
 		}
-		tv_content[2] = employeeProfileItem.getTel() != null ? employeeProfileItem
-				.getTel() : "";// 电话
-		tv_content[5] = employeeProfileItem.getUser_account() + "@"
-				+ employeeProfileItem.getCorp_account();// imo
+		tv_content[2] = employeeProfileItem.getTel() != null ? employeeProfileItem.getTel() : "";// 电话
+		tv_content[5] = employeeProfileItem.getUser_account() + "@" + employeeProfileItem.getCorp_account();// imo
 		tv_userPosition.setText(employeeProfileItem.getPos());
 		tv_worksign_content.setText("签名：" + employeeProfileItem.getSign());
 	}
@@ -335,8 +287,7 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 	private boolean isShowCard(int privacy_flag) {
 		if (privacy_flag == PRIVACY_FLAG_PUBLIC)// 所有人显示
 			return true;
-		if (privacy_flag == PRIVACY_FLAG_INNER_PUBLIC
-				&& (aboutCid == EngineConst.cId))// 内部联系人显示
+		if (privacy_flag == PRIVACY_FLAG_INNER_PUBLIC && (aboutCid == EngineConst.cId))// 内部联系人显示
 			return true;
 		return false;
 	}
@@ -353,8 +304,7 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 	}
 
 	private void loadHeadPic() {
-		float face_width = getResources().getDimension(
-				R.dimen.middle_title_face_height);
+		float face_width = getResources().getDimension(R.dimen.middle_title_face_height);
 		ImageUtil.changeFaceByUid(iv_userFace, aboutUid, face_width, false);
 	}
 
@@ -363,56 +313,38 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 
 		switch (v.getId()) {
 
-		case R.id.btn_left:
-			finish();
-			break;
-		case R.id.btn_right:
-			ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-			clip.setText(copyCard()); // 复制
-			Toast.makeText(this, "名片已经复制到剪切板", Toast.LENGTH_SHORT).show();
-			break;
+			case R.id.btn_left:
+				finish();
+				break;
+			case R.id.btn_right:
+				ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+				clip.setText(copyCard()); // 复制
+				Toast.makeText(this, "名片已经复制到剪切板", Toast.LENGTH_SHORT).show();
+				break;
 
-		case R.id.copynamecard_btn:
-			ClipboardManager clip2 = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-			clip2.setText(copyCard()); // 复制
-			Toast.makeText(this, "名片已经复制到剪切板", Toast.LENGTH_SHORT).show();
-			break;
-		default:
-			break;
+			case R.id.copynamecard_btn:
+				ClipboardManager clip2 = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+				clip2.setText(copyCard()); // 复制
+				Toast.makeText(this, "名片已经复制到剪切板", Toast.LENGTH_SHORT).show();
+				break;
+			default:
+				break;
 		}
 
 	}
 
 	private String copyCard() {
 		StringBuffer result = new StringBuffer();
-		result.append("姓名："
-				+ (Functions.isEmpty(tv_userName.getText()) ? "" : tv_userName
-						.getText()) + "\n");
-		result.append("职位："
-				+ (Functions.isEmpty(tv_userPosition.getText()) ? ""
-						: tv_userPosition.getText()) + "\n");
-		result.append((Functions.isEmpty(tv_worksign_content.getText()) ? "签名："
-				: tv_worksign_content.getText()) + "\n");
-		result.append("公司："
-				+ (Functions.isEmpty(tv_content[0]) ? "" : tv_content[0])
-				+ "\n");
-		result.append("地址："
-				+ (Functions.isEmpty(tv_content[1]) ? "" : tv_content[1])
-				+ "\n");
-		result.append("电话："
-				+ (Functions.isEmpty(tv_content[2]) ? "" : tv_content[2])
-				+ "\n");
-		result.append("手机："
-				+ (Functions.isEmpty(tv_content[3]) ? "" : tv_content[3])
-				+ "\n");
-		result.append("传真："
-				+ (Functions.isEmpty(tv_content[4]) ? "" : tv_content[4])
-				+ "\n");
-		result.append("imo："
-				+ (Functions.isEmpty(tv_content[5]) ? "" : tv_content[5])
-				+ "\n");
-		result.append("E-Mail："
-				+ (Functions.isEmpty(tv_content[6]) ? "" : tv_content[6]));
+		result.append("姓名：" + (Functions.isEmpty(tv_userName.getText()) ? "" : tv_userName.getText()) + "\n");
+		result.append("职位：" + (Functions.isEmpty(tv_userPosition.getText()) ? "" : tv_userPosition.getText()) + "\n");
+		result.append((Functions.isEmpty(tv_worksign_content.getText()) ? "签名：" : tv_worksign_content.getText()) + "\n");
+		result.append("公司：" + (Functions.isEmpty(tv_content[0]) ? "" : tv_content[0]) + "\n");
+		result.append("地址：" + (Functions.isEmpty(tv_content[1]) ? "" : tv_content[1]) + "\n");
+		result.append("电话：" + (Functions.isEmpty(tv_content[2]) ? "" : tv_content[2]) + "\n");
+		result.append("手机：" + (Functions.isEmpty(tv_content[3]) ? "" : tv_content[3]) + "\n");
+		result.append("传真：" + (Functions.isEmpty(tv_content[4]) ? "" : tv_content[4]) + "\n");
+		result.append("imo：" + (Functions.isEmpty(tv_content[5]) ? "" : tv_content[5]) + "\n");
+		result.append("E-Mail：" + (Functions.isEmpty(tv_content[6]) ? "" : tv_content[6]));
 		return result.toString();
 	}
 
@@ -422,8 +354,7 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 	}
 
 	@Override
-	public void NotifyPacketProgress(String aConnectionId, short command,
-			short aTotalLen, short aSendedLen) {
+	public void NotifyPacketProgress(String aConnectionId, short command, short aTotalLen, short aSendedLen) {
 	}
 
 	@Override
@@ -431,48 +362,45 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 
 		super.NotifyPacketArrived(aConnectionId, command);
 		switch (command) {
-		case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
-			short ret = -1;
-			EmployeeProfileItem employeeProfileItem = null;
-			try {
-				GetEmployeeProfileInPacket getEmployeeProfileInPacket = (GetEmployeeProfileInPacket) IMOApp
-						.getDataEngine().getInPacketByCommand(command);
-				employeeProfileItem = getEmployeeProfileInPacket
-						.getEmployeeItem();
-				ret = getEmployeeProfileInPacket.getRet();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				Map<String, Object> result = new HashMap<String, Object>();
-				result.put("cmd", command);
-				result.put("ret", ret);
-				result.put("employeeProfileItem", employeeProfileItem);
-				sendMessage(NotifyPacketArrived, result);
-			}
+			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE: {
+				short ret = -1;
+				EmployeeProfileItem employeeProfileItem = null;
+				try {
+					GetEmployeeProfileInPacket getEmployeeProfileInPacket = (GetEmployeeProfileInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
+					employeeProfileItem = getEmployeeProfileInPacket.getEmployeeItem();
+					ret = getEmployeeProfileInPacket.getRet();
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					Map<String, Object> result = new HashMap<String, Object>();
+					result.put("cmd", command);
+					result.put("ret", ret);
+					result.put("employeeProfileItem", employeeProfileItem);
+					sendMessage(NotifyPacketArrived, result);
+				}
 
-			break;
-		}
-		case IMOCommand.IMO_GET_CORP_INFO: {
-			short ret = -1;
-			CorpMaskItem corpMaskItem = null;
-			try {
-				GetCorpInfoInPacket getCorpInfoInPacket = (GetCorpInfoInPacket) IMOApp
-						.getDataEngine().getInPacketByCommand(command);
-				corpMaskItem = getCorpInfoInPacket.getMaskItem();
-				ret = getCorpInfoInPacket.getRet();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				Map<String, Object> result = new HashMap<String, Object>();
-				result.put("cmd", command);
-				result.put("ret", ret);
-				result.put("corpMaskItem", corpMaskItem);
-				sendMessage(NotifyPacketArrived, result);
+				break;
 			}
-			break;
-		}
-		default:
-			break;
+			case IMOCommand.IMO_GET_CORP_INFO: {
+				short ret = -1;
+				CorpMaskItem corpMaskItem = null;
+				try {
+					GetCorpInfoInPacket getCorpInfoInPacket = (GetCorpInfoInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
+					corpMaskItem = getCorpInfoInPacket.getMaskItem();
+					ret = getCorpInfoInPacket.getRet();
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					Map<String, Object> result = new HashMap<String, Object>();
+					result.put("cmd", command);
+					result.put("ret", ret);
+					result.put("corpMaskItem", corpMaskItem);
+					sendMessage(NotifyPacketArrived, result);
+				}
+				break;
+			}
+			default:
+				break;
 		}
 
 	}
@@ -481,13 +409,13 @@ public class CardActivity extends AbsBaseActivityNetListener implements
 	public boolean CanAcceptPacket(int command) {
 		super.CanAcceptPacket(command);
 		switch (command) {
-		case IMOCommand.IMO_GET_EMPLOYEE_PROFILE:
-			return true;
-		case IMOCommand.IMO_GET_CORP_INFO:
-			return true;
-		default:
-			return false;
+			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE:
+				return true;
+			case IMOCommand.IMO_GET_CORP_INFO:
+				return true;
+			default:
+				return false;
 		}
 	}
-	
+
 }
