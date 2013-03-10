@@ -1,6 +1,5 @@
 package com.imo.module.organize;
 
-import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Vector;
 
-import android.R.integer;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
@@ -86,9 +84,6 @@ import com.imo.util.PreferenceManager;
  * 1-AddDept <br>
  * 2-DelDept <br>
  * 3-UpdateDept<br>
- * 
- * @author CaixiaoLong
- * 
  */
 public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
@@ -114,8 +109,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		setContentView(R.layout.loading_data_activity);
 
 		View root = findViewById(R.id.root);
-		root.setBackgroundDrawable(new BitmapDrawable(getResources()
-				.openRawResource(R.drawable.loading_bg)));
+		root.setBackgroundDrawable(new BitmapDrawable(getResources().openRawResource(R.drawable.loading_bg)));
 
 		loading = findViewById(R.id.loading);
 		tip = (TextView) findViewById(R.id.tip);
@@ -131,17 +125,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 				IMOApp.getApp().turn2LoginForLogout();
 			}
 		});
-
-		// loading.setBackgroundResource(R.drawable.loading);
-		// final AnimationDrawable frameAnimation = (AnimationDrawable)
-		// loading.getBackground();
-		//
-		// loading.post(new Runnable() {
-		// @Override
-		// public void run() {
-		// frameAnimation.start();
-		// }
-		// });
 	}
 
 	int n = 0;
@@ -150,22 +133,22 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		public void handleMessage(android.os.Message msg) {
 
 			switch (msg.what) {
-			case 0: {
-				Drawable localDrawable = loading.getBackground();
-				if (n > 10000) {
-					n -= 10000;
-				} else {
-					n += 160;
-				}
+				case 0: {
+					Drawable localDrawable = loading.getBackground();
+					if (n > 10000) {
+						n -= 10000;
+					} else {
+						n += 160;
+					}
 
-				localDrawable.setLevel(n);
-				if (!isFinishing()) {
-					loadingHandler.sendEmptyMessage(0);
+					localDrawable.setLevel(n);
+					if (!isFinishing()) {
+						loadingHandler.sendEmptyMessage(0);
+					}
 				}
-			}
-				break;
-			default:
-				break;
+					break;
+				default:
+					break;
 			}
 		};
 	};
@@ -200,8 +183,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 			deptUserInfoMap = new HashMap<Integer, HashMap<Integer, EmployeeInfoItem>>();
 
-			int[][] temp_deptUC = mGlobal.imoStorage.get(deptInfoMap,
-					deptUserIdsMap, deptUserNextSiblingMap, deptUserInfoMap);
+			int[][] temp_deptUC = IMOApp.imoStorage.get(deptInfoMap, deptUserIdsMap, deptUserNextSiblingMap, deptUserInfoMap);
 
 			if (temp_deptUC != null) {
 
@@ -211,10 +193,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			}
 			LogFactory.d(TAG, "deptId = " + Arrays.toString(deptid));
 			LogFactory.d(TAG, "dept_uc = " + Arrays.toString(dept_uc));
-			LogFactory
-					.d(TAG, "dept_user_uc = " + Arrays.toString(dept_user_uc));
-			LogFactory.d(TAG, "deptInfoMap size = "
-					+ deptInfoMap.keySet().size());
+			LogFactory.d(TAG, "dept_user_uc = " + Arrays.toString(dept_user_uc));
+			LogFactory.d(TAG, "deptInfoMap size = " + deptInfoMap.keySet().size());
 			LogFactory.d(TAG, "deptUserIdsMap size = " + deptUserIdsMap.size());
 
 		} catch (Exception e) {
@@ -222,9 +202,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			Toast.makeText(mContext, "LocalDB read Failed", 1).show();
 			e.printStackTrace();
 		}
-
-		// /updateUserState();
-
 	}
 
 	ArrayList<Integer> needDelLocalDept = new ArrayList<Integer>();
@@ -240,8 +217,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 * 实现过滤比较 得到需要 <br>
 	 * 删除，更新，添加的DeptId
 	 */
-	private void doFilter(int[] local_deptid, int[] local_dept_uc,
-			int[] local_dept_user_uc) {
+	private void doFilter(int[] local_deptid, int[] local_dept_uc, int[] local_dept_user_uc) {
 		needDelLocalDept.clear();
 		needUpdateLocalDept.clear();
 		needUpdateLocalDeptUC.clear();
@@ -259,20 +235,14 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 						if (dept_uc[i] != local_dept_uc[j]) {
 							needUpdateLocalDept.add(deptid[i]);
-							LogFactory.e(TAG, "needUpdateLocalDept size = "
-									+ needUpdateLocalDept.size() + ",deptid = "
-									+ deptid[i]);
+							LogFactory.e(TAG, "needUpdateLocalDept size = " + needUpdateLocalDept.size() + ",deptid = " + deptid[i]);
 							needUpdateLocalDeptUC.add(dept_uc[i]);
-							LogFactory.e(TAG, "needUpdateLocalDeptUC size = "
-									+ needUpdateLocalDeptUC.size() + ",dept_uc = "
-									+ dept_uc[i]);
+							LogFactory.e(TAG, "needUpdateLocalDeptUC size = " + needUpdateLocalDeptUC.size() + ",dept_uc = " + dept_uc[i]);
 						}
 
 						if (dept_user_uc[i] != local_dept_user_uc[j]) {
 							needUpdateLocalDeptUser.add(deptid[i]); // 需要更新员工的部门。
-							LogFactory.e(TAG, "needUpdateLocalDeptUser size = "
-									+ needUpdateLocalDeptUser.size() + ",deptid = "
-									+ deptid[i]);
+							LogFactory.e(TAG, "needUpdateLocalDeptUser size = " + needUpdateLocalDeptUser.size() + ",deptid = " + deptid[i]);
 						}
 
 						temp_deptId[j] = -1; // 过滤出需要删除的。
@@ -283,37 +253,27 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 					if (j == local_deptid.length - 1) {
 						needAddLocalDept.add(deptid[i]); // 新增加的
 
-						LogFactory.e(TAG, "needAddLocalDept size = "
-								+ needAddLocalDept.size() + ",deptid = "
-								+ deptid[i]);
+						LogFactory.e(TAG, "needAddLocalDept size = " + needAddLocalDept.size() + ",deptid = " + deptid[i]);
 
 						needUpdateLocalDept.add(deptid[i]); // 需要更新的部门
-						LogFactory.e(TAG, "needUpdateLocalDept size = "
-								+ needUpdateLocalDept.size() + ",deptid = "
-								+ deptid[i]);
+						LogFactory.e(TAG, "needUpdateLocalDept size = " + needUpdateLocalDept.size() + ",deptid = " + deptid[i]);
 						needUpdateLocalDeptUC.add(dept_uc[i]);
-						LogFactory.e(TAG, "needUpdateLocalDeptUC size = "
-								+ needUpdateLocalDeptUC.size() + ",dept_uc = "
-								+ dept_uc[i]);
+						LogFactory.e(TAG, "needUpdateLocalDeptUC size = " + needUpdateLocalDeptUC.size() + ",dept_uc = " + dept_uc[i]);
 					}
 				}
 			}
-			
+
 			for (int i = 0; i < temp_deptId.length; i++) {
 				if (temp_deptId[i] != -1) {
 					needDelLocalDept.add(temp_deptId[i]);
 				}
 			}
 
-			LogFactory.d(TAG + "doFilter",
-					"needAddLocalDept = " + needAddLocalDept.toString());
-			LogFactory.d(TAG + "doFilter", "needUpdateLocalDept = "
-					+ needUpdateLocalDept.toString());
-			LogFactory.d(TAG + "doFilter",
-					"needDelLocalDept = " + needDelLocalDept.toString());
+			LogFactory.d(TAG + "doFilter", "needAddLocalDept = " + needAddLocalDept.toString());
+			LogFactory.d(TAG + "doFilter", "needUpdateLocalDept = " + needUpdateLocalDept.toString());
+			LogFactory.d(TAG + "doFilter", "needDelLocalDept = " + needDelLocalDept.toString());
 
-			LogFactory.d(TAG, "needUpdateLocalDeptUser = "
-					+ needUpdateLocalDeptUser.toString());
+			LogFactory.d(TAG, "needUpdateLocalDeptUser = " + needUpdateLocalDeptUser.toString());
 		}
 	}
 
@@ -342,43 +302,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		return true;
 	}
 
-	/**
-	 * First Version
-	 * 
-	 * 构建当前需要更新的DeptUserInfo部门Id
-	 */
-	private boolean buildUpdateDeptUserInfo() {
-
-		this.updateDeptUserDeptId = new int[needUpdateLocalDept.size()];
-
-		for (int i = 0; i < needUpdateLocalDept.size(); i++) {
-			updateDeptUserDeptId[i] = needUpdateLocalDept.get(i);
-		}
-		// this.updateDeptUserDeptId = (int[])this.deptid.clone();
-
-		return true;
-	}
-
-	/**
-	 * 构建当前需要更新的DeptUserInfo部门Id
-	 */
-	private boolean buildUpdateDeptUserInfoNext() {
-
-		if (needUpdateLocalDeptUser.size() == 0) {
-
-			LogFactory.d(TAG, "dept user not need to update");
-			return false;
-		}
-
-		this.updateDeptUserDeptId = new int[needUpdateLocalDeptUser.size()];
-
-		for (int i = 0; i < updateDeptUserDeptId.length; i++) {
-			updateDeptUserDeptId[i] = needUpdateLocalDeptUser.get(i);
-		}
-
-		return true;
-	}
-
 	private void doFilter() {
 
 		// 过滤前重置mPos位置
@@ -387,12 +310,9 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		LogFactory.d(TAG, "Begin: Get Local UC.");
 
 		try {
-			int[][] temp_deptUC = mGlobal.imoStorage.getDeptAndUserUC();
-
+			int[][] temp_deptUC = IMOApp.imoStorage.getDeptAndUserUC();
 			LogFactory.d(TAG, "Remote--UC = " + Arrays.toString(new_dept_uc));
 			LogFactory.d(TAG, "Local--UC = " + Arrays.toString(temp_deptUC[1]));
-			// LogFactory.d(TAG, "Local--deptId = " +
-			// Arrays.toString(temp_deptUC[0]));
 
 			doFilter(temp_deptUC[0], temp_deptUC[1], temp_deptUC[2]);
 
@@ -406,12 +326,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		if (buildUpdateDeptInfo()) {
 			// DeptInfo 需要更新
-			LogFactory.d(
-					TAG,
-					"Update DeptInfo deptId = "
-							+ needUpdateLocalDept.toString());
-
-			// doRequestDeptInfo(this.deptid[mPos], this.dept_uc[mPos]);
+			LogFactory.d(TAG, "Update DeptInfo deptId = " + needUpdateLocalDept.toString());
 
 			// 初始化各数据map
 			for (int i = 0; i < this.deptid.length; i++) {
@@ -419,12 +334,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 				dept_user_uc_map.put(this.deptid[i], this.dept_user_uc[i]);
 				dept_loadinfo_map.put(this.deptid[i], LOAD_STAT.NOT_LOAD);
 				dept_loaduids_map.put(this.deptid[i], LOAD_STAT.NOT_LOAD);
-				LogFactory.e(TAG,
-						"------> dept_uc_map size=" + dept_uc_map.size()
-								+ ", dept_loadinfo_map size="
-								+ dept_loadinfo_map.size()
-								+ ", dept_loaduids_map size="
-								+ dept_loaduids_map.size());
+				LogFactory.e(TAG, "------> dept_uc_map size=" + dept_uc_map.size() + ", dept_loadinfo_map size=" + dept_loadinfo_map.size() + ", dept_loaduids_map size=" + dept_loaduids_map.size());
 			}
 
 			// 开始并发请求deptinfo
@@ -448,7 +358,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	private int concurrent_deptinfo_loading_cnt = 0;
 	private int concurrent_deptuids_loadreq_limit = EngineConst.CONCURRENT_MAX_VALUE;
 	private int concurrent_deptuids_loading_cnt = 0;
-	private int concurrent_dept_employeeinfo_loadreq_limit = EngineConst.CONCURRENT_MAX_VALUE;
 	private int concurrent_dept_employeeinfo_loading_cnt = 0;
 
 	private int concurrent_request_status_limit = EngineConst.CONCURRENT_MAX_VALUE;
@@ -504,15 +413,12 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	private int do_concurrent_dept_info_req() {
 		// 开始并发请求deptinfo
 		int init_cnt = concurrent_deptinfo_loading_cnt;
-		for (int i = 0; i < this.deptid.length
-				&& concurrent_deptinfo_loading_cnt < concurrent_deptinfo_loadreq_limit; i++) {
+		for (int i = 0; i < this.deptid.length && concurrent_deptinfo_loading_cnt < concurrent_deptinfo_loadreq_limit; i++) {
 			if (dept_loadinfo_map.get(this.deptid[i]) == LOAD_STAT.NOT_LOAD) {
-				doRequestDeptInfo(this.deptid[i],
-						dept_uc_map.get(this.deptid[i]));
+				doRequestDeptInfo(this.deptid[i], dept_uc_map.get(this.deptid[i]));
 				dept_loadinfo_map.put(this.deptid[i], LOAD_STAT.LOADING);
 				concurrent_deptinfo_loading_cnt++;
-			} else {
-			}
+			} else {}
 		}
 
 		return concurrent_deptinfo_loading_cnt - init_cnt;
@@ -528,21 +434,12 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	private int do_concurrent_dept_uids_req() {
 		// 开始并发请求deptuids
 		int init_cnt = concurrent_deptuids_loading_cnt;
-		for (int i = 0; i < this.deptid.length
-				&& concurrent_deptuids_loading_cnt < concurrent_deptuids_loadreq_limit; i++) {
+		for (int i = 0; i < this.deptid.length && concurrent_deptuids_loading_cnt < concurrent_deptuids_loadreq_limit; i++) {
 			if (dept_loaduids_map.get(this.deptid[i]) == LOAD_STAT.NOT_LOAD) {
 				doRequestAllEmployeeUid(this.deptid[i]);
 				dept_loaduids_map.put(this.deptid[i], LOAD_STAT.LOADING);
 				concurrent_deptuids_loading_cnt++;
-
-				// LogFactory.d(TAG,
-				// "------> do_concurrent_dept_uids_req do get deptuids req in responseDeptUC deptid:"+this.deptid[i]+",init_cnt:"
-				// +init_cnt+", endcnt:"+concurrent_deptuids_loading_cnt);
-			} else {
-				// LogFactory.d(TAG,
-				// "------> do_concurrent_dept_uids_req not do get deptuids req in responseDeptUC deptid:"+this.deptid[i]+",init_cnt:"
-				// +init_cnt+", endcnt:"+concurrent_deptuids_loading_cnt);
-			}
+			} 
 		}
 
 		return concurrent_deptuids_loading_cnt - init_cnt;
@@ -557,11 +454,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 ******************************************************************************/
 	private int do_concurrent_dept_emyployeeinfo_req(int deptid) {
 		if (null == deptUserIdsMap.get(deptid)) {
-			LogFactory.d(TAG,
-							"------> do_concurrent_dept_emyployeeinfo_req fail deptUserIdsMap get(deptid) null deptid:"
-									+ deptid
-									+ ", loadingcnt:"
-									+ concurrent_dept_employeeinfo_loading_cnt);
+			LogFactory.d(TAG, "------> do_concurrent_dept_emyployeeinfo_req fail deptUserIdsMap get(deptid) null deptid:" + deptid + ", loadingcnt:" + concurrent_dept_employeeinfo_loading_cnt);
 			return 0;
 		}
 
@@ -572,8 +465,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		for (int i = 0; i < deptuids.length; i++) {
 			if (null == dept_uid_loademployeeinfo_map.get(deptuids[i])) {
 				req_uids[req_num++] = deptuids[i];
-				dept_uid_loademployeeinfo_map.put(deptuids[i],
-						LOAD_STAT.LOADING);
+				dept_uid_loademployeeinfo_map.put(deptuids[i], LOAD_STAT.LOADING);
 				uid_dept_map.put(deptuids[i], deptid);
 			}
 
@@ -589,10 +481,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			req_cnt++;
 		}
 		concurrent_dept_employeeinfo_loading_cnt += req_cnt;
-		LogFactory.d(TAG,
-				"------> do_concurrent_dept_emyployeeinfo_req deptid:" + deptid
-						+ "," + ", req_cnt:" + req_cnt + ", loading_cnt:"
-						+ concurrent_dept_employeeinfo_loading_cnt);
+		LogFactory.d(TAG, "------> do_concurrent_dept_emyployeeinfo_req deptid:" + deptid + "," + ", req_cnt:" + req_cnt + ", loading_cnt:" + concurrent_dept_employeeinfo_loading_cnt);
 		return req_cnt;
 	}
 
@@ -604,16 +493,9 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 * written --------------------
 	 ******************************************************************************/
 	private int check_dept_info_req_finish() {
-		// 开始并发请求deptuids
-		int init_cnt = concurrent_deptinfo_loading_cnt;
-		for (int i = 0; i < this.deptid.length
-				&& concurrent_deptinfo_loading_cnt < concurrent_deptinfo_loadreq_limit; i++) {
-			if (dept_loadinfo_map.get(this.deptid[i]) == LOAD_STAT.NOT_LOAD
-					|| dept_loadinfo_map.get(this.deptid[i]) == LOAD_STAT.LOADING) {
-
-				// LogFactory.e("check_dept_info_req_finish",
-				// "init_cnt :"+init_cnt+",deptid :"+deptid[i]+",dept_loadinfo_map keys:"+dept_loadinfo_map.keySet()+",dept_loadinfo_map values:"+dept_loadinfo_map.values());
-				return 0;
+		for (int i = 0; i < this.deptid.length && concurrent_deptinfo_loading_cnt < concurrent_deptinfo_loadreq_limit; i++) {
+			if (dept_loadinfo_map.get(this.deptid[i]) == LOAD_STAT.NOT_LOAD || dept_loadinfo_map.get(this.deptid[i]) == LOAD_STAT.LOADING) {
+return 0;
 			}
 		}
 
@@ -622,12 +504,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		dept_loadinfo_map.clear();
 		dept_loadinfo_pack_map.clear();
 
-		LogFactory.e("check_dept_info_req_finish", "over");
-		// buildUpdateDeptUserInfo();
-
 		// 开始存储数据到DB中去
-		if (dept_info_load == LOAD_STAT.LOADED
-				&& employee_info_load == LOAD_STAT.LOADED)
+		if (dept_info_load == LOAD_STAT.LOADED && employee_info_load == LOAD_STAT.LOADED)
 			doSaveData2DB();
 
 		return 1;
@@ -641,18 +519,9 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 * written --------------------
 	 ******************************************************************************/
 	private int check_dept_uids_req_finish() {
-		// 开始并发请求deptuids
-		int init_cnt = concurrent_deptuids_loading_cnt;
-		for (int i = 0; i < this.deptid.length
-				&& concurrent_deptuids_loading_cnt < concurrent_deptuids_loadreq_limit; i++) {
+		for (int i = 0; i < this.deptid.length && concurrent_deptuids_loading_cnt < concurrent_deptuids_loadreq_limit; i++) {
 
-			if (dept_loaduids_map.get(this.deptid[i]) == LOAD_STAT.NOT_LOAD
-					|| dept_loaduids_map.get(this.deptid[i]) == LOAD_STAT.LOADING) {
-				// LogFactory.e("check_dept_uids_req_finish",
-				// "init_cnt :"+init_cnt+",deptid :"+deptid[i]+
-				// ",dept_loaduids_map keys:"+dept_loaduids_map.keySet()+",dept_loaduids_map values:"
-				// +dept_loaduids_map.values());
-
+			if (dept_loaduids_map.get(this.deptid[i]) == LOAD_STAT.NOT_LOAD || dept_loaduids_map.get(this.deptid[i]) == LOAD_STAT.LOADING) {
 				return 0;
 			}
 		}
@@ -674,10 +543,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		}
 		return 0;
 	}
-
-	/*********************************************************/
-	// ============================================================
-
+	
 	@Override
 	public boolean CanAcceptHttpPacket() {
 		return false;
@@ -685,25 +551,10 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 	@Override
 	public boolean CanAcceptPacket(int command) {
-		if (IMOCommand.IMO_GET_DEPT_UC == command
-				|| IMOCommand.IMO_GET_DEPT_INFO == command
-				|| IMOCommand.IMO_GET_ALL_EMPLOYEE_UID == command
-				|| IMOCommand.IMO_GET_ALL_EMPLOYEE_BASIC_INFO == command
-				|| IMOCommand.IMO_GET_EMPLOYEE_STATUS == command
-				|| IMOCommand.IMO_UPDATE_STATUS == command
-				|| IMOCommand.IMO_INNER_CONTACTOR_GROUP_UC == command
-				|| IMOCommand.IMO_INNER_CONTACTOR_LIST_UC == command
-				|| IMOCommand.IMO_OUTER_CONTACTOR_GROUP_UC == command
-				|| IMOCommand.IMO_OUTER_CONTACTOR_LIST_UC == command
-				|| IMOCommand.IMO_INNER_CONTACTOR_GROUP == command
-				|| IMOCommand.IMO_INNER_CONTACTOR_LIST == command
-				|| IMOCommand.IMO_OUTER_CONTACTOR_GROUP == command
-				|| IMOCommand.IMO_OUTER_CONTACTOR_LIST == command
-				|| IMOCommand.IMO_OUTER_BASIC_INFO == command
-				|| IMOCommand.IMO_GET_ALL_EMPLOYEE_BASIC_INFO == command
-				|| IMOCommand.IMO_GET_EMPLOYEE_PROFILE == command
-				|| IMOCommand.IMO_GET_EMPLOYEE_STATUS == command
-				|| IMOCommand.IMO_GET_CORP_INFO == command)
+		if (IMOCommand.IMO_GET_DEPT_UC == command || IMOCommand.IMO_GET_DEPT_INFO == command || IMOCommand.IMO_GET_ALL_EMPLOYEE_UID == command || IMOCommand.IMO_GET_ALL_EMPLOYEE_BASIC_INFO == command || IMOCommand.IMO_GET_EMPLOYEE_STATUS == command || IMOCommand.IMO_UPDATE_STATUS == command
+				|| IMOCommand.IMO_INNER_CONTACTOR_GROUP_UC == command || IMOCommand.IMO_INNER_CONTACTOR_LIST_UC == command || IMOCommand.IMO_OUTER_CONTACTOR_GROUP_UC == command || IMOCommand.IMO_OUTER_CONTACTOR_LIST_UC == command || IMOCommand.IMO_INNER_CONTACTOR_GROUP == command
+				|| IMOCommand.IMO_INNER_CONTACTOR_LIST == command || IMOCommand.IMO_OUTER_CONTACTOR_GROUP == command || IMOCommand.IMO_OUTER_CONTACTOR_LIST == command || IMOCommand.IMO_OUTER_BASIC_INFO == command || IMOCommand.IMO_GET_ALL_EMPLOYEE_BASIC_INFO == command
+				|| IMOCommand.IMO_GET_EMPLOYEE_PROFILE == command || IMOCommand.IMO_GET_EMPLOYEE_STATUS == command || IMOCommand.IMO_GET_CORP_INFO == command)
 			return true;
 
 		return false;
@@ -717,76 +568,70 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			switch (command) {
 
 			// 1-获得部门UC
-			case IMOCommand.IMO_GET_DEPT_UC: {
-				responseDeptUC(command);
-				break;
-			}
-			// 2-获得部门Info
-			case IMOCommand.IMO_GET_DEPT_INFO: {
-				responseDeptInfo(command);
-				break;
-			}
-
-			// 3-获取所有的员工UID
-			case IMOCommand.IMO_GET_ALL_EMPLOYEE_UID:
-				responseAllEmployeeUid(command);
-				break;
-			// 4-获取所有的员工基本信息
-			case IMOCommand.IMO_GET_ALL_EMPLOYEE_BASIC_INFO:
-				responseAllEmployeeInfo(command);
-				break;
-			// 5-获取员工的状态
-			case IMOCommand.IMO_GET_EMPLOYEE_STATUS:
-				if (forOrganize) {
-					responseEmployeeState(command);
-				} else {
-					responseOuterContactState(command);
+				case IMOCommand.IMO_GET_DEPT_UC: {
+					responseDeptUC(command);
+					break;
 				}
-				break;
-			case IMOCommand.IMO_UPDATE_STATUS:
-				break;
+				// 2-获得部门Info
+				case IMOCommand.IMO_GET_DEPT_INFO: {
+					responseDeptInfo(command);
+					break;
+				}
 
-			case IMOCommand.IMO_INNER_CONTACTOR_GROUP_UC:
-				responseInnerGroupUC(command);
-				break;
-			case IMOCommand.IMO_INNER_CONTACTOR_LIST_UC:
-				responseInnerContactUC(command);
-				break;
-			case IMOCommand.IMO_INNER_CONTACTOR_GROUP:
-				responseInnerGroupInfo(command);
-				break;
-			case IMOCommand.IMO_INNER_CONTACTOR_LIST:
-				responseInnerContactId(command);
-				break;
-			// case IMOCommand.IMO_GET_ALL_EMPLOYEE_BASIC_INFO:
-			// responseAllEmployeeInfo(command);
-			// break;
-			// case IMOCommand.IMO_GET_EMPLOYEE_STATUS: //// 需要修改逻辑：原先是分开的。
-			// responseOuterContactState(command);
-			// break;
-			case IMOCommand.IMO_GET_EMPLOYEE_PROFILE:
-				responseInnerContactWorkSign(command);
-				break;
-			case IMOCommand.IMO_OUTER_CONTACTOR_GROUP_UC:
-				responseOuterContactGroupUC(command);
-				break;
-			case IMOCommand.IMO_OUTER_CONTACTOR_LIST_UC:
-				responseOuterContactUC(command);
-				break;
-			case IMOCommand.IMO_OUTER_CONTACTOR_GROUP:
-				responseOuterGroupInfo(command);
-				break;
-			case IMOCommand.IMO_OUTER_CONTACTOR_LIST:
-				responseOuterContactId(command);
-				break;
-			case IMOCommand.IMO_OUTER_BASIC_INFO:
-				responseOuterBasicInfo(command);
-				break;
-			case IMOCommand.IMO_GET_CORP_INFO:
-				responseOuterCorpInfo(command);
-				break;
-			default:
-				break;
+				// 3-获取所有的员工UID
+				case IMOCommand.IMO_GET_ALL_EMPLOYEE_UID:
+					responseAllEmployeeUid(command);
+					break;
+				// 4-获取所有的员工基本信息
+				case IMOCommand.IMO_GET_ALL_EMPLOYEE_BASIC_INFO:
+					responseAllEmployeeInfo(command);
+					break;
+				// 5-获取员工的状态
+				case IMOCommand.IMO_GET_EMPLOYEE_STATUS:
+					if (forOrganize) {
+						responseEmployeeState(command);
+					} else {
+						responseOuterContactState(command);
+					}
+					break;
+				case IMOCommand.IMO_UPDATE_STATUS:
+					break;
+
+				case IMOCommand.IMO_INNER_CONTACTOR_GROUP_UC:
+					responseInnerGroupUC(command);
+					break;
+				case IMOCommand.IMO_INNER_CONTACTOR_LIST_UC:
+					responseInnerContactUC(command);
+					break;
+				case IMOCommand.IMO_INNER_CONTACTOR_GROUP:
+					responseInnerGroupInfo(command);
+					break;
+				case IMOCommand.IMO_INNER_CONTACTOR_LIST:
+					responseInnerContactId(command);
+					break;
+				case IMOCommand.IMO_GET_EMPLOYEE_PROFILE:
+					responseInnerContactWorkSign(command);
+					break;
+				case IMOCommand.IMO_OUTER_CONTACTOR_GROUP_UC:
+					responseOuterContactGroupUC(command);
+					break;
+				case IMOCommand.IMO_OUTER_CONTACTOR_LIST_UC:
+					responseOuterContactUC(command);
+					break;
+				case IMOCommand.IMO_OUTER_CONTACTOR_GROUP:
+					responseOuterGroupInfo(command);
+					break;
+				case IMOCommand.IMO_OUTER_CONTACTOR_LIST:
+					responseOuterContactId(command);
+					break;
+				case IMOCommand.IMO_OUTER_BASIC_INFO:
+					responseOuterBasicInfo(command);
+					break;
+				case IMOCommand.IMO_GET_CORP_INFO:
+					responseOuterCorpInfo(command);
+					break;
+				default:
+					break;
 			}
 		}
 	};
@@ -814,8 +659,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	}
 
 	@Override
-	public void NotifyPacketProgress(String aConnectionId, short command,
-			short aTotalLen, short aSendedLen) {
+	public void NotifyPacketProgress(String aConnectionId, short command, short aTotalLen, short aSendedLen) {
 		// TODO Auto-generated method stub
 
 	}
@@ -824,11 +668,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	public void refresh(Object param) {
 		// //加载联系人数据
 		beginLoadingContact();
-		// dialog.dismiss();
-		// dialog = null;
-		// System.gc();
-		// MainActivityGroup.launch(mContext);
-		// NormalLoadingActivity.this.finish();
 
 	}
 
@@ -864,39 +703,12 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		stateResponseCount = 0;
 
-		// mStateRequestCount = initUserStateRequest(deptUserIdsMap);
-		// LogFactory.d(TAG + "StateCount", "Total mStateRequestCount = "+
-		// mStateRequestCount);
-
-		for (hasConcurrentSended = 0; hasRequestCount < mStateRequestCount
-				&& hasConcurrentSended < concurrent_request_status_limit; hasConcurrentSended++) {
+		for (hasConcurrentSended = 0; hasRequestCount < mStateRequestCount && hasConcurrentSended < concurrent_request_status_limit; hasConcurrentSended++) {
 			Object[] idArrays = getRequestUserIdArray();
 			LogFactory.d("SendUid", Arrays.toString((int[]) idArrays[1]));
-			LogFactory.e("hasConcurrentSended", "hasConcurrentSended :"
-					+ hasConcurrentSended);
-			doRequestEmployeeState(((int[]) idArrays[0]).length,
-					((int[]) idArrays[0]), ((int[]) idArrays[1]));
+			LogFactory.e("hasConcurrentSended", "hasConcurrentSended :" + hasConcurrentSended);
+			doRequestEmployeeState(((int[]) idArrays[0]).length, ((int[]) idArrays[0]), ((int[]) idArrays[1]));
 		}
-
-		//
-		// LogFactory.d(TAG, "--------------> begin UpdateUserState");
-		//
-		// hasRequestCount = 0;
-		//
-		// mStateRequestCount = initUserStateRequest(deptUserIdsMap);
-		//
-		// LogFactory.d(TAG + "StateCount", "Total mStateRequestCount = "
-		// + mStateRequestCount);
-		//
-		// Object[] idArrays = getRequestUserIdArray();
-		//
-		// if (idArrays != null) {
-		// LogFactory.d("SendUid", Arrays.toString((int[]) idArrays[1]));
-		// doRequestEmployeeState(((int[]) idArrays[0]).length,
-		// ((int[]) idArrays[0]), ((int[]) idArrays[1]));
-		// } else {
-		// LogFactory.d(TAG, "UId idArrays == null");
-		// }
 	}
 
 	/**
@@ -904,8 +716,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void initAllStateRequestCount() {
 		mStateRequestCount = initUserStateRequest(deptUserIdsMap);
-		LogFactory.d(TAG + "StateCount", "Total mStateRequestCount = "
-				+ mStateRequestCount);
+		LogFactory.d(TAG + "StateCount", "Total mStateRequestCount = " + mStateRequestCount);
 	}
 
 	/**
@@ -928,57 +739,41 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			requestCIds = new int[MAX_STATE_REQUEST_COUNT];
 			requestUIds = new int[MAX_STATE_REQUEST_COUNT];
 
-			LogFactory.d(TAG + "State--HasRequestCount", "hasRequestCount = "
-					+ hasRequestCount);
+			LogFactory.d(TAG + "State--HasRequestCount", "hasRequestCount = " + hasRequestCount);
 
-			requestIds = new int[MAX_STATE_REQUEST_COUNT];
+			System.arraycopy(mAllCIds, hasRequestCount * MAX_STATE_REQUEST_COUNT, requestCIds, 0, MAX_STATE_REQUEST_COUNT);
 
-			System.arraycopy(mAllCIds, hasRequestCount
-					* MAX_STATE_REQUEST_COUNT, requestCIds, 0,
-					MAX_STATE_REQUEST_COUNT);
-			
-			//TODO  bug修改点，  在长度大于的情况下， 说明 有新的状态产生了需要更新
-			if (mAllUserIds.length > hasRequestCount
-					* MAX_STATE_REQUEST_COUNT) {
-				
-				System.arraycopy(mAllUserIds, hasRequestCount
-						* MAX_STATE_REQUEST_COUNT, requestUIds, 0,
-						MAX_STATE_REQUEST_COUNT);
+			// TODO bug修改点， 在长度大于的情况下， 说明 有新的状态产生了需要更新
+			if (mAllUserIds.length > hasRequestCount * MAX_STATE_REQUEST_COUNT) {
+
+				System.arraycopy(mAllUserIds, hasRequestCount * MAX_STATE_REQUEST_COUNT, requestUIds, 0, MAX_STATE_REQUEST_COUNT);
 			}
 
 			this.hasRequestCount++;
 
 		} else {
-			LogFactory.d(TAG + "StateHasRequestCount",
-					" State has Request Completed !! hasRequestCount = "
-							+ hasRequestCount);
+			LogFactory.d(TAG + "StateHasRequestCount", " State has Request Completed !! hasRequestCount = " + hasRequestCount);
 
-			requestCIds = new int[mAllUserIds.length - hasRequestCount
-					* MAX_STATE_REQUEST_COUNT];
-			requestUIds = new int[mAllUserIds.length - hasRequestCount
-					* MAX_STATE_REQUEST_COUNT];
+			requestCIds = new int[mAllUserIds.length - hasRequestCount * MAX_STATE_REQUEST_COUNT];
+			requestUIds = new int[mAllUserIds.length - hasRequestCount * MAX_STATE_REQUEST_COUNT];
 
-			System.arraycopy(mAllCIds, hasRequestCount
-					* MAX_STATE_REQUEST_COUNT, requestCIds, 0,
-					requestUIds.length);
-			
-			//TODO  bug修改点，  在长度大于的情况下， 说明 有新的状态产生了需要更新
-			if (mAllUserIds.length > hasRequestCount
-					* MAX_STATE_REQUEST_COUNT) {
-				System.arraycopy(mAllUserIds, hasRequestCount
-						* MAX_STATE_REQUEST_COUNT, requestUIds, 0,
-						requestUIds.length);
+			System.arraycopy(mAllCIds, hasRequestCount * MAX_STATE_REQUEST_COUNT, requestCIds, 0, requestUIds.length);
+
+			// TODO bug修改点， 在长度大于的情况下， 说明 有新的状态产生了需要更新
+			if (mAllUserIds.length > hasRequestCount * MAX_STATE_REQUEST_COUNT) {
+				System.arraycopy(mAllUserIds, hasRequestCount * MAX_STATE_REQUEST_COUNT, requestUIds, 0, requestUIds.length);
 
 			}
-			
+
 			// 请求完成后，需要重置
 			// this.hasRequestCount = 0;
 			this.hasRequestCount++;
 
 		}
-		LogFactory.d("hasRequestCount", "state hasRequestCount = "
-				+ hasRequestCount);
-		return new Object[] { requestCIds, requestUIds };
+		LogFactory.d("hasRequestCount", "state hasRequestCount = " + hasRequestCount);
+		return new Object[] {
+				requestCIds, requestUIds
+		};
 	}
 
 	private ActivityManager mActivityManager = null;
@@ -1004,20 +799,15 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	private String formateFileSize(long size) {
 		return Formatter.formatFileSize(NormalLoadingActivity.this, size);
 	}
-
-	// ====================================================
-	// ====================================================
+	
 	/**
 	 * 1-发送DeptUC请求包
 	 */
 	private void doRequestDeptUC() {
 
-		LogFactory.e(TAG, "getSystemAvaialbeMemorySize*******"
-				+ getSystemAvaialbeMemorySize());
+		LogFactory.e(TAG, "getSystemAvaialbeMemorySize*******" + getSystemAvaialbeMemorySize());
 
-		GetDeptUCOutPacket outPacket = new GetDeptUCOutPacket(
-				ByteBuffer.allocate(0), IMOCommand.IMO_GET_DEPT_UC,
-				EngineConst.cId, EngineConst.uId);
+		GetDeptUCOutPacket outPacket = new GetDeptUCOutPacket(ByteBuffer.allocate(0), IMOCommand.IMO_GET_DEPT_UC, EngineConst.cId, EngineConst.uId);
 
 		// if (!isNewConnection || mNIOThread != null) {
 		if (mNIOThread != null) {
@@ -1029,14 +819,12 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 	}
 
-	// ====================================================
 	/**
 	 * 2-发送DeptInfo请求包
 	 */
 	private void doRequestDeptInfo(int deptid, int dept_uc) {
 		// 请求DeptInfo
-		LogFactory.d(TAG, "doRequestDeptInfo :[ deptid = " + deptid
-				+ "\t dept_uc = " + dept_uc + "]");
+		LogFactory.d(TAG, "doRequestDeptInfo :[ deptid = " + deptid + "\t dept_uc = " + dept_uc + "]");
 
 		int mask = 1;
 		mask |= (mask << 1);
@@ -1053,110 +841,54 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		mask |= (mask << 12);
 		mask |= (mask << 13);
 
-		ByteBuffer bufferBody = GetDeptInfoOutPacket.GenerateDeptInfoBody(
-				deptid, dept_uc, mask);
+		ByteBuffer bufferBody = GetDeptInfoOutPacket.GenerateDeptInfoBody(deptid, dept_uc, mask);
 
-		GetDeptInfoOutPacket outPacket = new GetDeptInfoOutPacket(bufferBody,
-				IMOCommand.IMO_GET_DEPT_INFO, EngineConst.cId, EngineConst.uId);
+		GetDeptInfoOutPacket outPacket = new GetDeptInfoOutPacket(bufferBody, IMOCommand.IMO_GET_DEPT_INFO, EngineConst.cId, EngineConst.uId);
 
 		if (mNIOThread != null) {
 			mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 		}
 	}
 
-	// ====================================================
 	/**
 	 * 3-发送AllEmployeeUid请求包： 获得部门下的所有员工的UId
 	 * 
 	 * @param aDeptID
-	 *            部门
+	 *        部门
 	 */
 	private void doRequestAllEmployeeUid(int aDeptID) {
 
 		LogFactory.d(TAG, "doRequestAllEmployeeUid  deptId = " + aDeptID);
-		ByteBuffer bufferBody = GetAllEmployeesUIDOutPacket
-				.GenerateEmplyeesUIDBody(aDeptID);
-		GetAllEmployeesUIDOutPacket outPacket = new GetAllEmployeesUIDOutPacket(
-				bufferBody, IMOCommand.IMO_GET_ALL_EMPLOYEE_UID,
-				EngineConst.cId, EngineConst.uId);
+		ByteBuffer bufferBody = GetAllEmployeesUIDOutPacket.GenerateEmplyeesUIDBody(aDeptID);
+		GetAllEmployeesUIDOutPacket outPacket = new GetAllEmployeesUIDOutPacket(bufferBody, IMOCommand.IMO_GET_ALL_EMPLOYEE_UID, EngineConst.cId, EngineConst.uId);
 
 		if (mNIOThread != null) {
 			mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 		}
 	}
 
-	// ====================================================
-
-	private boolean isCompletedSingleDept = false; // 单个部门是否已经请求完成
-
 	private int hasRequestCount = 0; // 需要请求的次数
-
-	private int[] requestIds; // 每次请求的Id数组
 
 	private int USERINFO_REQUEST_MAX_COUNT = 20; // 员工信息，单个请求最大的个数
 
-	/**
-	 * 4-发送AllEmployeeInfo请求包,
-	 * 
-	 * 登陆后取联系人列表用,一次最多取20个联系人
-	 * 
-	 * @param aContactorsNum
-	 *            联系人的个数
-	 * @param aContactorUidArray
-	 *            联系人的Uid数组
-	 */
+	private void doRequestAllEmployeeInfo(int aContactorsNum, int[] aContactorUidArray) {
 
-	/*
-	 * private void doRequestAllEmployeeInfo(int aContactorsNum, int[]
-	 * aContactorUidArray) {
-	 * 
-	 * LogFactory.d(TAG + "2", "doRequestAllEmployeeInfo : uids = " +
-	 * Arrays.toString(aContactorUidArray));
-	 * 
-	 * ByteBuffer bufferBody = GetAllEmployeesInfoOutPacket.
-	 * GenerateEmployeesBasicInfoBody(aContactorsNum,aContactorUidArray);
-	 * 
-	 * GetAllEmployeesInfoOutPacket outPacket = new
-	 * GetAllEmployeesInfoOutPacket( bufferBody,
-	 * IMOCommand.IMO_GET_ALL_EMPLOYEE_BASIC_INFO, EngineConst.cId,
-	 * EngineConst.uId);
-	 * 
-	 * if (mNIOThread != null) { mNIOThread.send(EngineConst.IMO_CONNECTION_ID,
-	 * outPacket, false); } }
-	 */
-	private void doRequestAllEmployeeInfo(int aContactorsNum,
-			int[] aContactorUidArray) {
+		LogFactory.d(TAG + "2", "doRequestAllEmployeeInfo : uids = " + Arrays.toString(aContactorUidArray) + ",num = " + aContactorsNum);
 
-		LogFactory.d(
-				TAG + "2",
-				"doRequestAllEmployeeInfo : uids = "
-						+ Arrays.toString(aContactorUidArray) + ",num = "
-						+ aContactorsNum);
-
-		ByteBuffer bufferBody = GetAllEmployeesInfoOutPacket
-				.GenerateEmployeesBasicInfoBody(aContactorsNum,
-						aContactorUidArray);
+		ByteBuffer bufferBody = GetAllEmployeesInfoOutPacket.GenerateEmployeesBasicInfoBody(aContactorsNum, aContactorUidArray);
 
 		LogFactory.d(TAG + "2", "bufferBody = " + bufferBody.toString());
 
-		GetAllEmployeesInfoOutPacket outPacket = new GetAllEmployeesInfoOutPacket(
-				bufferBody, IMOCommand.IMO_GET_ALL_EMPLOYEE_BASIC_INFO,
-				EngineConst.cId, EngineConst.uId);
+		GetAllEmployeesInfoOutPacket outPacket = new GetAllEmployeesInfoOutPacket(bufferBody, IMOCommand.IMO_GET_ALL_EMPLOYEE_BASIC_INFO, EngineConst.cId, EngineConst.uId);
 
 		int header_seq = outPacket.get_header_seq();
 
 		dept_loademployeeinfo_pack_map.put(header_seq, LOAD_STAT.LOADING);
-		LogFactory.d(
-				TAG,
-				"doRequestAllEmployeeInfo :[ aContactorsNum = "
-						+ aContactorsNum + ", aContactorUidArray = "
-						+ Arrays.toString(aContactorUidArray) + "]" + ", seq="
-						+ header_seq);
+		LogFactory.d(TAG, "doRequestAllEmployeeInfo :[ aContactorsNum = " + aContactorsNum + ", aContactorUidArray = " + Arrays.toString(aContactorUidArray) + "]" + ", seq=" + header_seq);
 
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 	}
 
-	// ====================================================
 	private boolean forOrganize = true;
 
 	private int mStateRequestCount = 0;
@@ -1165,15 +897,14 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 * 5-发送AllEmployeeInfo请求包
 	 * 
 	 * @param aContactorsNum
-	 *            请求的员工数量 个数
+	 *        请求的员工数量 个数
 	 * @param aContactorCidArray
-	 *            内部联系人 、外部联系人 CidArray
+	 *        内部联系人 、外部联系人 CidArray
 	 * @param aContactorUidArray
-	 *            用户 UIdArray
+	 *        用户 UIdArray
 	 * 
 	 */
-	private void doRequestEmployeeState(int aContactorsNum,
-			int[] aContactorCidArray, int[] aContactorUidArray) {
+	private void doRequestEmployeeState(int aContactorsNum, int[] aContactorCidArray, int[] aContactorUidArray) {
 
 		if (stopLoad) {
 			return;
@@ -1181,39 +912,13 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "doRequestEmployeeState ");
 
-		ByteBuffer bufferBody = GetEmployeesStatusOutPacket
-				.GenerateEmployeesStatusBody(aContactorsNum,
-						aContactorCidArray, aContactorUidArray);
-		GetEmployeesStatusOutPacket outPacket = new GetEmployeesStatusOutPacket(
-				bufferBody, IMOCommand.IMO_GET_EMPLOYEE_STATUS,
-				EngineConst.cId, EngineConst.uId);
+		ByteBuffer bufferBody = GetEmployeesStatusOutPacket.GenerateEmployeesStatusBody(aContactorsNum, aContactorCidArray, aContactorUidArray);
+		GetEmployeesStatusOutPacket outPacket = new GetEmployeesStatusOutPacket(bufferBody, IMOCommand.IMO_GET_EMPLOYEE_STATUS, EngineConst.cId, EngineConst.uId);
 
 		if (mNIOThread != null) {
 			mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 		}
 	}
-
-	/**
-	 * 发送当前用户状态 请求包
-	 */
-	private void doRequestOwnState() {
-
-		LogFactory.d(TAG, "doRequestOwnState ");
-		// 修改command
-		CommonOutPacket outPacket = new CommonOutPacket(ByteBuffer.allocate(0),
-				IMOCommand.IMO_UPDATE_STATUS, EngineConst.cId, EngineConst.uId);
-		if (mNIOThread != null) {
-			mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
-		}
-	}
-
-	private Handler handlerTree = new Handler() {
-
-		public void handleMessage(android.os.Message msg) {
-
-			getTree();
-		};
-	};
 
 	/**
 	 * 将数据保存到数据库中去
@@ -1232,22 +937,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			needUpdateLocalDeptUser.addAll(needAddLocalDept);
 			needUpdateLocalDeptUser.addAll(needUpdateLocalDept);
 
-			// needUpdateLocalDept+needAddLocalDept;
 			new DataOperatorTask(true).execute("");
-
-			// boolean result = IMOApp.imoStorage.update(new_deptid,
-			// new_dept_uc,
-			// new_dept_user_uc, needAddLocalDept, needDelLocalDept,
-			// needUpdateLocalDept, needUpdateLocalDeptUser, deptInfoMap,
-			// deptUserIdsMap, deptUserNextSiblingMap, deptUserInfoMap);
-			//
-			// if (result) {
-			// updateGlobalData();
-			// } else {
-			// LogFactory.d("DB", "Update Db data failed .");
-			// LoginActivity.launch(mContext);
-			// this.finish();
-			// }
 
 		} catch (Exception e) {
 
@@ -1266,28 +956,9 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 * 从数据库中读取数据，更新全局数据
 	 */
 	private void updateGlobalData() {
-
 		new DataOperatorTask().execute("");
-
-		// loadDBDataSource();
-		//
-		// buildData();
-		//
-		// mGlobal.updateData(
-		// (int[]) deptid.clone(),
-		// (int[]) dept_uc.clone(),
-		// (int[]) dept_user_uc.clone(),
-		// (HashMap<Integer, DeptMaskItem>) deptInfoMap.clone(),
-		// (HashMap<Integer, int[]>) deptUserIdsMap.clone(),
-		// (HashMap<Integer, int[]>) deptUserNextSiblingMap.clone(),
-		// (HashMap<Integer, HashMap<Integer, Integer>>) deptUserSiblingMap
-		// .clone(),
-		// (HashMap<Integer, HashMap<Integer, EmployeeInfoItem>>)
-		// deptUserInfoMap
-		// .clone());
 	}
 
-	// private final int TYPE_REQUEST_USER_STATE = 1;
 	private final int TYPE_DB_SAVE_FAILED = 2;
 	private final int TYPE_SEND_STATE_PACKAGE = 3;
 	/**
@@ -1298,24 +969,18 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			// case TYPE_REQUEST_USER_STATE:
-			// updateUserState();
-			// break;
-			case TYPE_SEND_STATE_PACKAGE:
+				case TYPE_SEND_STATE_PACKAGE:
 
-				break;
-			case TYPE_DB_SAVE_FAILED:
-				LogFactory.d("DB", "Update Db data failed .");
-				// LoginActivity.launch(mContext);
-				// finish();
-				stopLoad = true;
-				EngineConst.isLoginSuccess = false;
-				DataEngine.getInstance().setLogicStatus(LOGICSTATUS.DISCONNECTED);
-				IMOApp.getApp().turn2LoginForLogout();
-				break;
+					break;
+				case TYPE_DB_SAVE_FAILED:
+					stopLoad = true;
+					EngineConst.isLoginSuccess = false;
+					DataEngine.getInstance().setLogicStatus(LOGICSTATUS.DISCONNECTED);
+					IMOApp.getApp().turn2LoginForLogout();
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		};
 	};
@@ -1339,27 +1004,10 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		protected Boolean doInBackground(String... params) {
 			try {
 				if (needUpdate) {
-					System.out.println("before needAddLocalDept size = "
-							+ needAddLocalDept.size() + ", needDelLocalDept = "
-							+ needDelLocalDept.size()
-							+ ", needUpdateLocalDept = "
-							+ needUpdateLocalDept.size()
-							+ ", needUpdateLocalDeptUser = "
-							+ needUpdateLocalDeptUser.size()
-							+ ", deptInfoMap = " + deptInfoMap.keySet().size()
-							+ ", deptUserIdsMap size = "
-							+ deptUserIdsMap.size()
-							+ ", deptUserNextSiblingMap size = "
-							+ deptUserNextSiblingMap.size()
-							+ ", deptUserInfoMap size = "
-							+ deptUserInfoMap.size());
+					System.out.println("before needAddLocalDept size = " + needAddLocalDept.size() + ", needDelLocalDept = " + needDelLocalDept.size() + ", needUpdateLocalDept = " + needUpdateLocalDept.size() + ", needUpdateLocalDeptUser = " + needUpdateLocalDeptUser.size() + ", deptInfoMap = "
+							+ deptInfoMap.keySet().size() + ", deptUserIdsMap size = " + deptUserIdsMap.size() + ", deptUserNextSiblingMap size = " + deptUserNextSiblingMap.size() + ", deptUserInfoMap size = " + deptUserInfoMap.size());
 
-					IMOApp.imoStorage.update(new_deptid, new_dept_uc,
-							new_dept_user_uc, needAddLocalDept,
-							needDelLocalDept, needUpdateLocalDept,
-							needUpdateLocalDeptUser, deptInfoMap,
-							deptUserIdsMap, deptUserNextSiblingMap,
-							deptUserInfoMap);
+					IMOApp.imoStorage.update(new_deptid, new_dept_uc, new_dept_user_uc, needAddLocalDept, needDelLocalDept, needUpdateLocalDept, needUpdateLocalDeptUser, deptInfoMap, deptUserIdsMap, deptUserNextSiblingMap, deptUserInfoMap);
 				}
 			} catch (Exception e) {
 				if (IMOApp.getApp().getAppMode()) {
@@ -1373,18 +1021,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 				buildData();
 
-				mGlobal.updateData(
-						(int[]) deptid.clone(),
-						(int[]) dept_uc.clone(),
-						(int[]) dept_user_uc.clone(),
-						(HashMap<Integer, DeptMaskItem>) deptInfoMap.clone(),
-						(HashMap<Integer, int[]>) deptUserIdsMap.clone(),
-						(HashMap<Integer, int[]>) deptUserNextSiblingMap
-								.clone(),
-						(HashMap<Integer, HashMap<Integer, Integer>>) deptUserSiblingMap
-								.clone(),
-						(HashMap<Integer, HashMap<Integer, EmployeeInfoItem>>) deptUserInfoMap
-								.clone());
+				mGlobal.updateData((int[]) deptid.clone(), (int[]) dept_uc.clone(), (int[]) dept_user_uc.clone(), (HashMap<Integer, DeptMaskItem>) deptInfoMap.clone(), (HashMap<Integer, int[]>) deptUserIdsMap.clone(), (HashMap<Integer, int[]>) deptUserNextSiblingMap.clone(),
+						(HashMap<Integer, HashMap<Integer, Integer>>) deptUserSiblingMap.clone(), (HashMap<Integer, HashMap<Integer, EmployeeInfoItem>>) deptUserInfoMap.clone());
 
 				initAllStateRequestCount();
 
@@ -1432,8 +1070,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	private int[] new_dept_uc = null;
 	private int[] new_dept_user_uc = null;
 
-	private int[] updateDeptUserDeptId = null;
-
 	/**
 	 * <1>响应 部门UC 数据
 	 * 
@@ -1441,8 +1077,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void responseDeptUC(short command) {
 
-		GetDeptUCInPacket inPacket = (GetDeptUCInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		GetDeptUCInPacket inPacket = (GetDeptUCInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 
 		if (inPacket == null)
 			return;
@@ -1491,8 +1126,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 				new_dept_uc = (int[]) dept_uc.clone();
 				new_dept_user_uc = (int[]) dept_user_uc.clone();
 
-				LogFactory.d(TAG, "------> 最新的DeptUC 拉取成功 \t  TotalDeptCount="
-						+ deptid.length);
+				LogFactory.d(TAG, "------> 最新的DeptUC 拉取成功 \t  TotalDeptCount=" + deptid.length);
 
 				// 在这个时候需要做的功能是，去比较，得到哪些是 add,update,del
 				doFilter();
@@ -1511,8 +1145,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void responseDeptInfo(short command) {
 
-		GetDeptInfoInPacket inPacket = (GetDeptInfoInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		GetDeptInfoInPacket inPacket = (GetDeptInfoInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 
 		if (inPacket == null)
 			return;
@@ -1522,31 +1155,12 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		LogFactory.d(TAG, " mDeptMaskItem =" + mDeptMaskItem.toString());
 		ConnectionLog.MusicLogInstance().addLog("NormalLoadingActivity mDeptMaskItem =" + mDeptMaskItem.toString());
 
-		// 依次请求所有的部门
-		/*
-		 * if (++mPos != this.deptid.length) {
-		 * 
-		 * doRequestDeptInfo(this.deptid[mPos], this.dept_uc[mPos]);
-		 * 
-		 * } else { mPos = 0; //
-		 * ---------------------------------------------------------- //
-		 * 构建需要更新的deptUserInfo deptId // if (buildUpdateDeptUserInfo()) { //
-		 * doRequestAllEmployeeUid(this.updateDeptUserDeptId[mPos]); // }else {
-		 * // //员工不需要更新的情况 // doSaveData2DB(); // } if
-		 * (buildUpdateDeptUserInfo()) {
-		 * 
-		 * doRequestAllEmployeeUid(this.updateDeptUserDeptId[mPos]); } }
-		 */
-
 		deptInfoMap.put(inPacket.getDeptid(), mDeptMaskItem);
 		int seq = inPacket.getSequence();
 		dept_loadinfo_pack_map.put(seq, LOAD_STAT.LOADED);
 		concurrent_deptinfo_loading_cnt--;
 
-		LogFactory.d(TAG, "DeptInfo Loaded Deptid=" + inPacket.getDeptid()
-				+ " mDeptMaskItem =" + mDeptMaskItem.toString()
-				+ ", concurrent_deptinfo_loading_cnt:"
-				+ concurrent_deptinfo_loading_cnt + "seq:" + seq);
+		LogFactory.d(TAG, "DeptInfo Loaded Deptid=" + inPacket.getDeptid() + " mDeptMaskItem =" + mDeptMaskItem.toString() + ", concurrent_deptinfo_loading_cnt:" + concurrent_deptinfo_loading_cnt + "seq:" + seq);
 
 		dept_loadinfo_map.put(inPacket.getDeptid(), LOAD_STAT.LOADED);
 		int send_cnt = do_concurrent_dept_info_req();
@@ -1587,8 +1201,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void responseAllEmployeeUid(short command) {
 
-		GetAllEmployeesUIDInPacket inPacket = (GetAllEmployeesUIDInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		GetAllEmployeesUIDInPacket inPacket = (GetAllEmployeesUIDInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 
 		if (inPacket == null)
 			return;
@@ -1623,8 +1236,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		// 控制需要请求的次数
 		if (endflag == 1) {
-			LogFactory.d(TAG, "------> Dept下的  UserId 拉取成功 \t  deptid="
-					+ deptid);
+			LogFactory.d(TAG, "------> Dept下的  UserId 拉取成功 \t  deptid=" + deptid);
 
 			// 一个deptid的uids请求完毕，结束该请求的seq监控，并将并发请求--
 			concurrent_deptuids_loading_cnt--;
@@ -1638,56 +1250,10 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			deptUserNextSiblingMap.put(deptid, nextSibling);
 
 			// 请求总次数的映射
-			deptUserInfoRequestCountMap.put(deptid, deptUserCount
-					% USERINFO_REQUEST_MAX_COUNT == 0 ? deptUserCount
-					/ USERINFO_REQUEST_MAX_COUNT : deptUserCount
-					/ USERINFO_REQUEST_MAX_COUNT + 1);
-
-			// LogFactory.d(TAG+"1", " deptUserCount =" + deptUserCount +
-			// "  deptId = " + this.deptid[mPos] );
-			// LogFactory.d(TAG+"1", " deptUser needRequestTimes = " +
-			// deptUserInfoRequestCountMap.get(this.deptid[mPos]));
-			LogFactory.d(TAG + "1",
-					" deptAllEmployeeUid=" + Arrays.toString(uid));
-			// LogFactory.d(TAG+"1", " deptAllEmployee- nextSibling Uid=" +
-			// Arrays.toString(nextSibling));
+			deptUserInfoRequestCountMap.put(deptid, deptUserCount % USERINFO_REQUEST_MAX_COUNT == 0 ? deptUserCount / USERINFO_REQUEST_MAX_COUNT : deptUserCount / USERINFO_REQUEST_MAX_COUNT + 1);
 
 			// 当前部门的所有uid已经完全取到，开始取uid的info
 			do_concurrent_dept_emyployeeinfo_req(deptid);
-
-			// 依次请求所有的部门
-			// if (++mPos != this.updateDeptUserDeptId.length) {
-			//
-			// this.uid = null;
-			// this.nextSibling = null;
-			//
-			// doRequestAllEmployeeUid(this.updateDeptUserDeptId[mPos]);
-			//
-			// } else {
-			//
-			// mPos = 0;
-			//
-			// int temp_pos = updatePos(mPos);
-			// if (temp_pos != -1) {
-			// mPos = temp_pos;
-			// //
-			// ========================请求DeptUserInfo,请求第一个部门下的员工信息============================================
-			// requestIds = getRequestDeptUserIds(
-			// deptUserIdsMap.get((this.updateDeptUserDeptId[mPos])),
-			// deptUserInfoRequestCountMap.get(this.updateDeptUserDeptId[mPos]),
-			// hasRequestCount);
-			//
-			// LogFactory.d(TAG, "UserID requestIds = " + requestIds);
-			//
-			// doRequestAllEmployeeInfo(requestIds.length, requestIds);
-			// } else {
-			// // 所有的数据全部拉取成功。
-			// mPos = 0;
-			// // 开始存储数据到DB中去
-			// doSaveData2DB();
-			// }
-			//
-			// }
 
 			int send_cnt = do_concurrent_dept_uids_req();
 			if (send_cnt == 0) {
@@ -1698,11 +1264,10 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 				if (finish != 0) {
 					LogFactory.d(TAG, " all dept uids get done");
 
-					int count = deptUserIdsMap.size();
+					deptUserIdsMap.size();
 					int sum = 0;
 
-					Iterator<Entry<Integer, int[]>> iter = deptUserIdsMap
-							.entrySet().iterator();
+					Iterator<Entry<Integer, int[]>> iter = deptUserIdsMap.entrySet().iterator();
 					while (iter.hasNext()) {
 						Map.Entry<Integer, int[]> entry = iter.next();
 						sum += ((int[]) entry.getValue()).length;
@@ -1711,63 +1276,16 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 						employee_info_load = LOAD_STAT.LOADED;
 
 					// 开始存储数据到DB中去
-					if (dept_info_load == LOAD_STAT.LOADED
-							&& employee_info_load == LOAD_STAT.LOADED)
+					if (dept_info_load == LOAD_STAT.LOADED && employee_info_load == LOAD_STAT.LOADED)
 						doSaveData2DB();
 				}
 			}
 		}
 	}
 
-	/**
-	 * 获得当前用户信息请求的数组
-	 * 
-	 * @param srcIds
-	 * @param totalRequestCount
-	 * @param hasRequestCount
-	 * @return
-	 */
-	private int[] getRequestDeptUserIds(int[] srcIds, int totalRequestCount,
-			int hasRequestCount) {
-
-		int[] requestIds = null;
-
-		if (totalRequestCount - 1 > hasRequestCount) {
-
-			this.hasRequestCount++;
-
-			LogFactory.d(TAG + "hasRequestCount", "hasRequestCount = "
-					+ hasRequestCount + " \t  deptid = " + this.deptid[mPos]);
-
-			requestIds = new int[USERINFO_REQUEST_MAX_COUNT];
-
-			System.arraycopy(srcIds, hasRequestCount
-					* USERINFO_REQUEST_MAX_COUNT, requestIds, 0,
-					USERINFO_REQUEST_MAX_COUNT);
-
-			isCompletedSingleDept = false;
-
-		} else {
-
-			requestIds = new int[srcIds.length - hasRequestCount
-					* USERINFO_REQUEST_MAX_COUNT];
-
-			System.arraycopy(srcIds, hasRequestCount
-					* USERINFO_REQUEST_MAX_COUNT, requestIds, 0, srcIds.length
-					- hasRequestCount * USERINFO_REQUEST_MAX_COUNT);
-
-			isCompletedSingleDept = true;
-
-			// 请求完成后，需要重置
-			this.hasRequestCount = 0;
-		}
-
-		return requestIds;
-	}
+	
 
 	// ===============部门员工Info表对应 字段==============================endflag
-
-	private EmployeeInfoItem[] employeeInfoArray = null;
 
 	/**
 	 * 部门下的所有用户信息Map -------------------- 需要多次的请求，叠加数据
@@ -1781,14 +1299,12 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void responseAllEmployeeInfo(short command) {
 
-		GetAllEmployeesInfoInPacket inPacket = (GetAllEmployeesInfoInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		GetAllEmployeesInfoInPacket inPacket = (GetAllEmployeesInfoInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 
 		if (inPacket == null)
 			return;
 
-		LogFactory.d(TAG + "2",
-				"----------responseAllEmployeeInfo -----------deptID = ");
+		LogFactory.d(TAG + "2", "----------responseAllEmployeeInfo -----------deptID = ");
 
 		int seq = inPacket.getSequence();
 
@@ -1800,13 +1316,10 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			concurrent_dept_employeeinfo_loading_cnt--;
 		} else {
 			byte endflag = inPacket.getEndflag();
-			EmployeeInfoItem[] temp_employeeInfoArray = inPacket
-					.getEmployeesInfoArray();
+			EmployeeInfoItem[] temp_employeeInfoArray = inPacket.getEmployeesInfoArray();
 
-			if (null == temp_employeeInfoArray
-					|| temp_employeeInfoArray.length == 0) {
-				LogFactory.d(TAG,
-						"responseAllEmployeeInfo------> no data return for seq =" + seq);
+			if (null == temp_employeeInfoArray || temp_employeeInfoArray.length == 0) {
+				LogFactory.d(TAG, "responseAllEmployeeInfo------> no data return for seq =" + seq);
 				// int[] deptUidArray = deptUserIdsMap.get(this.deptid[mPos]);
 			} else {
 				deptid = uid_dept_map.get(temp_employeeInfoArray[0].getUid());
@@ -1815,48 +1328,40 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 				if (null == cache_employeeInfoArray) {
 					dept_EmployeeInfo_map.put(deptid, temp_employeeInfoArray);
 				} else {
-					cache_employeeInfoArray = mergeUserArray(
-							cache_employeeInfoArray, temp_employeeInfoArray);
+					cache_employeeInfoArray = mergeUserArray(cache_employeeInfoArray, temp_employeeInfoArray);
 					dept_EmployeeInfo_map.put(deptid, cache_employeeInfoArray);
 				}
 
 				EmployeeInfoItem[] testArray = dept_EmployeeInfo_map.get(deptid);
 
 				for (int i = 0; i < testArray.length; i++) {
-					LogFactory.e(TAG,"EmployeeInfo : " + testArray[i].toString());
+					LogFactory.e(TAG, "EmployeeInfo : " + testArray[i].toString());
 				}
 			}
 
 			// 一个完整的请求返回，需要保存数据，检查是否所有请求均完成
 			if (endflag == 1) {
 				concurrent_dept_employeeinfo_loading_cnt--;
-				LogFactory.d(TAG,
-						"------> 一次Dept下的  EmployeeInfo请求成功 \t  deptId ="
-								+ deptid);
+				LogFactory.d(TAG, "------> 一次Dept下的  EmployeeInfo请求成功 \t  deptId =" + deptid);
 			}
 		}
 
 		int finish = check_employeeinfo_req_finish();
 		if (finish != 0) {
 			// 从缓存读出数组数据转换为map存入deptUserInfoMap中
-			Iterator<Map.Entry<Integer, EmployeeInfoItem[]>> it = dept_EmployeeInfo_map
-					.entrySet().iterator();
+			Iterator<Map.Entry<Integer, EmployeeInfoItem[]>> it = dept_EmployeeInfo_map.entrySet().iterator();
 
 			while (it.hasNext()) {
-				Map.Entry<Integer, EmployeeInfoItem[]> entry = (Map.Entry<Integer, EmployeeInfoItem[]>) it
-						.next();
+				Map.Entry<Integer, EmployeeInfoItem[]> entry = (Map.Entry<Integer, EmployeeInfoItem[]>) it.next();
 				int cur_deptid = (Integer) entry.getKey();
-				EmployeeInfoItem[] cache_employeeInfoArray = (EmployeeInfoItem[]) entry
-						.getValue();
+				EmployeeInfoItem[] cache_employeeInfoArray = (EmployeeInfoItem[]) entry.getValue();
 				if (deptUserInfoMap.get(cur_deptid) != null) {
 					// 同一个部门的UserId-Info-Map
 					deptUserInfoMapItem = deptUserInfoMap.get(cur_deptid);
 
 					for (int i = 0; i < cache_employeeInfoArray.length; i++) {
 						// deptUserInfoMapItem.put(deptUidArray[i],employeeInfoArray[i]);
-						deptUserInfoMapItem.put(
-								cache_employeeInfoArray[i].getUid(),
-								cache_employeeInfoArray[i]);
+						deptUserInfoMapItem.put(cache_employeeInfoArray[i].getUid(), cache_employeeInfoArray[i]);
 					}
 
 					deptUserInfoMap.put(cur_deptid, deptUserInfoMapItem);
@@ -1866,9 +1371,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 					for (int i = 0; i < cache_employeeInfoArray.length; i++) {
 
-						deptUserInfoMapItem.put(
-								cache_employeeInfoArray[i].getUid(),
-								cache_employeeInfoArray[i]);
+						deptUserInfoMapItem.put(cache_employeeInfoArray[i].getUid(), cache_employeeInfoArray[i]);
 					}
 
 					deptUserInfoMap.put(cur_deptid, deptUserInfoMapItem);
@@ -1881,160 +1384,20 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			dept_uid_loademployeeinfo_map.clear();
 			// 当前请求的数据
 
-			Log.d(TAG, "all EmployeeInfo get done Response count,time 1:"
-					+ System.currentTimeMillis());
+			Log.d(TAG, "all EmployeeInfo get done Response count,time 1:" + System.currentTimeMillis());
 			// 所有的数据全部拉取成功。
 			mPos = 0;
 
 			employee_info_load = LOAD_STAT.LOADED;
 			// 开始存储数据到DB中去
-			if (dept_info_load == LOAD_STAT.LOADED
-					&& employee_info_load == LOAD_STAT.LOADED)
+			if (dept_info_load == LOAD_STAT.LOADED && employee_info_load == LOAD_STAT.LOADED)
 				doSaveData2DB();
 
-			Log.d(TAG, "all EmployeeInfo get done Response count,time 2:"
-					+ System.currentTimeMillis());
+			Log.d(TAG, "all EmployeeInfo get done Response count,time 2:" + System.currentTimeMillis());
 		}
 		return;
 	}
-
-	/*
-	 * private void responseAllEmployeeInfo(short command) {
-	 * 
-	 * LogFactory.d(TAG +
-	 * "2","----------responseAllEmployeeInfo -----------deptID = " +
-	 * this.updateDeptUserDeptId[mPos]);
-	 * 
-	 * GetAllEmployeesInfoInPacket inPacket = (GetAllEmployeesInfoInPacket)
-	 * getTcpConnection().getInPacketByCommand(command);
-	 * 
-	 * if(inPacket==null) return;
-	 * 
-	 * HashMap<Integer, EmployeeInfoItem> deptUserInfoMapItem = null;
-	 * 
-	 * short commandRet = inPacket.getCommandRet();
-	 * 
-	 * if (commandRet == 0) {
-	 * 
-	 * byte endflag = inPacket.getEndflag();
-	 * 
-	 * EmployeeInfoItem[] temp_employeeInfoArray =
-	 * inPacket.getEmployeesInfoArray();
-	 * 
-	 * if (employeeInfoArray == null) {
-	 * 
-	 * // for the first time employeeInfoArray = temp_employeeInfoArray; } else
-	 * {
-	 * 
-	 * // for the next time employeeInfoArray =
-	 * mergeUserArray(employeeInfoArray,temp_employeeInfoArray); }
-	 * 
-	 * // 控制需要请求的次数 if (endflag == 1) {
-	 * 
-	 * LogFactory.d(TAG, "------> Dept下的  UserId取出成功 \t  TotalDeptCount=" +
-	 * this.updateDeptUserDeptId[mPos]);
-	 * 
-	 * if (deptUserInfoMap.get(this.updateDeptUserDeptId[mPos]) != null) {
-	 * 
-	 * // 同一个部门的UserId-Info-Map deptUserInfoMapItem =
-	 * deptUserInfoMap.get(this.updateDeptUserDeptId[mPos]);
-	 * 
-	 * for (int i = 0; i < employeeInfoArray.length; i++) {
-	 * 
-	 * deptUserInfoMapItem.put(employeeInfoArray[i].getUid(),employeeInfoArray[i]
-	 * ); }
-	 * 
-	 * deptUserInfoMap.put(this.updateDeptUserDeptId[mPos],deptUserInfoMapItem);
-	 * 
-	 * } else {
-	 * 
-	 * deptUserInfoMapItem = new HashMap<Integer, EmployeeInfoItem>();
-	 * 
-	 * for (int i = 0; i < employeeInfoArray.length; i++) {
-	 * 
-	 * deptUserInfoMapItem.put(employeeInfoArray[i].getUid(),employeeInfoArray[i]
-	 * ); }
-	 * 
-	 * deptUserInfoMap.put(this.updateDeptUserDeptId[mPos],deptUserInfoMapItem);
-	 * 
-	 * }
-	 * 
-	 * // 当前请求的数据 LogFactory.d(TAG, "EmployeeInfo single Response count =" +
-	 * employeeInfoArray.length + " deptId = " +
-	 * this.updateDeptUserDeptId[mPos]);
-	 * 
-	 * // 打印出当前请求返回的 员工信息数据 // for (int i = 0; i < employeeInfoArray.length;
-	 * i++) { // LogFactory.d(TAG, " EmployeeInfo=" + //
-	 * employeeInfoArray[i].toString() ); // }
-	 * 
-	 * // 当前部门的请求是否都已经完成了 if (!isCompletedSingleDept) {
-	 * 
-	 * employeeInfoArray = null;
-	 * 
-	 * requestIds = getRequestDeptUserIds(
-	 * deptUserIdsMap.get((this.updateDeptUserDeptId[mPos])),
-	 * deptUserInfoRequestCountMap.get(this.updateDeptUserDeptId[mPos]),
-	 * hasRequestCount);
-	 * 
-	 * doRequestAllEmployeeInfo(requestIds.length, requestIds);
-	 * 
-	 * } else {
-	 * 
-	 * // if (mPos == this.updateDeptUserDeptId.length -1) { // // mPos = 0; //
-	 * // 开始存储数据到DB中去 // doSaveData2DB(); // }
-	 * 
-	 * // 依次请求下一个部门 this.isCompletedSingleDept = false;
-	 * 
-	 * this.hasRequestCount = 0;
-	 * 
-	 * // 在部门请求完成的基础上，判断是不是最后一个部门 if (++mPos !=
-	 * this.updateDeptUserDeptId.length) {
-	 * 
-	 * employeeInfoArray = null;
-	 * 
-	 * int temp_pos = updatePos(mPos); if (temp_pos != -1) { mPos = temp_pos;
-	 * requestIds = getRequestDeptUserIds(
-	 * deptUserIdsMap.get((this.updateDeptUserDeptId[mPos])),
-	 * deptUserInfoRequestCountMap.get(this.updateDeptUserDeptId[mPos]),
-	 * hasRequestCount);
-	 * 
-	 * doRequestAllEmployeeInfo(requestIds.length,requestIds);
-	 * 
-	 * } else {
-	 * 
-	 * // 所有的数据全部拉取成功。 mPos = 0; // 开始存储数据到DB中去 doSaveData2DB(); } } else {
-	 * 
-	 * // 所有的数据全部拉取成功。 mPos = 0; // 开始存储数据到DB中去 doSaveData2DB();
-	 * 
-	 * } } } } }
-	 */
-
-	private int updatePos(int pos) {
-
-		if (pos == deptUserIdsMap.keySet().size()) {
-			// 没有部门需要请求了
-			return -1;
-		}
-
-		if (deptUserIdsMap.get((this.deptid[pos])).length != 0) {
-			return pos;
-		} else {
-			return updatePos(++pos);
-		}
-	}
-
-	// ============================================================
-
-	// /**
-	// * 用户状态 Map对象,存放用户的在线状态。
-	// */
-	// HashMap<Integer, Integer> userStateMap = new HashMap<Integer, Integer>();
-	// /**
-	// * 部门用户在线状态映射
-	// *
-	// */
-	// HashMap<Integer, Integer> deptUserOnLineCountMap = new HashMap<Integer,
-	// Integer>();
+	
 	/**
 	 * 用户状态 Map对象,存放用户的在线状态。
 	 */
@@ -2045,27 +1408,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 	// 统计在线总人数
 	private int onLineTotalCount = 0;
-
-	//
-	// /**
-	// * 获得在线的总人数
-	// */
-	// private int getOnLineTotalCount(){
-	//
-	// int onLineTotalCount = 0 ;
-	//
-	// // Set<Integer> keySet = deptUserOnLineCountMap.keySet();
-	// // keySet.size();
-	// // ArrayList<Integer> ii = (ArrayList<Integer>)
-	// deptUserOnLineCountMap.values();
-	//
-	// for (Integer deptId : deptUserOnLineCountMap.keySet()) {
-	//
-	// onLineTotalCount += deptUserOnLineCountMap.get(deptId);
-	// }
-	//
-	// return onLineTotalCount;
-	// }
 
 	/**
 	 * All User IDs
@@ -2082,50 +1424,15 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		mAllUserIds = null;
 
-		// Iterator<Entry<Integer, int[]>> iterator =
-		// deptUserIdsMap.entrySet().iterator();
-		//
-		// while (iterator.hasNext()) {
-		// Map.Entry<Integer, int[]> entry = (Map.Entry<Integer, int[]>)
-		// iterator.next();
-		//
-		// int[] temp_UserId = entry.getValue();
-		//
-		// LogFactory.d("UID", Arrays.toString(temp_UserId));
-		//
-		// if (mAllUserIds == null) {
-		//
-		// mAllUserIds = temp_UserId;
-		// }else {
-		//
-		// mAllUserIds = mergeIntArray(mAllUserIds, temp_UserId);
-		// }
-		// LogFactory.d("UID-mAllUserIds", Arrays.toString(mAllUserIds));
-		// }
-
 		LogFactory.d(TAG + "StateRequest", "deptid.length = " + deptid.length);
 
 		for (int i = 0; i < this.deptid.length; i++) {
-
 			int[] temp_UserId = deptUserIdsMap.get(this.deptid[i]);
-
 			if (temp_UserId != null) {
-
-				/*
-				 * if (mAllUserIds == null) {
-				 * 
-				 * mAllUserIds = temp_UserId; } else {
-				 * 
-				 * mAllUserIds = mergeIntArray(mAllUserIds, temp_UserId);
-				 * LogFactory.d("UID-mAllUserIds","request state UserId="+
-				 * Arrays.toString(mAllUserIds)); }
-				 */
-
 				for (int j = 0; j < temp_UserId.length; j++) {
 					mAllUserIds_vector.add(new Integer(temp_UserId[j]));
 				}
 			}
-			// LogFactory.d("UID-mAllUserIds", Arrays.toString(mAllUserIds));
 		}
 
 		mAllUserIds = new int[mAllUserIds_vector.size()];
@@ -2140,9 +1447,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			mAllCIds[i] = EngineConst.cId;
 		}
 
-		return mAllUserIds.length % MAX_STATE_REQUEST_COUNT == 0 ? mAllUserIds.length
-				/ MAX_STATE_REQUEST_COUNT
-				: mAllUserIds.length / MAX_STATE_REQUEST_COUNT + 1;
+		return mAllUserIds.length % MAX_STATE_REQUEST_COUNT == 0 ? mAllUserIds.length / MAX_STATE_REQUEST_COUNT : mAllUserIds.length / MAX_STATE_REQUEST_COUNT + 1;
 	}
 
 	/**
@@ -2157,51 +1462,27 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG + "3", "----------responseEmployeeState ---------");
 
-		GetEmployeesStatusInPacket inPacket = (GetEmployeesStatusInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		GetEmployeesStatusInPacket inPacket = (GetEmployeesStatusInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 
 		if (inPacket == null)
 			return;
-		// 获得当前请求包 数组
-		int[] cid = inPacket.getCid();
+		inPacket.getCid();
 		int[] uid = inPacket.getUid();
 		int[] status = inPacket.getStatus(); // 状态
 
 		for (int i = 0; i < uid.length; i++) {
 			// 添加用户状态的映射
 			userStateMap.put(uid[i], status[i]);
-			// if (status[i] == 1) {
-			// onLineTotalCount++;
-			// }
 		}
 
 		// 当前请求的数据
-		LogFactory.d(TAG + "StateCount",
-				"responseEmployeeState single Response count =" + uid.length);
+		LogFactory.d(TAG + "StateCount", "responseEmployeeState single Response count =" + uid.length);
 
-		// 打印出当前请求返回的 员工状态 数据
-//		for (int i = 0; i < uid.length; i++) {
-//			LogFactory.d(TAG, " uid =" + uid[i] + "  state = " + status[i]);
-//		}
-
-		// // 当前部门的请求是否都已经完成了
-		// if (hasRequestCount < mStateRequestCount) {
-		//
-		// Object[] idArrays = getRequestUserIdArray();
-		// if (idArrays != null) {
-		// doRequestEmployeeState(((int[]) idArrays[0]).length,
-		// ((int[]) idArrays[0]), ((int[]) idArrays[1]));
-		//
-		// }
-		//
-		// } else
-
-		// /收到包后计数器加1
+		// 收到包后计数器加1
 		stateResponseCount++;
 		stateResponseCountEx++;
 
-		LogFactory.e("stateResponseCount", "stateResponseCount: "
-				+ stateResponseCount);
+		LogFactory.e("stateResponseCount", "stateResponseCount: " + stateResponseCount);
 
 		if (hasConcurrentSended == stateResponseCount) {
 			updateUserState();
@@ -2209,87 +1490,22 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		if (stateResponseCountEx == mStateRequestCount) {
 			mPos = 0;
-			LogFactory.d(TAG, "User State request has completed !!! \n "
-					+ "responseEmployeeState single Response count ="
-					+ uid.length);
+			LogFactory.d(TAG, "User State request has completed !!! \n " + "responseEmployeeState single Response count =" + uid.length);
 
 			forOrganize = false;// / 组织架构状态获取完成
 
-			LogFactory.d(TAG + "StateCount", "onLineTotalCount = "
-					+ onLineTotalCount);
+			LogFactory.d(TAG + "StateCount", "onLineTotalCount = " + onLineTotalCount);
 
-			mGlobal.updateStateMap((HashMap<Integer, Integer>) userStateMap
-					.clone());
+			mGlobal.updateStateMap((HashMap<Integer, Integer>) userStateMap.clone());
 
 			refresh(null);
 		}
-
-	}
-
-	// ==============================================
-
-	private void getTree() {
-
-		// buildData();
-
-		rootDeptMask = deptInfoMap.get(0); // deptId = 0
-
-		buildTree(rootDeptMask, null);
-
-		addUser2Tree();
-
-		rootNodeDept = nodeMap.get(0);
-
-		// adapter = new OrganizeAdapter(mContext,rootNodeDept);
-
-		// mListView.setAdapter(adapter);
-
-		// mStructNavView.removeAllViews();
-		// mStructNavView.setVisibility(View.GONE);
-
-		// mListView.setOnItemClickListener(new OnItemClickListener() {
-		//
-		// @Override
-		// public void onItemClick(AdapterView<?> parent, View view,int
-		// position, long id) {
-		//
-		// mStructNavView.setVisibility(View.VISIBLE);
-		//
-		// Node curNode = adapter.getItem(position);
-		//
-		// if (NodeManager.isLeaf(curNode)) {
-		// Toast.makeText(mContext, "点击的是叶子节点", 1).show();
-		// }else {
-		// adapter.showChildNodes(curNode);
-		// if (mStructNavView.getViewGroupChildCount()==0) {
-		// mStructNavView.addItem(rootNodeDept.getNodeData().nodeName,rootNodeDept);
-		// }
-		// mStructNavView.addItem(curNode.getNodeData().nodeName,curNode);
-		// // 实现导航点击事件的封装。
-		// mStructNavView.setOnItemClickListener(adapter);
-		// }
-		//
-		// }
-		// });
-
-		doRequestOwnState();
-
-		LogFactory.d("rootNodeDept", "root child count = "
-				+ rootNodeDept.getChildNodes().size());
-
 	}
 
 	/**
 	 * 构建数据
 	 */
 	private void buildData() {
-
-		// private HashMap<Integer, int[]> deptUserIdsMap = new HashMap<Integer,
-		// int[]>();
-		// private HashMap<Integer, int[]> deptUserNextSiblingMap = new
-		// HashMap<Integer, int[]>();
-		// HashMap<Integer, HashMap<Integer, Integer>> deptUserSiblingMap;
-
 		deptUserSiblingMap.clear();
 
 		int[] uid = null;
@@ -2303,13 +1519,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			nextSibling = deptUserNextSiblingMap.get(this.deptid[i]);
 
 			if (uid != null) {
-
-				LogFactory.d(TAG, "uid" + Arrays.toString(uid));
-				LogFactory.d(TAG, "nextSibling" + Arrays.toString(nextSibling));
-
-				// LogFactory.d(TAG, "uid size == nextSibling size " +
-				// (uid.length == nextSibling.length) + "\t" +uid.length);
-
 				HashMap<Integer, Integer> deptUserSiblingMapItem = new HashMap<Integer, Integer>();
 
 				for (int t = 0; t < uid.length; t++) {
@@ -2339,217 +1548,21 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	// 部门Id List
 	ArrayList<Integer> deptIdList = new ArrayList<Integer>();
 
-	/**
-	 * 构建 :部门节点结构树
-	 * 
-	 * true 表示构建完成
-	 */
-	private boolean buildTree(DeptMaskItem deptInfo, Node curNode) {
-
-		Node node = null;
-
-		if (deptInfo.getDept_id() == 0) {
-
-			node = new Node(new NodeData("组织结构数据", "（92/143）"));
-
-		} else {
-			node = new Node(new NodeData(deptInfo.getName(), "（10/100）"));
-		}
-
-		// node.setId(deptInfo.getDept_id());
-		node.setDept(true);
-		nodeMap.put(deptInfo.getDept_id(), node);
-
-		deptIdList.add(deptInfo.getDept_id());
-
-		if (deptInfo.getDept_id() != 0) {
-			NodeManager.addChildNode(curNode, node);
-		}
-
-		if (deptInfo.getFirst_child() == -1) {
-			if (deptInfo.getNext_sibling() == -1) {
-				if (NodeManager.isRoot(curNode)) {
-					return true;
-				}
-
-				Object[] args = getCurNode(deptInfo, node.getParentNode());
-				if (args != null) {
-					return buildTree(deptInfoMap.get((Integer) args[0]),
-							(Node) args[1]);
-				} else
-					return true;
-
-				// return buildTree(deptInfoMap.get(
-				// deptInfoMap.get(deptInfo.getParent_dept_id()).getNext_sibling()),
-				// getCurNode(deptInfo, node.getParentNode())
-				// // node.getParentNode().getParentNode()
-				// );
-			} else {
-				curNode = node.getParentNode();
-				return buildTree(deptInfoMap.get(deptInfo.getNext_sibling()),
-						curNode);
-			}
-		} else {
-			return buildTree(deptInfoMap.get(deptInfo.getFirst_child()), node);
-		}
-
-	}
-
-	private Object[] getCurNode(DeptMaskItem deptInfo, Node leafParent) {
-
-		Node curNode = null;
-
-		Integer id = deptInfoMap.get(deptInfo.getParent_dept_id())
-				.getNext_sibling();
-
-		if (id != -1) {
-			curNode = leafParent.getParentNode();
-		} else {
-			if (NodeManager.isRoot(leafParent)) {
-				return null;
-			}
-			return getCurNode(deptInfoMap.get(deptInfo.getParent_dept_id()),
-					leafParent.getParentNode());
-		}
-		return new Object[] { id, curNode };
-	}
-
-	/**
-	 * 添加员工到指定的部门
-	 */
-	private void addUser2Tree() {
-
-		// for (int i = 1; i < this.deptid.length; i++) {
-		for (int i = 0; i < deptIdList.size(); i++) {
-
-			// Node deptNode = nodeMap.get(this.deptid[i]); //部门节点
-			Node deptNode = nodeMap.get(deptIdList.get(i)); // 部门节点
-			deptNode.setId(deptIdList.get(i));
-
-			// =========================================||
-			if (deptUserInfoMap.get(deptIdList.get(i)) != null
-					&& deptUserInfoMap.get(deptIdList.get(i)).keySet().size() != 0) {
-				addDeptUser(deptNode, deptInfoMap.get(deptIdList.get(i)));// 添加该部门下的所有User
-																			// leafNode
-
-				userNodeMapItem = new HashMap<Integer, Node>();
-				for (int j = 0; j < deptNode.getChildNodes().size(); j++) {
-					Node temNode = deptNode.getChildNodes().get(j);
-					if (!temNode.isDept()) {
-						userNodeMapItem.put(temNode.getId(), temNode);
-					}
-
-				}
-				userNodeMap.put(deptNode.getId(), userNodeMapItem);// ////
-			}
-			// =========================================||
-
-			/*
-			 * LogFactory.d("deptNameMapSize", "All dept count = " +
-			 * nodeMap.keySet().size()); // LogFactory.d("deptName",
-			 * "this dept id = " + nodeMap.get(this.deptid[i]));
-			 * 
-			 * // ==================================== //get first_user id int
-			 * dept_first_userId =
-			 * this.deptInfoMap.get(this.deptid[i]).getFfirst_user() ; //get
-			 * first_user userInfo EmployeeInfoItem curEmployeeInfo =
-			 * deptUserInfoMap.get(this.deptid[i]).get(dept_first_userId);
-			 * 
-			 * //build the first user node Node curNode = new Node(new
-			 * NodeData(isBoy
-			 * (curEmployeeInfo.getGender()),curEmployeeInfo.getName()));
-			 * //获得兄弟Node NodeManager.addChildNode(deptNode, curNode);
-			 * 
-			 * //添加单个部门的员工UserInfo Map //
-			 * HashMap<Integer,GetAllEmployeesInfoInPacket.EmployeeInfoItem>
-			 * userInfoMap = deptUserInfoMap.get(this.deptid[i]);
-			 * HashMap<Integer,GetAllEmployeesInfoInPacket.EmployeeInfoItem>
-			 * userInfoMap = deptUserInfoMap.get(deptIdList.get(i));
-			 * 
-			 * HashMap<Integer, Integer> deptUserSiblingMapItem =
-			 * deptUserSiblingMap.get(this.deptid[i]);
-			 * 
-			 * // Node leafNode; // int[] userIdArray =
-			 * this.deptUserIdsMap.get(this.deptid[i]);
-			 * 
-			 * //在该部门中依次添加用户节点 for (int j = 0; j <
-			 * this.deptUserIdsMap.get(this.deptid[i]).length -1; j++) {
-			 * curEmployeeInfo = addUserNode(deptNode, curEmployeeInfo,
-			 * userInfoMap,deptUserSiblingMapItem); if (curEmployeeInfo == null)
-			 * { break; } }
-			 */
-		}
-	}
-
 	HashMap<Integer, HashMap<Integer, Node>> userNodeMap = new HashMap<Integer, HashMap<Integer, Node>>();// ////
 
 	HashMap<Integer, Node> userNodeMapItem = null;// ////
 
-	private void addDeptUser(Node deptNode, DeptMaskItem deptMaskItem) {
-
-		int dept_first_userId = deptMaskItem.getFfirst_user();
-
-		if (dept_first_userId != -1) {// ////////
-
-			// userNodeMapItem = new HashMap<Integer, Node>();//////========
-
-			EmployeeInfoItem curEmployeeInfo = deptUserInfoMap.get(
-					deptMaskItem.getDept_id()).get(dept_first_userId);
-
-			// build the first user node
-			Node curNode = new Node(new NodeData(
-					isBoy(curEmployeeInfo.getGender()),
-					curEmployeeInfo.getName()));
-			curNode.setId(curEmployeeInfo.getUid());// ====
-			curNode.setOnLineState(userStateMap.get(curEmployeeInfo.getUid()));
-			NodeManager.addChildNode(deptNode, curNode);
-
-			// userNodeMapItem.put(curEmployeeInfo.getUid(), curNode);//////
-
-			// 添加单个部门的员工UserInfo Map
-			HashMap<Integer, EmployeeInfoItem> userInfoMap = deptUserInfoMap
-					.get(deptMaskItem.getDept_id());
-
-			HashMap<Integer, Integer> deptUserSiblingMapItem = deptUserSiblingMap
-					.get(deptMaskItem.getDept_id());
-
-			// 在该部门中依次添加用户节点
-			for (int j = 0; j < this.deptUserIdsMap.get(deptMaskItem
-					.getDept_id()).length - 1; j++) {
-				curEmployeeInfo = addUserNode(deptNode, curEmployeeInfo,
-						userInfoMap, deptUserSiblingMapItem);
-				if (curEmployeeInfo == null) {
-					break;
-				}
-			}
-
-			// userNodeMap.put(deptNode.getId(), userNodeMapItem);//////
-
-			// //////
-			// ArrayList<Node> temp_dept_userNode = deptNode.getChildNodes();
-			// for (int i = 0; i < temp_dept_userNode.size(); i++) {
-			//
-			//
-			// }
-		}
-
-	}
-
 	/**
 	 * @param parentNode
-	 *            部门节点
+	 *        部门节点
 	 * @param curEmployeeInfo
-	 *            当前的用户信息
+	 *        当前的用户信息
 	 * @param deptUserInfoMap
-	 *            部门UserInfoMap
+	 *        部门UserInfoMap
 	 */
-	private EmployeeInfoItem addUserNode(Node parentNode,
-			EmployeeInfoItem curEmployeeInfo,
-			HashMap<Integer, EmployeeInfoItem> deptUserInfoMap,
-			HashMap<Integer, Integer> deptUserSiblingMapItem) {
+	private EmployeeInfoItem addUserNode(Node parentNode, EmployeeInfoItem curEmployeeInfo, HashMap<Integer, EmployeeInfoItem> deptUserInfoMap, HashMap<Integer, Integer> deptUserSiblingMapItem) {
 
-		// int colleagueId = curEmployeeInfo.getColleague_uid();
-		int colleagueId = curEmployeeInfo.getUid();
+		curEmployeeInfo.getUid();
 
 		int siblingId = deptUserSiblingMapItem.get(curEmployeeInfo.getUid());
 
@@ -2583,50 +1596,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	}
 
 	/**
-	 * 获取查询结果
-	 * 
-	 * @param key
-	 * @return
-	 */
-	private ArrayList<Node> getSearchResult(ArrayList<int[]> deptUserId) {
-
-		// 0-deptId ; 1-userId
-		// ArrayList<int[]> deptUserId = null ;
-		int[] temp_item = null;
-
-		ArrayList<Node> searchResultList = new ArrayList<Node>();
-
-		for (int i = 0; i < deptUserId.size(); i++) {
-
-			temp_item = deptUserId.get(i);
-
-			LogFactory.d("SearchResult", "deptId = " + temp_item[0]
-					+ "UserId =" + temp_item[1]);
-
-			if (userNodeMap.get(temp_item[0]).get(temp_item[1]) != null) {
-
-				searchResultList.add(userNodeMap.get(temp_item[0]).get(
-						temp_item[1]));
-
-				LogFactory.d(
-						"SearchResult",
-						"NodeDate = "
-								+ userNodeMap.get(temp_item[0])
-										.get(temp_item[1]).getNodeData()
-										.toString());
-			} else {
-				LogFactory.d("SearchResult", "Null------->deptId = "
-						+ temp_item[0] + "UserId =" + temp_item[1]);
-			}
-
-			// searchResultList.add(userNodeMap.get(temp_item[0]).get(temp_item[1]));
-
-		}
-
-		return searchResultList;
-	}
-
-	/**
 	 * 数组的合并
 	 * 
 	 * @param curArray
@@ -2638,8 +1607,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		int[] destArray = new int[curArray.length + tempArray.length];
 
 		System.arraycopy(curArray, 0, destArray, 0, curArray.length);
-		System.arraycopy(tempArray, 0, destArray, curArray.length,
-				tempArray.length);
+		System.arraycopy(tempArray, 0, destArray, curArray.length, tempArray.length);
 		curArray = tempArray = null;
 		System.gc();
 		return destArray;
@@ -2652,13 +1620,12 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 * @param tempArray
 	 * @return
 	 */
-	private EmployeeInfoItem[] mergeUserArray(EmployeeInfoItem[] curArray,
-			EmployeeInfoItem[] tempArray) {
+	private EmployeeInfoItem[] mergeUserArray(EmployeeInfoItem[] curArray, EmployeeInfoItem[] tempArray) {
 
 		EmployeeInfoItem[] destArray = new EmployeeInfoItem[curArray.length + tempArray.length];
 
 		System.arraycopy(curArray, 0, destArray, 0, curArray.length);
-		System.arraycopy(tempArray, 0, destArray, curArray.length,tempArray.length);
+		System.arraycopy(tempArray, 0, destArray, curArray.length, tempArray.length);
 		curArray = tempArray = null;
 		System.gc();
 		return destArray;
@@ -2685,7 +1652,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		return super.onKeyDown(keyCode, event);
 	}
 
-	// ==========================================================================================
 	/** 更新列表的显示 */
 	private final int TYPE_REFRESH_TREE = 1;
 
@@ -2695,12 +1661,12 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 			switch (msg.what) {
 
-			case TYPE_REFRESH_TREE:
-				turn2Main();
-				break;
+				case TYPE_REFRESH_TREE:
+					turn2Main();
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 
 		}
@@ -2711,22 +1677,10 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 * 数据全部请求完成后：跳转主界面
 	 */
 	private void turn2Main() {
-		LogFactory.e(TAG, "trun2Main---------------> hasGetInnerContactId :"
-				+ hasGetInnerContactId + ", hasGetInnerGroupInfo :"
-				+ hasGetInnerGroupInfo + ", hasGetInnerContactWorkSign :"
-				+ hasGetInnerContactWorkSign + ", hasGetOuterGroupInfo :"
-				+ hasGetOuterGroupInfo + ", hasGetOuterContactId :"
-				+ hasGetOuterContactId + ", hasGetOuterCropName :"
-				+ hasGetOuterCropName + ", hasGetOuterContactBasicInfoState :"
-				+ hasGetOuterContactBasicInfoState
-				+ ", hasGetOuterContactState_State :"
-				+ hasGetOuterContactState_State);
+		LogFactory.e(TAG, "trun2Main---------------> hasGetInnerContactId :" + hasGetInnerContactId + ", hasGetInnerGroupInfo :" + hasGetInnerGroupInfo + ", hasGetInnerContactWorkSign :" + hasGetInnerContactWorkSign + ", hasGetOuterGroupInfo :" + hasGetOuterGroupInfo + ", hasGetOuterContactId :"
+				+ hasGetOuterContactId + ", hasGetOuterCropName :" + hasGetOuterCropName + ", hasGetOuterContactBasicInfoState :" + hasGetOuterContactBasicInfoState + ", hasGetOuterContactState_State :" + hasGetOuterContactState_State);
 
-		if (hasGetInnerContactId && hasGetInnerGroupInfo
-				&& hasGetInnerContactWorkSign && hasGetOuterGroupInfo
-				&& hasGetOuterContactId && hasGetOuterCropName
-				&& hasGetOuterContactBasicInfoState
-				&& hasGetOuterContactState_State) {
+		if (hasGetInnerContactId && hasGetInnerGroupInfo && hasGetInnerContactWorkSign && hasGetOuterGroupInfo && hasGetOuterContactId && hasGetOuterCropName && hasGetOuterContactBasicInfoState && hasGetOuterContactState_State) {
 			// /1- 更新全局数据
 			// HashMap<Integer,InnerContactorItem> innerGroupIdMap,
 			// HashMap<Integer,ArrayList<Integer>> innerGroupContactMap,
@@ -2737,19 +1691,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			// HashMap<Integer, String> outerContactCorpMap,
 			// HashMap<Integer, OuterContactBasicInfo> outerContactInfoMap
 
-			mGlobal.updateContactData(
-					(HashMap<Integer, InnerContactorItem>) innerGroupIdMap
-							.clone(),
-					(HashMap<Integer, ArrayList<Integer>>) innerGroupContactMap
-							.clone(),
-					(HashMap<Integer, String>) innerContactWorkSignMap.clone(),
-					(HashMap<Integer, OuterContactorItem>) outerGroupIdMap
-							.clone(),
-					(HashMap<Integer, ArrayList<OuterContactItem>>) outerGroupContactMap
-							.clone(),
-					(HashMap<Integer, String>) outerContactCorpMap.clone(),
-					(HashMap<Integer, OuterContactBasicInfo>) outerContactInfoMap
-							.clone());
+			mGlobal.updateContactData((HashMap<Integer, InnerContactorItem>) innerGroupIdMap.clone(), (HashMap<Integer, ArrayList<Integer>>) innerGroupContactMap.clone(), (HashMap<Integer, String>) innerContactWorkSignMap.clone(), (HashMap<Integer, OuterContactorItem>) outerGroupIdMap.clone(),
+					(HashMap<Integer, ArrayList<OuterContactItem>>) outerGroupContactMap.clone(), (HashMap<Integer, String>) outerContactCorpMap.clone(), (HashMap<Integer, OuterContactBasicInfo>) outerContactInfoMap.clone());
 			// /2- 存数据库
 			if (doSaveData2Local()) {
 				// /3- 跳转页面
@@ -2786,13 +1729,11 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void resetGroupMap() {
 		innerGroupIdMap = new HashMap<Integer, InnerContactorItem>();
-		innerGroupIdMap.put(0, new InnerContactorItem(0, getResources()
-				.getString(R.string.uncategorized_inner_contact)));
+		innerGroupIdMap.put(0, new InnerContactorItem(0, getResources().getString(R.string.uncategorized_inner_contact)));
 		// innerGroupContactMap.put(0, new ArrayList<Integer>());
 
 		outerGroupIdMap = new HashMap<Integer, OuterContactorItem>();
-		outerGroupIdMap.put(0, new OuterContactorItem(0, getResources()
-				.getString(R.string.uncategorized_outer_contact)));
+		outerGroupIdMap.put(0, new OuterContactorItem(0, getResources().getString(R.string.uncategorized_outer_contact)));
 		// outerGroupContactMap.put(0, null);
 	}
 
@@ -2827,11 +1768,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		hasGetInnerGroupInfo = false;
 		Random random = new Random();
 		untransID = random.nextInt();
-		ByteBuffer buffer = ContactorGroupUCOutPacket
-				.GenerateGroupUCBody(untransID);
-		ContactorGroupUCOutPacket outPacket = new ContactorGroupUCOutPacket(
-				buffer, IMOCommand.IMO_INNER_CONTACTOR_GROUP_UC,
-				EngineConst.cId, EngineConst.uId);
+		ByteBuffer buffer = ContactorGroupUCOutPacket.GenerateGroupUCBody(untransID);
+		ContactorGroupUCOutPacket outPacket = new ContactorGroupUCOutPacket(buffer, IMOCommand.IMO_INNER_CONTACTOR_GROUP_UC, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 	}
 
@@ -2847,11 +1785,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		hasGetInnerContactId = false;
 		Random random = new Random();
 		untransID = random.nextInt();
-		ByteBuffer buffer = ContactorGroupUCOutPacket
-				.GenerateGroupUCBody(untransID);
-		ContactorGroupUCOutPacket outPacket = new ContactorGroupUCOutPacket(
-				buffer, IMOCommand.IMO_INNER_CONTACTOR_LIST_UC,
-				EngineConst.cId, EngineConst.uId);
+		ByteBuffer buffer = ContactorGroupUCOutPacket.GenerateGroupUCBody(untransID);
+		ContactorGroupUCOutPacket outPacket = new ContactorGroupUCOutPacket(buffer, IMOCommand.IMO_INNER_CONTACTOR_LIST_UC, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 	}
 
@@ -2859,9 +1794,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 * 请求所有的InnerGroupInfo
 	 */
 	private void doRequestInnerGroupInfo() {
-		CommonOutPacket outPacket = new CommonOutPacket(ByteBuffer.allocate(0),
-				IMOCommand.IMO_INNER_CONTACTOR_GROUP, EngineConst.cId,
-				EngineConst.uId);
+		CommonOutPacket outPacket = new CommonOutPacket(ByteBuffer.allocate(0), IMOCommand.IMO_INNER_CONTACTOR_GROUP, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 	}
 
@@ -2872,9 +1805,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		innerGroupContactMap.clear();
 
-		CommonOutPacket outPacketList = new CommonOutPacket(
-				ByteBuffer.allocate(0), IMOCommand.IMO_INNER_CONTACTOR_LIST,
-				EngineConst.cId, EngineConst.uId);
+		CommonOutPacket outPacketList = new CommonOutPacket(ByteBuffer.allocate(0), IMOCommand.IMO_INNER_CONTACTOR_LIST, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacketList, false);
 	}
 
@@ -2889,20 +1820,14 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 * @param aContactorCidArray
 	 * @param aContactorUidArray
 	 */
-	private void doRequestOuterContactState(int aContactorsNum,
-			int[] aContactorCidArray, int[] aContactorUidArray) {
+	private void doRequestOuterContactState(int aContactorsNum, int[] aContactorCidArray, int[] aContactorUidArray) {
 
-		LogFactory.d(TAG,
-				"......................doRequest Outer Contact State ");
+		LogFactory.d(TAG, "......................doRequest Outer Contact State ");
 
 		hasGetOuterContactState_State = false;
 
-		ByteBuffer bufferBody = GetEmployeesStatusOutPacket
-				.GenerateEmployeesStatusBody(aContactorsNum,
-						aContactorCidArray, aContactorUidArray);
-		GetEmployeesStatusOutPacket outPacket = new GetEmployeesStatusOutPacket(
-				bufferBody, IMOCommand.IMO_GET_EMPLOYEE_STATUS,
-				EngineConst.cId, EngineConst.uId);
+		ByteBuffer bufferBody = GetEmployeesStatusOutPacket.GenerateEmployeesStatusBody(aContactorsNum, aContactorCidArray, aContactorUidArray);
+		GetEmployeesStatusOutPacket outPacket = new GetEmployeesStatusOutPacket(bufferBody, IMOCommand.IMO_GET_EMPLOYEE_STATUS, EngineConst.cId, EngineConst.uId);
 
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 	}
@@ -2930,32 +1855,13 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		Random random = new Random();
 		untransID = random.nextInt();
 
-		ByteBuffer bodyBuffer = GetEmployeeProfileOutPacket
-				.GenerateEmployeeProfileBody(untransID, cid, uid, mask);
-		GetEmployeeProfileOutPacket out = new GetEmployeeProfileOutPacket(
-				bodyBuffer, IMOCommand.IMO_GET_EMPLOYEE_PROFILE,
-				EngineConst.cId, EngineConst.uId);
+		ByteBuffer bodyBuffer = GetEmployeeProfileOutPacket.GenerateEmployeeProfileBody(untransID, cid, uid, mask);
+		GetEmployeeProfileOutPacket out = new GetEmployeeProfileOutPacket(bodyBuffer, IMOCommand.IMO_GET_EMPLOYEE_PROFILE, EngineConst.cId, EngineConst.uId);
 
 		outer_loadinfo_seq_map.put(out.get_header_seq(), uid);
 
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 	}
-
-	// // [内部联系人]
-	// private void doRequestAllEmployeeInfo(int aContactorsNum,int[]
-	// aContactorUidArray){
-	//
-	// ByteBuffer bufferBody =
-	// GetAllEmployeesInfoOutPacket.GenerateEmployeesBasicInfoBody(aContactorsNum,
-	// aContactorUidArray);
-	//
-	// GetAllEmployeesInfoOutPacket outPacket = new
-	// GetAllEmployeesInfoOutPacket(bufferBody,
-	// IMOCommand.IMO_GET_ALL_EMPLOYEE_BASIC_INFO, EngineConst.cId,
-	// EngineConst.uId);
-	//
-	// mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
-	// }
 
 	private boolean hasGetOuterGroupInfo = false;
 
@@ -2968,11 +1874,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		Random random = new Random();
 		untransID = random.nextInt();
 
-		ByteBuffer bufferList = ContactorGroupUCOutPacket
-				.GenerateGroupUCBody(untransID);
-		ContactorGroupUCOutPacket outPacketList = new ContactorGroupUCOutPacket(
-				bufferList, IMOCommand.IMO_OUTER_CONTACTOR_GROUP_UC,
-				EngineConst.cId, EngineConst.uId);
+		ByteBuffer bufferList = ContactorGroupUCOutPacket.GenerateGroupUCBody(untransID);
+		ContactorGroupUCOutPacket outPacketList = new ContactorGroupUCOutPacket(bufferList, IMOCommand.IMO_OUTER_CONTACTOR_GROUP_UC, EngineConst.cId, EngineConst.uId);
 
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacketList, false);
 	}
@@ -2988,11 +1891,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		Random random = new Random();
 		untransID = random.nextInt();
-		ByteBuffer buffer = ContactorGroupUCOutPacket
-				.GenerateGroupUCBody(untransID);
-		ContactorGroupUCOutPacket outPacket = new ContactorGroupUCOutPacket(
-				buffer, IMOCommand.IMO_OUTER_CONTACTOR_LIST_UC,
-				EngineConst.cId, EngineConst.uId);
+		ByteBuffer buffer = ContactorGroupUCOutPacket.GenerateGroupUCBody(untransID);
+		ContactorGroupUCOutPacket outPacket = new ContactorGroupUCOutPacket(buffer, IMOCommand.IMO_OUTER_CONTACTOR_LIST_UC, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 	}
 
@@ -3003,9 +1903,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "doRequestOuterGroupInfo ................");
 
-		CommonOutPacket outPacket = new CommonOutPacket(ByteBuffer.allocate(0),
-				IMOCommand.IMO_OUTER_CONTACTOR_GROUP, EngineConst.cId,
-				EngineConst.uId);
+		CommonOutPacket outPacket = new CommonOutPacket(ByteBuffer.allocate(0), IMOCommand.IMO_OUTER_CONTACTOR_GROUP, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 	}
 
@@ -3013,9 +1911,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "doRequestOuterContactId ................");
 
-		CommonOutPacket outPacketList = new CommonOutPacket(
-				ByteBuffer.allocate(0), IMOCommand.IMO_OUTER_CONTACTOR_LIST,
-				EngineConst.cId, EngineConst.uId);
+		CommonOutPacket outPacketList = new CommonOutPacket(ByteBuffer.allocate(0), IMOCommand.IMO_OUTER_CONTACTOR_LIST, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacketList, false);
 	}
 
@@ -3029,15 +1925,11 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void doRequestOuterContactBasicInfo(int cid, int uid) {
 
-		LogFactory.d(TAG, " ................doRequestOuterBasicInfo cid=" + cid
-				+ " uid = " + uid);
+		LogFactory.d(TAG, " ................doRequestOuterBasicInfo cid=" + cid + " uid = " + uid);
 
 		hasGetOuterContactBasicInfoState = false;
-		ByteBuffer bodyBuffer = OuterBasicInfoOutPacket
-				.GenerateOuterBasicInfoBody(cid, uid);
-		OuterBasicInfoOutPacket out = new OuterBasicInfoOutPacket(bodyBuffer,
-				IMOCommand.IMO_OUTER_BASIC_INFO, EngineConst.cId,
-				EngineConst.uId);
+		ByteBuffer bodyBuffer = OuterBasicInfoOutPacket.GenerateOuterBasicInfoBody(cid, uid);
+		OuterBasicInfoOutPacket out = new OuterBasicInfoOutPacket(bodyBuffer, IMOCommand.IMO_OUTER_BASIC_INFO, EngineConst.cId, EngineConst.uId);
 		outer_basic_info_seq_map.put(out.get_header_seq(), uid);
 
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
@@ -3050,20 +1942,16 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 * do request outer corp info
 	 * 
 	 * @param cid
-	 *            company id
+	 *        company id
 	 */
 	private void doRequestOuterCorpInfo(int cid) {
 
-		LogFactory.d(TAG,
-				"................doRequestOuterCorpInfo ................cid ="
-						+ cid);
+		LogFactory.d(TAG, "................doRequestOuterCorpInfo ................cid =" + cid);
 
 		hasGetOuterCropName = false;
 		int mask = (1 << 1);// 公司简介
-		ByteBuffer bodyBuffer = GetCorpInfoOutPacket.GenerateCorpInfoBody(cid,
-				mask);
-		GetCorpInfoOutPacket out = new GetCorpInfoOutPacket(bodyBuffer,
-				IMOCommand.IMO_GET_CORP_INFO, EngineConst.cId, EngineConst.uId);
+		ByteBuffer bodyBuffer = GetCorpInfoOutPacket.GenerateCorpInfoBody(cid, mask);
+		GetCorpInfoOutPacket out = new GetCorpInfoOutPacket(bodyBuffer, IMOCommand.IMO_GET_CORP_INFO, EngineConst.cId, EngineConst.uId);
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, out, false);
 	}
 
@@ -3080,16 +1968,13 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	private int do_concurrent_outer_corp_info_req() {
 		// 开始并发请求deptinfo
 		int init_cnt = concurrent_outer_corp_loading_count;
-		for (int i = 0; i < this.outerCidList.size()
-				&& concurrent_outer_corp_loading_count < MAX_REQUEST_CONCURRENT_OUTER_CORP_NUMBER; i++) {
+		for (int i = 0; i < this.outerCidList.size() && concurrent_outer_corp_loading_count < MAX_REQUEST_CONCURRENT_OUTER_CORP_NUMBER; i++) {
 
 			if (outer_corp_loadinfo_map.get(outerCidList.get(i)) == LOAD_STAT.NOT_LOAD) {
 				doRequestOuterCorpInfo(outerCidList.get(i));
-				outer_corp_loadinfo_map.put(outerCidList.get(i),
-						LOAD_STAT.LOADING);
+				outer_corp_loadinfo_map.put(outerCidList.get(i), LOAD_STAT.LOADING);
 				concurrent_outer_corp_loading_count++;
-			} else {
-			}
+			} else {}
 		}
 
 		return concurrent_outer_corp_loading_count - init_cnt;
@@ -3102,8 +1987,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void responseOuterCorpInfo(short command) {
 
-		GetCorpInfoInPacket getCorpInfoInPacket = (GetCorpInfoInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		GetCorpInfoInPacket getCorpInfoInPacket = (GetCorpInfoInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		if (getCorpInfoInPacket == null)
 			return;
 		short commandRet = getCorpInfoInPacket.getRet();
@@ -3118,23 +2002,12 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			if (shortName == null) {
 				shortName = "";
 			}
-			outerContactCorpMap.put(getCorpInfoInPacket.getContactorID(),
-					shortName);
+			outerContactCorpMap.put(getCorpInfoInPacket.getContactorID(), shortName);
 
-			LogFactory.e(TAG, "cid = " + getCorpInfoInPacket.getContactorID()
-					+ ",shortName = " + shortName);
+			LogFactory.e(TAG, "cid = " + getCorpInfoInPacket.getContactorID() + ",shortName = " + shortName);
 		}
 
-		/*
-		 * if (curPos_OuterCropName < outerCidList.size()) { // / the next
-		 * request
-		 * doRequestOuterCorpInfo(outerCidList.get(curPos_OuterCropName++)); }
-		 * else { updateGetOuterCropNameState();
-		 * LogFactory.d(TAG,"........................has got all Out crop Name "
-		 * ); }
-		 */
-		outer_corp_loadinfo_map.put(getCorpInfoInPacket.getContactorID(),
-				LOAD_STAT.LOADED);
+		outer_corp_loadinfo_map.put(getCorpInfoInPacket.getContactorID(), LOAD_STAT.LOADED);
 		concurrent_outer_corp_loading_count--;
 
 		int send_cnt = do_concurrent_outer_corp_info_req();
@@ -3145,12 +2018,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	}
 
 	private int check_outer_corp_info_req_finish() {
-		// 开始并发请求deptuids
-		int init_cnt = concurrent_outer_corp_loading_count;
-		for (int i = 0; i < this.outerCidList.size()
-				&& concurrent_outer_corp_loading_count < MAX_REQUEST_CONCURRENT_OUTER_CORP_NUMBER; i++) {
-			if (outer_corp_loadinfo_map.get(outerCidList.get(i)) == LOAD_STAT.NOT_LOAD
-					|| outer_corp_loadinfo_map.get(outerCidList.get(i)) == LOAD_STAT.LOADING) {
+		for (int i = 0; i < this.outerCidList.size() && concurrent_outer_corp_loading_count < MAX_REQUEST_CONCURRENT_OUTER_CORP_NUMBER; i++) {
+			if (outer_corp_loadinfo_map.get(outerCidList.get(i)) == LOAD_STAT.NOT_LOAD || outer_corp_loadinfo_map.get(outerCidList.get(i)) == LOAD_STAT.LOADING) {
 
 				return 0;
 			}
@@ -3178,8 +2047,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "........................responseOuterBasicInfo");
 
-		OuterBasicInfoInPacket outerContactorBasicInfo = (OuterBasicInfoInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		OuterBasicInfoInPacket outerContactorBasicInfo = (OuterBasicInfoInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		if (outerContactorBasicInfo == null)
 			return;
 		short commandRet = outerContactorBasicInfo.getRet();
@@ -3192,40 +2060,22 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			String name = outerContactorBasicInfo.getName();
 			int gender = outerContactorBasicInfo.getGender();
 
-			OuterContactBasicInfo basicInfo = new OuterContactBasicInfo(cid,
-					uid, corpAccount, userAccount, name, gender);
+			OuterContactBasicInfo basicInfo = new OuterContactBasicInfo(cid, uid, corpAccount, userAccount, name, gender);
 
 			// // add to the map
 			outerContactInfoMap.put(uid, basicInfo);
 
-			LogFactory.d(TAG, ".......................外部联系人基本资料:name =" + name
-					+ "  userAccount = " + userAccount);
+			LogFactory.d(TAG, ".......................外部联系人基本资料:name =" + name + "  userAccount = " + userAccount);
 		}
 
-		/*
-		 * if (curPos_OuterBasicInfo < outerContactItemList.size()) {
-		 * OuterContactItem requestItem = outerContactItemList
-		 * .get(curPos_OuterBasicInfo++);
-		 * doRequestOuterContactBasicInfo(requestItem.getCid(),
-		 * requestItem.getUid()); } else { LogFactory.d(TAG,
-		 * "has got all outer basic info ........");
-		 * updateGetOuterContactBasicInfoState(); }
-		 */
-
-		if (outer_basic_info_map.containsKey(outerContactorBasicInfo
-				.getContactor_uid())) {
-			outer_basic_info_map.put(
-					outerContactorBasicInfo.getContactor_uid(),
-					LOAD_STAT.LOADED);
+		if (outer_basic_info_map.containsKey(outerContactorBasicInfo.getContactor_uid())) {
+			outer_basic_info_map.put(outerContactorBasicInfo.getContactor_uid(), LOAD_STAT.LOADED);
 		} else {
-			int uid = outer_basic_info_seq_map.get(outerContactorBasicInfo
-					.get_header_seq());
+			int uid = outer_basic_info_seq_map.get(outerContactorBasicInfo.get_header_seq());
 			outer_basic_info_map.put(uid, LOAD_STAT.LOADED);
 		}
 
-		LogFactory.e(TAG,
-				"outer_basic_info_map end : " + outer_basic_info_map.keySet()
-						+ ",value :" + outer_basic_info_map.values());
+		LogFactory.e(TAG, "outer_basic_info_map end : " + outer_basic_info_map.keySet() + ",value :" + outer_basic_info_map.values());
 		concurrent_outer_basic_info_loading_count--;
 
 		int send_cnt = do_concurrent_outer_basic_info_req();
@@ -3236,13 +2086,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	}
 
 	private int check_outer_basic_info_req_finish() {
-		// 开始并发请求deptuids
-		int init_cnt = concurrent_outer_basic_info_loading_count;
-		for (int i = 0; i < this.outerContactItemList.size()
-				&& concurrent_outer_basic_info_loading_count < MAX_REQUEST_CONCURRENT_OUTER_BASIC_INFO_NUMBER; i++) {
-			if (outer_basic_info_map.get(outerContactItemList.get(i).getUid()) == LOAD_STAT.NOT_LOAD
-					|| outer_basic_info_map.get(outerContactItemList.get(i)
-							.getUid()) == LOAD_STAT.LOADING) {
+		for (int i = 0; i < this.outerContactItemList.size() && concurrent_outer_basic_info_loading_count < MAX_REQUEST_CONCURRENT_OUTER_BASIC_INFO_NUMBER; i++) {
+			if (outer_basic_info_map.get(outerContactItemList.get(i).getUid()) == LOAD_STAT.NOT_LOAD || outer_basic_info_map.get(outerContactItemList.get(i).getUid()) == LOAD_STAT.LOADING) {
 
 				return 0;
 			}
@@ -3263,11 +2108,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	private HashMap<Integer, String> outerContactCropMap = new HashMap<Integer, String>();
 	/** Outer Conctact Crop id List */
 	private ArrayList<Integer> outerCidList = new ArrayList<Integer>();
-	private Integer curPos_OuterCropName = 0;
-
 	/** Outer Conctact Id --[cid,uid,group,flag] */
 	private ArrayList<OuterContactItem> outerContactItemList = new ArrayList<OuterContactItem>();
-	private Integer curPos_OuterBasicInfo = 0;
 	private Integer curPos_OuterContactState = 0;// / outer contact state
 
 	// // outer contact request total count for state
@@ -3282,9 +2124,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.e(TAG + "Outer", "................responseOuterContactId.");
 
-		OuterContactorListInPacket outerContactorList = (OuterContactorListInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
-		
+		OuterContactorListInPacket outerContactorList = (OuterContactorListInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
+
 		if (outerContactorList == null)
 			return;
 		short commandRet = outerContactorList.getRet();
@@ -3296,18 +2137,15 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			int[] outertempInnerGroupId = outerContactorList.getGroup_id();
 			int[] outFlag = outerContactorList.getFlag();
 
-			LogFactory.e(TAG, "responseOuterContactId size : "
-					+ outertempContactorCid.length);
+			LogFactory.e(TAG, "responseOuterContactId size : " + outertempContactorCid.length);
 
 			for (int i = 0; i < outertempContactorUid.length; i++) {
 
-				OuterContactItem item = new OuterContactItem(
-						outertempContactorCid[i], outertempContactorUid[i],
-						outertempInnerGroupId[i], outFlag[i]);
+				OuterContactItem item = new OuterContactItem(outertempContactorCid[i], outertempContactorUid[i], outertempInnerGroupId[i], outFlag[i]);
 				outerContactItemList.add(item);// /All Outer Contact id info for
 												// basic info
 
-				outer_basic_info_map.put(outertempContactorUid[i],LOAD_STAT.NOT_LOAD);
+				outer_basic_info_map.put(outertempContactorUid[i], LOAD_STAT.NOT_LOAD);
 
 				outerContactCropMap.put(outertempContactorCid[i], ""); //
 																		// update
@@ -3322,13 +2160,11 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 					}
 					outerContactList.add(item);
 
-					outerGroupContactMap.put(outertempInnerGroupId[i],
-							outerContactList);
+					outerGroupContactMap.put(outertempInnerGroupId[i], outerContactList);
 				} else {
 					item.setGroupId(0);
 
-					ArrayList<OuterContactItem> outerContactList = outerGroupContactMap
-							.get(0);
+					ArrayList<OuterContactItem> outerContactList = outerGroupContactMap.get(0);
 					if (outerContactList == null) {
 						outerContactList = new ArrayList<OuterContactItem>();
 					}
@@ -3344,8 +2180,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			LogFactory.e(TAG, "outerContactCropMap size : " + outerContactCropMap.size());
 
 			// //has got all outer contact id
-			LogFactory.e(TAG + "Outer",
-					"................外部联系人ContactorID数据-请求完毕！");
+			LogFactory.e(TAG + "Outer", "................外部联系人ContactorID数据-请求完毕！");
 
 			updateGetOuterContactIdState();
 
@@ -3354,13 +2189,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 				outerCidList.add(cId);
 				outer_corp_loadinfo_map.put(cId, LOAD_STAT.NOT_LOAD);
 			}
-
-			/*
-			 * curPos_OuterCropName = 0; // // first request outer crop info if
-			 * (outerCidList.size() > 0) {
-			 * doRequestOuterCorpInfo(outerCidList.get(curPos_OuterCropName++));
-			 * } else { updateGetOuterCropNameState(); }
-			 */
 
 			if (outerCidList.size() > 0) {
 				LogFactory.e(TAG, "outerCidList size : " + outerCidList.size());
@@ -3385,18 +2213,13 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			}
 
 			// 3- begin doRequestOuterContactState
-			outerStateRequestTotalCount = outerContactItemList.size()
-					% MAX_STATE_REQUEST_COUNT == 0 ? outerContactItemList
-					.size() / MAX_STATE_REQUEST_COUNT : outerContactItemList
-					.size() / MAX_STATE_REQUEST_COUNT + 1;
+			outerStateRequestTotalCount = outerContactItemList.size() % MAX_STATE_REQUEST_COUNT == 0 ? outerContactItemList.size() / MAX_STATE_REQUEST_COUNT : outerContactItemList.size() / MAX_STATE_REQUEST_COUNT + 1;
 
-			LogFactory.e(TAG, "................outerStateRequestTotalCount = "
-					+ outerStateRequestTotalCount);
+			LogFactory.e(TAG, "................outerStateRequestTotalCount = " + outerStateRequestTotalCount);
 
 			if (outerStateRequestTotalCount > 0) {
 				Object[] objs = getRequestOuterContactIdArray();
-				doRequestOuterContactState(((int[]) objs[0]).length,
-						(int[]) objs[0], (int[]) objs[1]);
+				doRequestOuterContactState(((int[]) objs[0]).length, (int[]) objs[0], (int[]) objs[1]);
 			} else {
 				// /没有员工，无效请求state
 				updateGetOuterContactState_State();
@@ -3413,27 +2236,21 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	private int do_concurrent_outer_basic_info_req() {
 		// 开始并发请求deptinfo
 		int init_cnt = concurrent_outer_basic_info_loading_count;
-		for (int i = 0; i < this.outerContactItemList.size()
-				&& concurrent_outer_basic_info_loading_count < MAX_REQUEST_CONCURRENT_OUTER_BASIC_INFO_NUMBER; i++) {
+		for (int i = 0; i < this.outerContactItemList.size() && concurrent_outer_basic_info_loading_count < MAX_REQUEST_CONCURRENT_OUTER_BASIC_INFO_NUMBER; i++) {
 
-			if (outer_basic_info_map.get(this.outerContactItemList.get(i)
-					.getUid()) == LOAD_STAT.NOT_LOAD) {
+			if (outer_basic_info_map.get(this.outerContactItemList.get(i).getUid()) == LOAD_STAT.NOT_LOAD) {
 
 				OuterContactItem requestItem = outerContactItemList.get(i);
-				doRequestOuterContactBasicInfo(requestItem.getCid(),
-						requestItem.getUid());
+				doRequestOuterContactBasicInfo(requestItem.getCid(), requestItem.getUid());
 
-				outer_basic_info_map.put(requestItem.getUid(),
-						LOAD_STAT.LOADING);
+				outer_basic_info_map.put(requestItem.getUid(), LOAD_STAT.LOADING);
 				concurrent_outer_basic_info_loading_count++;
-			} else {
-			}
+			} else {}
 		}
 
 		return concurrent_outer_basic_info_loading_count - init_cnt;
 	}
 
-	// private int MAX_STATE_REQUEST_COUNT = 100;
 	/**
 	 * 状态请求外部联系人数组ID
 	 * 
@@ -3449,17 +2266,14 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			requestCIds = new int[MAX_STATE_REQUEST_COUNT];
 			requestUIds = new int[MAX_STATE_REQUEST_COUNT];
 
-			LogFactory.d(TAG + "State--HasRequestCount",
-					"curPos_OuterContactState = " + curPos_OuterContactState);
+			LogFactory.d(TAG + "State--HasRequestCount", "curPos_OuterContactState = " + curPos_OuterContactState);
 
 			int start = MAX_STATE_REQUEST_COUNT * curPos_OuterContactState;
-			int end = MAX_STATE_REQUEST_COUNT * curPos_OuterContactState
-					+ MAX_STATE_REQUEST_COUNT;
+			int end = MAX_STATE_REQUEST_COUNT * curPos_OuterContactState + MAX_STATE_REQUEST_COUNT;
 
 			List<OuterContactItem> tempList = outerContactItemList.subList(start, end);
 
-			LogFactory.d(TAG, "request state arraySize = "
-					+ MAX_STATE_REQUEST_COUNT);
+			LogFactory.d(TAG, "request state arraySize = " + MAX_STATE_REQUEST_COUNT);
 
 			for (int i = 0; i < tempList.size(); i++) {
 				requestCIds[i] = tempList.get(i).getCid();
@@ -3469,10 +2283,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			curPos_OuterContactState++;
 
 		} else {
-			LogFactory.d(TAG + "State--HasRequestCount",
-					"curPos_OuterContactState = " + curPos_OuterContactState);
-			int arraySize = outerContactItemList.size()
-					- curPos_OuterContactState * MAX_STATE_REQUEST_COUNT;
+			LogFactory.d(TAG + "State--HasRequestCount", "curPos_OuterContactState = " + curPos_OuterContactState);
+			int arraySize = outerContactItemList.size() - curPos_OuterContactState * MAX_STATE_REQUEST_COUNT;
 
 			LogFactory.d(TAG, "last request state arraySize = " + arraySize);
 
@@ -3496,7 +2308,9 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			}
 		}
 
-		return new Object[] { requestCIds, requestUIds };
+		return new Object[] {
+				requestCIds, requestUIds
+		};
 	}
 
 	/**
@@ -3508,8 +2322,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "................responseOuterContactGroupInfo.");
 
-		ContactorGroupInPacket outerGroupInPacket = (ContactorGroupInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		ContactorGroupInPacket outerGroupInPacket = (ContactorGroupInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 
 		if (outerGroupInPacket == null) {
 			return;
@@ -3524,11 +2337,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			String[] outertempGroupName = outerGroupInPacket.getGroup_name();
 
 			for (int i = 0; i < outertempGroupName.length; i++) {
-				LogFactory.d(TAG, "outertempGroupId = " + outertempGroupId[i]
-						+ "  outertempGroupName" + outertempGroupName[i]);
-				outerGroupIdMap.put(outertempGroupId[i],
-						new OuterContactorItem(outertempGroupId[i],
-								outertempGroupName[i]));
+				LogFactory.d(TAG, "outertempGroupId = " + outertempGroupId[i] + "  outertempGroupName" + outertempGroupName[i]);
+				outerGroupIdMap.put(outertempGroupId[i], new OuterContactorItem(outertempGroupId[i], outertempGroupName[i]));
 			}
 		}
 		if (endflag == 1) {
@@ -3545,16 +2355,16 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "................responseOuterContactUC");
 
-		ContactorGroupUCInPacket outerlistinPacket = (ContactorGroupUCInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		ContactorGroupUCInPacket outerlistinPacket = (ContactorGroupUCInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 
 		if (outerlistinPacket == null) {
 			return;
 		}
 
 		// /获得本地Contact Uc
-		outerGroupListUC = (Integer) PreferenceManager.get(Globe.SP_FILE,
-				new Object[] { OUTER_GROUP_LIST_UC, outerGroupListUC });
+		outerGroupListUC = (Integer) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+				OUTER_GROUP_LIST_UC, outerGroupListUC
+		});
 
 		int curOuterGroupListUC = outerlistinPacket.getUnContactorGroupListUC();
 
@@ -3573,9 +2383,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			outerContactInfoMap.clear();
 			// /////获得本地的3大数据
 			try {
-				mGlobal.imoStorage.getAllOuterContactListInfo(
-						outerGroupContactMap, outerContactCorpMap,
-						outerContactInfoMap);
+				IMOApp.imoStorage.getAllOuterContactListInfo(outerGroupContactMap, outerContactCorpMap, outerContactInfoMap);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -3586,26 +2394,20 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			// 3- begin doRequestOuterContactState
 			outerContactItemList.clear();
 			for (Integer groupId : outerGroupContactMap.keySet()) {
-				ArrayList<OuterContactItem> itemList = outerGroupContactMap
-						.get(groupId);
+				ArrayList<OuterContactItem> itemList = outerGroupContactMap.get(groupId);
 				if (itemList != null) {
 					outerContactItemList.addAll(itemList);
 				}
 			}
-			outerStateRequestTotalCount = outerContactItemList.size()
-					% MAX_STATE_REQUEST_COUNT == 0 ? outerContactItemList
-					.size() / MAX_STATE_REQUEST_COUNT : outerContactItemList
-					.size() / MAX_STATE_REQUEST_COUNT + 1;
+			outerStateRequestTotalCount = outerContactItemList.size() % MAX_STATE_REQUEST_COUNT == 0 ? outerContactItemList.size() / MAX_STATE_REQUEST_COUNT : outerContactItemList.size() / MAX_STATE_REQUEST_COUNT + 1;
 
-			LogFactory.d(TAG, "................outerStateRequestTotalCount = "
-					+ outerStateRequestTotalCount);
+			LogFactory.d(TAG, "................outerStateRequestTotalCount = " + outerStateRequestTotalCount);
 
 			if (outerStateRequestTotalCount > 0) {
 
 				Object[] objs = getRequestOuterContactIdArray();
 				if (objs != null) {
-					doRequestOuterContactState(((int[]) objs[0]).length,
-							(int[]) objs[0], (int[]) objs[1]);
+					doRequestOuterContactState(((int[]) objs[0]).length, (int[]) objs[0], (int[]) objs[1]);
 				}
 			} else {
 				// /没有员工，无需请求state
@@ -3623,16 +2425,16 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "................responseOuterContactGroupUC");
 
-		ContactorGroupUCInPacket outerinPacket = (ContactorGroupUCInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		ContactorGroupUCInPacket outerinPacket = (ContactorGroupUCInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 
 		if (outerinPacket == null) {
 			return;
 		}
 
 		// /本地数据
-		outerGroupUC = (Integer) PreferenceManager.get(Globe.SP_FILE,
-				new Object[] { OUTER_GROUP_UC, outerGroupUC });
+		outerGroupUC = (Integer) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+				OUTER_GROUP_UC, outerGroupUC
+		});
 
 		int curOuterGroupUC = outerinPacket.getUnContactorGroupListUC();
 
@@ -3647,7 +2449,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			// /GroupInfo needn't update , get data from local
 			outerGroupIdMap.clear();
 			try {
-				mGlobal.imoStorage.getOuterGroupInfo(outerGroupIdMap);// //
+				IMOApp.imoStorage.getOuterGroupInfo(outerGroupIdMap);// //
 																		// 添加数据库接口：获得所有的OuterGroupInfo
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -3656,31 +2458,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			updateGetOuterGroupInfoState();
 		}
 	}
-
-	// /**
-	// * response All Employee info
-	// *
-	// * 内部联系人不需要使用
-	// *
-	// * @param command
-	// */
-	// private void responseAllEmployeeInfo(short command) {
-	// GetAllEmployeesInfoInPacket employeesbasicinfoInPac =
-	// (GetAllEmployeesInfoInPacket)
-	// tcpConnection.getInPacketByCommand(command);
-	// EmployeeInfoItem[] itemArray =
-	// employeesbasicinfoInPac.getEmployeesInfoArray();
-	// Log.e("ContactActivity item array :", ""+itemArray.toString());
-	//
-	// int[] cidArray = new int[itemArray.length];
-	// int[] uidArray = new int[itemArray.length];
-	// for (int i = 0; i < itemArray.length; i++)
-	// {
-	// cidArray[i] = EngineConst.cId;
-	// uidArray[i] = itemArray[i].getUid();
-	// }
-	// // doRequestOuterContactState(itemArray.length,cidArray,uidArray);
-	// }
 
 	/**
 	 * Outer contact state map
@@ -3698,8 +2475,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "...............responseOuterContactState");
 
-		GetEmployeesStatusInPacket statusInPacket = (GetEmployeesStatusInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		GetEmployeesStatusInPacket statusInPacket = (GetEmployeesStatusInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		if (statusInPacket == null) {
 			return;
 		}
@@ -3716,16 +2492,14 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		if (curPos_OuterContactState < outerStateRequestTotalCount) {
 			Object[] objs = getRequestOuterContactIdArray();
 			if (objs != null) {
-				doRequestOuterContactState(((int[]) objs[0]).length,
-						(int[]) objs[0], (int[]) objs[1]);
+				doRequestOuterContactState(((int[]) objs[0]).length, (int[]) objs[0], (int[]) objs[1]);
 			} else {
 				updateGetOuterContactState_State();
 			}
-		} 
+		}
 
-		if(outerId_State_Map.size()==outerContactItemList.size()){
-			LogFactory.d(TAG,
-					"...............outer contact state has got .....");
+		if (outerId_State_Map.size() == outerContactItemList.size()) {
+			LogFactory.d(TAG, "...............outer contact state has got .....");
 			updateGetOuterContactState_State();
 		}
 	}
@@ -3742,17 +2516,13 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	private int do_concurrent_outer_info_req() {
 		// 开始并发请求deptinfo
 		int init_cnt = concurrent_outer_loading_count;
-		for (int i = 0; i < this.innerContactIdList.size()
-				&& concurrent_outer_loading_count < MAX_REQUEST_CONCURRENT_INNER_NUMBER; i++) {
+		for (int i = 0; i < this.innerContactIdList.size() && concurrent_outer_loading_count < MAX_REQUEST_CONCURRENT_INNER_NUMBER; i++) {
 
 			if (outer_loadinfo_map.get(innerContactIdList.get(i)) == LOAD_STAT.NOT_LOAD) {
-				doRequestInnerContactWorkSign(EngineConst.cId,
-						innerContactIdList.get(i));
-				outer_loadinfo_map.put(innerContactIdList.get(i),
-						LOAD_STAT.LOADING);
+				doRequestInnerContactWorkSign(EngineConst.cId, innerContactIdList.get(i));
+				outer_loadinfo_map.put(innerContactIdList.get(i), LOAD_STAT.LOADING);
 				concurrent_outer_loading_count++;
-			} else {
-			}
+			} else {}
 		}
 
 		return concurrent_outer_loading_count - init_cnt;
@@ -3771,8 +2541,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		String sign = "";
 
-		GetEmployeeProfileInPacket getEmployeeProfileInPacket = (GetEmployeeProfileInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		GetEmployeeProfileInPacket getEmployeeProfileInPacket = (GetEmployeeProfileInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		if (getEmployeeProfileInPacket == null)
 			return;
 
@@ -3786,28 +2555,19 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			if (employeeProfileItem != null) {
 				sign = employeeProfileItem.getSign();
 			}
-			LogFactory.d(TAG, "WorkSign --------->uid=" + uid + "  sign="
-					+ sign);
+			LogFactory.d(TAG, "WorkSign --------->uid=" + uid + "  sign=" + sign);
 
 			innerContactWorkSignMap.put(uid, sign);// / add work sign
 		}
 
 		concurrent_outer_loading_count--;
 
-		LogFactory
-				.e(TAG,
-						"Outer Loaded cid="
-								+ getEmployeeProfileInPacket.getCid()
-								+ ",employeeProfileItem = , concurrent_outer_loading_count:"
-								+ concurrent_outer_loading_count + ",seq:"
-								+ getEmployeeProfileInPacket.getSequence());
+		LogFactory.e(TAG, "Outer Loaded cid=" + getEmployeeProfileInPacket.getCid() + ",employeeProfileItem = , concurrent_outer_loading_count:" + concurrent_outer_loading_count + ",seq:" + getEmployeeProfileInPacket.getSequence());
 
 		if (outer_loadinfo_map.containsKey(getEmployeeProfileInPacket.getUid())) {
-			outer_loadinfo_map.put(getEmployeeProfileInPacket.getUid(),
-					LOAD_STAT.LOADED);
+			outer_loadinfo_map.put(getEmployeeProfileInPacket.getUid(), LOAD_STAT.LOADED);
 		} else {
-			int uid = outer_loadinfo_seq_map.get(getEmployeeProfileInPacket
-					.get_header_seq());
+			int uid = outer_loadinfo_seq_map.get(getEmployeeProfileInPacket.get_header_seq());
 			outer_loadinfo_map.put(uid, LOAD_STAT.LOADED);
 		}
 
@@ -3819,23 +2579,11 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			// has got all sign
 			check_InnerContact_WorkSign_req_finish();
 		}
-
-		/*
-		 * if (curPos_InnerWorkSign < innerContactIdList.size()) {
-		 * doRequestInnerContactWorkSign
-		 * (EngineConst.cId,innerContactIdList.get(curPos_InnerWorkSign++)); }
-		 * else { curPos_InnerWorkSign = 0; // //has got all sign
-		 * updateGetInnerContactWorkSignState(); }
-		 */
 	}
 
 	private int check_InnerContact_WorkSign_req_finish() {
-		// 开始并发请求deptuids
-		int init_cnt = concurrent_outer_loading_count;
-		for (int i = 0; i < this.innerContactIdList.size()
-				&& concurrent_outer_loading_count < MAX_REQUEST_CONCURRENT_INNER_NUMBER; i++) {
-			if (outer_loadinfo_map.get(innerContactIdList.get(i)) == LOAD_STAT.NOT_LOAD
-					|| outer_loadinfo_map.get(innerContactIdList.get(i)) == LOAD_STAT.LOADING) {
+		for (int i = 0; i < this.innerContactIdList.size() && concurrent_outer_loading_count < MAX_REQUEST_CONCURRENT_INNER_NUMBER; i++) {
+			if (outer_loadinfo_map.get(innerContactIdList.get(i)) == LOAD_STAT.NOT_LOAD || outer_loadinfo_map.get(innerContactIdList.get(i)) == LOAD_STAT.LOADING) {
 
 				return 0;
 			}
@@ -3861,8 +2609,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "responseInnerGroupInfo ................");
 
-		ContactorGroupInPacket innerGroupInPacket = (ContactorGroupInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		ContactorGroupInPacket innerGroupInPacket = (ContactorGroupInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 
 		if (innerGroupInPacket == null) {
 			return;
@@ -3878,11 +2625,9 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			String[] tempGroupName = innerGroupInPacket.getGroup_name();
 
 			for (int i = 0; i < tempGroupName.length; i++) {
-				LogFactory.d(TAG, "GroupId = " + tempGroupId[i]
-						+ "  GroupName =" + tempGroupName[i]);
+				LogFactory.d(TAG, "GroupId = " + tempGroupId[i] + "  GroupName =" + tempGroupName[i]);
 
-				innerGroupIdMap.put(tempGroupId[i], new InnerContactorItem(
-						tempGroupId[i], tempGroupName[i]));
+				innerGroupIdMap.put(tempGroupId[i], new InnerContactorItem(tempGroupId[i], tempGroupName[i]));
 			}
 
 			if (endflag == 1) {
@@ -3904,8 +2649,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "responseInnerContactId ................");
 
-		InnerContactorListInPacket innerContactorList = (InnerContactorListInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		InnerContactorListInPacket innerContactorList = (InnerContactorListInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		if (innerContactorList == null) {
 			return;
 		}
@@ -3920,23 +2664,19 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			// //当group下没有联系人
 			if (tempInnerGroupId != null && tempContactorId != null) {
 
-				LogFactory.d(TAGUC, "innerContactId Size = "
-						+ tempContactorId.length);
+				LogFactory.d(TAGUC, "innerContactId Size = " + tempContactorId.length);
 				// //Add contact id to the corresponding GroupId
 				for (int i = 0; i < tempContactorId.length; i++) {
 
-					LogFactory.d(TAG, "InnerGroupId = " + tempInnerGroupId[i]
-							+ "  ContactId = " + tempContactorId[i]);
+					LogFactory.d(TAG, "InnerGroupId = " + tempInnerGroupId[i] + "  ContactId = " + tempContactorId[i]);
 
-					ArrayList<Integer> groupContactIdList = innerGroupContactMap
-							.get(tempInnerGroupId[i]);
+					ArrayList<Integer> groupContactIdList = innerGroupContactMap.get(tempInnerGroupId[i]);
 					if (groupContactIdList == null) {
 						groupContactIdList = new ArrayList<Integer>();
 					}
 					groupContactIdList.add(tempContactorId[i]);
 
-					innerGroupContactMap.put(tempInnerGroupId[i],
-							groupContactIdList);
+					innerGroupContactMap.put(tempInnerGroupId[i], groupContactIdList);
 				}
 			}
 		}
@@ -3956,16 +2696,16 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "responseInnerContactUC ................");
 
-		ContactorGroupUCInPacket listinPacket = (ContactorGroupUCInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		ContactorGroupUCInPacket listinPacket = (ContactorGroupUCInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 
 		if (listinPacket == null) {
 			return;
 		}
 
 		// /get local innerGroupListUC
-		innerGroupListUC = (Integer) PreferenceManager.get(Globe.SP_FILE,
-				new Object[] { INNER_GROUP_LIST_UC, innerGroupListUC });
+		innerGroupListUC = (Integer) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+				INNER_GROUP_LIST_UC, innerGroupListUC
+		});
 		int curInnerGroupListUC = listinPacket.getUnContactorGroupListUC();
 
 		LogFactory.d(TAGUC, "curInnerGroupListUC = " + curInnerGroupListUC);
@@ -3983,8 +2723,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			// //1- get local date
 			innerGroupContactMap.clear();
 			try {
-				mGlobal.imoStorage
-						.getAllInnerContactListInfo(innerGroupContactMap);
+				IMOApp.imoStorage.getAllInnerContactListInfo(innerGroupContactMap);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -4001,15 +2740,15 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		LogFactory.d(TAG, "responseInnerGroupUC ................");
 
-		ContactorGroupUCInPacket inPacket = (ContactorGroupUCInPacket) IMOApp.getDataEngine()
-				.getInPacketByCommand(command);
+		ContactorGroupUCInPacket inPacket = (ContactorGroupUCInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		if (inPacket == null) {
 			return;
 		}
 
 		// 本地innerGroupUC
-		innerGroupUC = (Integer) PreferenceManager.get(Globe.SP_FILE,
-				new Object[] { INNER_GROUP_UC, innerGroupUC });
+		innerGroupUC = (Integer) PreferenceManager.get(Globe.SP_FILE, new Object[] {
+				INNER_GROUP_UC, innerGroupUC
+		});
 
 		int curInnerGroupUC = inPacket.getUnContactorGroupListUC();
 
@@ -4024,7 +2763,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 			// /GroupInfo needn't update , get data from local
 			innerGroupIdMap.clear();
 			try {
-				mGlobal.imoStorage.getInnerGroupInfo(innerGroupIdMap);
+				IMOApp.imoStorage.getInnerGroupInfo(innerGroupIdMap);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}// // 添加数据库接口：获得所有的InnerGroupInfo
@@ -4046,21 +2785,25 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 		// /保存数据
 		boolean save2DbResult = save2DB();
 
-		// / When DB save success!
+		// When DB save success!
 		if (save2DbResult) {
 
 			// 1- save innerGroupUC
 			PreferenceManager.save(Globe.SP_FILE, new Object[] {
-					INNER_GROUP_UC, innerGroupUC });
+					INNER_GROUP_UC, innerGroupUC
+			});
 			// 2- save innerContactUC
 			PreferenceManager.save(Globe.SP_FILE, new Object[] {
-					INNER_GROUP_LIST_UC, innerGroupListUC });
+					INNER_GROUP_LIST_UC, innerGroupListUC
+			});
 			// 3- save outerGroupUC
 			PreferenceManager.save(Globe.SP_FILE, new Object[] {
-					OUTER_GROUP_UC, outerGroupUC });
+					OUTER_GROUP_UC, outerGroupUC
+			});
 			// 4- save outerContactUC
 			PreferenceManager.save(Globe.SP_FILE, new Object[] {
-					OUTER_GROUP_LIST_UC, outerGroupListUC });
+					OUTER_GROUP_LIST_UC, outerGroupListUC
+			});
 
 		}
 		return save2DbResult;
@@ -4075,31 +2818,21 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 
 		try {
 			if (innerGroupInfoNeedUpdate) {
-				// Map<Integer,InnerContactorItem> innerGroupIdMap
-				mGlobal.imoStorage.putInnerGroupInfo(innerGroupIdMap);
+				IMOApp.imoStorage.putInnerGroupInfo(innerGroupIdMap);
 			}
 
 			if (innerContactNeedUpdate) {
-				// Map<Integer,ArrayList<Integer>> innerGroupContactMap
-				mGlobal.imoStorage
-						.putInnerContactListInfo(innerGroupContactMap);
+				IMOApp.imoStorage.putInnerContactListInfo(innerGroupContactMap);
 			}
 
 			if (outerGroupInfoNeedUpdate) {
-				// Map<Integer,OuterContactorItem> outerGroupIdMap
-				mGlobal.imoStorage.putOuterGroupInfo(outerGroupIdMap);
+				IMOApp.imoStorage.putOuterGroupInfo(outerGroupIdMap);
 			}
 
 			if (outerContactNeedUpdate) {
-				// Map<Integer,ArrayList<OuterContactItem>> outerGroupContactMap
-				// HashMap<Integer, OuterContactBasicInfo>
-				// outerContactInfoMap///昨天忘了写的
-				// HashMap<Integer, String> outerContactCorpMap ///公司信息
-				mGlobal.imoStorage
-						.putOuterContactListInfo(outerGroupContactMap);
-				mGlobal.imoStorage
-						.putOuterContactBasicInfo(outerContactInfoMap);
-				mGlobal.imoStorage.putOuterCorpInfo(outerContactCorpMap);
+				IMOApp.imoStorage.putOuterContactListInfo(outerGroupContactMap);
+				IMOApp.imoStorage.putOuterContactBasicInfo(outerContactInfoMap);
+				IMOApp.imoStorage.putOuterCorpInfo(outerContactCorpMap);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -4114,9 +2847,8 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void updateGetInnerGroupInfoState() {
 		hasGetInnerGroupInfo = true;
-		// /// send msg to refresh contact
+		// send msg to refresh contact
 		mContactHandler.sendEmptyMessage(TYPE_REFRESH_TREE);
-		// doRequestInnerContactUC();
 	}
 
 	/**
@@ -4124,30 +2856,21 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void updateGetInnerContactIdState() {
 		hasGetInnerContactId = true;
-		// /// send msg to refresh contact
+		// send msg to refresh contact
 		mContactHandler.sendEmptyMessage(TYPE_REFRESH_TREE);
 
-		// /// begin request worksign
-		// curPos_InnerWorkSign = 0;
 		innerContactIdList.clear();
 		for (Integer groupId : innerGroupContactMap.keySet()) {
-			// ///如果group中为空的情况，上面处理过了，这边不可能出现了
+			// 如果group中为空的情况，上面处理过了，这边不可能出现了
 			innerContactIdList.addAll(innerGroupContactMap.get(groupId));
 		}
 
 		// 初始化out_loadinfo_map的状态
 		for (int i = 0; i < innerContactIdList.size(); i++) {
-			outer_loadinfo_map.put(innerContactIdList.get(i),
-					LOAD_STAT.NOT_LOAD);
+			outer_loadinfo_map.put(innerContactIdList.get(i), LOAD_STAT.NOT_LOAD);
 		}
-		// [End]
-
-		// innerContactIdList for worksign
 
 		if (innerContactIdList.size() > 0) {
-			// 请求InnerContactWorkSign
-			// doRequestInnerContactWorkSign(EngineConst.cId,innerContactIdList.get(curPos_InnerWorkSign++));
-
 			// 修改为并发请求
 			do_concurrent_outer_info_req();
 		} else {
@@ -4160,7 +2883,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void updateGetInnerContactWorkSignState() {
 		hasGetInnerContactWorkSign = true;
-		// /// send msg to refresh contact
+		// send msg to refresh contact
 		mContactHandler.sendEmptyMessage(TYPE_REFRESH_TREE);
 	}
 
@@ -4169,7 +2892,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void updateGetOuterGroupInfoState() {
 		hasGetOuterGroupInfo = true;
-		// /// send msg to refresh contact
+		// send msg to refresh contact
 		mContactHandler.sendEmptyMessage(TYPE_REFRESH_TREE);
 		doRequestOuterContactUC();
 	}
@@ -4179,7 +2902,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void updateGetOuterContactIdState() {
 		hasGetOuterContactId = true;
-		// /// send msg to refresh contact
+		// send msg to refresh contact
 		mContactHandler.sendEmptyMessage(TYPE_REFRESH_TREE);
 	}
 
@@ -4188,7 +2911,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void updateGetOuterCropNameState() {
 		hasGetOuterCropName = true;
-		// /// send msg to refresh contact
+		// send msg to refresh contact
 		mContactHandler.sendEmptyMessage(TYPE_REFRESH_TREE);
 	}
 
@@ -4197,7 +2920,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void updateGetOuterContactBasicInfoState() {
 		hasGetOuterContactBasicInfoState = true;
-		// /// send msg to refresh contact
+		// send msg to refresh contact
 		mContactHandler.sendEmptyMessage(TYPE_REFRESH_TREE);
 	}
 
@@ -4206,19 +2929,9 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	 */
 	private void updateGetOuterContactState_State() {
 		hasGetOuterContactState_State = true;
-		// //update global data
-		mGlobal.outerUserStateMap = (HashMap<Integer, Integer>) outerId_State_Map
-				.clone();
-		LogFactory.d("OuterState", "======================================");
-		// for (Integer uid :mGlobal.outerUserStateMap.keySet()) {
-		// LogFactory.d("OuterState", "uid= "+ uid +"  state = " +
-		// mGlobal.outerUserStateMap.get(uid)+"" );
-		// }
-		// /// send msg to refresh contact
+		// update global data
+		mGlobal.outerUserStateMap = (HashMap<Integer, Integer>) outerId_State_Map.clone();
+		// send msg to refresh contact
 		mContactHandler.sendEmptyMessage(TYPE_REFRESH_TREE);
 	}
-
-	// ==================================End=====================================================
-	// ==========================================================================================
-
 }
