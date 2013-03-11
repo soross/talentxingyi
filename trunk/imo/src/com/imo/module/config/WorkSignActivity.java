@@ -23,7 +23,6 @@ import com.imo.network.packages.EditProfileInPacket;
 import com.imo.network.packages.EditProfileOutPacket;
 import com.imo.network.packages.IMOCommand;
 import com.imo.util.DialogFactory;
-import com.imo.util.LogFactory;
 import com.imo.view.LinedEditText;
 
 /**
@@ -31,7 +30,7 @@ import com.imo.view.LinedEditText;
  */
 public class WorkSignActivity extends AbsBaseActivityNetListener {
 
-	private String TAG = "WorkSign";
+	private String TAG = WorkSignActivity.class.getSimpleName();
 
 	private LinedEditText work_sign;
 
@@ -114,7 +113,6 @@ public class WorkSignActivity extends AbsBaseActivityNetListener {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-
 				while (work_sign.getLineCount() < 7) {
 					work_sign.append("\n");
 				}
@@ -150,32 +148,22 @@ public class WorkSignActivity extends AbsBaseActivityNetListener {
 
 	@Override
 	public void refresh(Object param) {
-		// TODO Auto-generated method stub
-
 	}
 
 	private View.OnClickListener listener = new View.OnClickListener() {
-
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-
 			switch (v.getId()) {
-
 				case R.id.btn_left:
 					doCancel();
-
 					break;
 				case R.id.btn_right:
-
 					doUpdateWorkSign();
-
 					break;
-
 				default:
 					break;
 			}
-
 		}
 	};
 
@@ -201,9 +189,7 @@ public class WorkSignActivity extends AbsBaseActivityNetListener {
 	}
 
 	private Handler mHandlerUI = new Handler() {
-
 		public void handleMessage(android.os.Message msg) {
-			// update db data
 			try {
 				dialog.dismiss();
 				Globe.myself.setSign(curWorkSign);
@@ -217,7 +203,6 @@ public class WorkSignActivity extends AbsBaseActivityNetListener {
 	};
 
 	private void doUpdateWorkSign() {
-
 		String worksign = work_sign.getText().toString().trim();
 		if (worksign.length() > 0) {
 			isEmpty = false;
@@ -233,30 +218,19 @@ public class WorkSignActivity extends AbsBaseActivityNetListener {
 		} else {
 			Toast.makeText(mContext, getResources().getString(R.string.net_connected_failed), Toast.LENGTH_SHORT).show();
 		}
-
 	}
 
-	/**
-	 * 请求工作签名
-	 */
+	/** 请求工作签名 */
 	private void doRequestUpdateWorkSign(String sign) {
-
 		this.curWorkSign = sign;
-
-		LogFactory.d(TAG, "doRequestUpdateWorkSign   curWorkSign= " + curWorkSign + "\t length = " + curWorkSign.length());
-
 		int mask = 1;
 		mask = (mask << 4);
-
 		ByteBuffer bufferBody = EditProfileOutPacket.GenerateEdifProfileMsgBody(mask, sign);
-
 		EditProfileOutPacket outPacket = new EditProfileOutPacket(bufferBody, IMOCommand.IMO_EDIT_PROFILE, EngineConst.cId, EngineConst.uId);
-
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 	}
 
 	private void doCancel() {
-
 		finish();
 	}
 
@@ -278,18 +252,16 @@ public class WorkSignActivity extends AbsBaseActivityNetListener {
 	public void NotifyPacketArrived(String aConnectionId, short command) {
 		super.NotifyPacketArrived(aConnectionId, command);
 
-		if (EngineConst.IMO_CONNECTION_ID.equals(aConnectionId))
-
+		if (EngineConst.IMO_CONNECTION_ID.equals(aConnectionId)) {
 			switch (command) {
-
 				case IMOCommand.IMO_EDIT_PROFILE: {
 					responseUpdateWorkSign(command);
 					break;
 				}
-
 				default:
 					break;
 			}
+		}
 	}
 
 	private boolean isEmpty = false;
@@ -300,10 +272,8 @@ public class WorkSignActivity extends AbsBaseActivityNetListener {
 	 * @param command
 	 */
 	private void responseUpdateWorkSign(short command) {
-		LogFactory.d(TAG, "------------responseUpdateWorkSing----->");
 		EditProfileInPacket inPacket = (EditProfileInPacket) IMOApp.getDataEngine().getInPacketByCommand(command);
 		short commandRet = inPacket.getRet();
-		LogFactory.d(TAG, "commandRet = " + commandRet);
 		if (commandRet == 0) {
 			if (isEmpty) {
 				mHandlerUI.sendEmptyMessage(0);
@@ -315,13 +285,10 @@ public class WorkSignActivity extends AbsBaseActivityNetListener {
 
 	@Override
 	public void NotifyHttpPacketArrived(String aConnectionId, ByteBuffer aBuffer) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void NotifyPacketProgress(String aConnectionId, short command, short aTotalLen, short aSendedLen) {
-		// TODO Auto-generated method stub
 	}
 
 }

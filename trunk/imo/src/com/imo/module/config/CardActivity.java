@@ -41,7 +41,6 @@ public class CardActivity extends AbsBaseActivityNetListener implements OnClickL
 
 	private static final int PRIVACY_FLAG_PUBLIC = 0;// 名片对所有人公开
 	private static final int PRIVACY_FLAG_INNER_PUBLIC = 1;// 名片对内部联系人公开
-	// private static final int PRIVACY_FLAG_PRIVATE = 2;// 名片不公开
 
 	private ImageView iv_userFace;
 
@@ -58,8 +57,6 @@ public class CardActivity extends AbsBaseActivityNetListener implements OnClickL
 	private int aboutCid;
 
 	private int aboutUid;
-
-	// private boolean isBoy = true;
 
 	private String userName;
 
@@ -80,7 +77,7 @@ public class CardActivity extends AbsBaseActivityNetListener implements OnClickL
 	// "mengxin@imoffice.com"
 	// };
 
-	private String TAG = "CardActivity";
+	private String TAG = CardActivity.class.getSimpleName();
 
 	public static void launch(Context c, Bundle bundle) {
 		Intent intent = new Intent(c, CardActivity.class);
@@ -133,16 +130,14 @@ public class CardActivity extends AbsBaseActivityNetListener implements OnClickL
 		if (bundle != null) {
 			aboutCid = bundle.getInt("cid");
 			aboutUid = bundle.getInt("uid");
-			// isBoy = bundle.getBoolean("sex");
 			userName = bundle.getString("name");
 
 			if (userName != null) {
 				tv_userName.setText(userName);
 			}
 
-			if (aboutUid != EngineConst.uId) {
+			if (aboutUid != EngineConst.uId) {// 不是登录的uid则请求对应数据
 				getEmployeeInfo(aboutCid, aboutUid);
-				// 开始请求公司资料
 				getCorpInfo(aboutCid);
 				btn_begin_dialogue.setVisibility(View.VISIBLE);
 			} else {
@@ -153,12 +148,12 @@ public class CardActivity extends AbsBaseActivityNetListener implements OnClickL
 			btn_begin_dialogue.setVisibility(View.GONE);
 			initLoginUserInfo();
 		}
-
 	}
 
 	private void getEmployeeInfo(int cid, int uid) {
-
+		LogFactory.d(TAG, "Send EmployeeInfo , cid = " + cid + ", uid = " + uid);
 		EmployeeProfileItem employeeProfileItem = Globe.employeeProfileItems.get(uid);
+		LogFactory.d(TAG, "EmployeeProfileItem is null ? " + (employeeProfileItem == null));
 		if (employeeProfileItem != null) {
 			setEmployeeProfile(employeeProfileItem);
 			tv_userPosition.setText(employeeProfileItem.getPos());
@@ -179,6 +174,7 @@ public class CardActivity extends AbsBaseActivityNetListener implements OnClickL
 
 	private void getCorpInfo(int cid) {
 		CorpMaskItem corpMaskItem = Globe.corpMaskItems.get(cid);
+		LogFactory.d(TAG, "CorpMaskItem is null ? " + (corpMaskItem == null));
 		if (corpMaskItem != null) {
 			tv_content[0] = corpMaskItem.getCn_name() != null ? corpMaskItem.getCn_name() : "";// 公司名称
 			tv_content[1] = corpMaskItem.getAddr() != null ? corpMaskItem.getAddr() : "";// 地址
@@ -199,13 +195,14 @@ public class CardActivity extends AbsBaseActivityNetListener implements OnClickL
 	}
 
 	private void initLoginUserInfo() {
-		LogFactory.d("card-id", "id = " + aboutUid + "  cid=" + aboutCid);
 		loadHeadPic();
 
 		EmployeeProfileItem loginUserInfo = Globe.myself;
 		CorpMaskItem corp = Globe.corp;
 
 		if (loginUserInfo != null) {
+			LogFactory.d(TAG, "UsrName:" + loginUserInfo.getName() + ",UsrPosition:" + loginUserInfo.getPos() + ",UsrSign:" + loginUserInfo.getSign());
+
 			tv_userName.setText(loginUserInfo.getName() != null ? loginUserInfo.getName() : "");
 			tv_userPosition.setText(loginUserInfo.getPos() != null ? loginUserInfo.getPos() : "");
 			tv_worksign_content.setText("签名：" + (loginUserInfo.getSign() != null ? loginUserInfo.getSign() : ""));
@@ -265,12 +262,9 @@ public class CardActivity extends AbsBaseActivityNetListener implements OnClickL
 	}
 
 	private void setEmployeeProfile(EmployeeProfileItem employeeProfileItem) {
-		int privacy_flag = employeeProfileItem.getPrivacy_flag();// 名片显示权限：0
-		// 全部公开；
-		// 1
-		// 仅对内部联系人公开；2
-		// 全部隐藏
-		System.out.println(privacy_flag);
+		// 名片显示权限：0-全部公开；1-仅对内部联系人公开；2-全部隐藏
+		int privacy_flag = employeeProfileItem.getPrivacy_flag();
+		LogFactory.d(TAG, "Card_Show_Flag = " + privacy_flag);
 		if (isShowCard(privacy_flag)) {
 			tv_content[3] = employeeProfileItem.getMobile() != null ? Functions.formatPhone(employeeProfileItem.getMobile()) : "";// 手机
 			tv_content[6] = employeeProfileItem.getEmail() != null ? employeeProfileItem.getEmail() : "";// E-mail
