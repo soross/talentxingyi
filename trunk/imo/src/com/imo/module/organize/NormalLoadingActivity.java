@@ -369,9 +369,6 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	// dept_loadinfo_map 标识当前所有deptid的uids成员列表的获取情况，有未载入，载入中，已载入3个状态
 	private Map<Integer, Integer> dept_loaduids_map = new HashMap<Integer, Integer>();
 
-	// 缓存一个部门的uids，nextsibling，员工信息
-	private Map<Integer, int[]> dept_uids_map = new HashMap<Integer, int[]>();
-	private Map<Integer, int[]> dept_nextSibling_map = new HashMap<Integer, int[]>();
 	private Map<Integer, EmployeeInfoItem[]> dept_EmployeeInfo_map = new HashMap<Integer, EmployeeInfoItem[]>();
 
 	// 存储dept uc值
@@ -439,7 +436,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 				doRequestAllEmployeeUid(this.deptid[i]);
 				dept_loaduids_map.put(this.deptid[i], LOAD_STAT.LOADING);
 				concurrent_deptuids_loading_cnt++;
-			} 
+			}
 		}
 
 		return concurrent_deptuids_loading_cnt - init_cnt;
@@ -495,7 +492,7 @@ public class NormalLoadingActivity extends AbsBaseActivityNetListener {
 	private int check_dept_info_req_finish() {
 		for (int i = 0; i < this.deptid.length && concurrent_deptinfo_loading_cnt < concurrent_deptinfo_loadreq_limit; i++) {
 			if (dept_loadinfo_map.get(this.deptid[i]) == LOAD_STAT.NOT_LOAD || dept_loadinfo_map.get(this.deptid[i]) == LOAD_STAT.LOADING) {
-return 0;
+				return 0;
 			}
 		}
 
@@ -543,7 +540,7 @@ return 0;
 		}
 		return 0;
 	}
-	
+
 	@Override
 	public boolean CanAcceptHttpPacket() {
 		return false;
@@ -567,18 +564,18 @@ return 0;
 
 			switch (command) {
 
-			// 1-获得部门UC
+				// 1-获得部门UC
 				case IMOCommand.IMO_GET_DEPT_UC: {
 					responseDeptUC(command);
 					break;
 				}
-				// 2-获得部门Info
+					// 2-获得部门Info
 				case IMOCommand.IMO_GET_DEPT_INFO: {
 					responseDeptInfo(command);
 					break;
 				}
 
-				// 3-获取所有的员工UID
+					// 3-获取所有的员工UID
 				case IMOCommand.IMO_GET_ALL_EMPLOYEE_UID:
 					responseAllEmployeeUid(command);
 					break;
@@ -799,7 +796,7 @@ return 0;
 	private String formateFileSize(long size) {
 		return Formatter.formatFileSize(NormalLoadingActivity.this, size);
 	}
-	
+
 	/**
 	 * 1-发送DeptUC请求包
 	 */
@@ -1283,8 +1280,6 @@ return 0;
 		}
 	}
 
-	
-
 	// ===============部门员工Info表对应 字段==============================endflag
 
 	/**
@@ -1397,7 +1392,7 @@ return 0;
 		}
 		return;
 	}
-	
+
 	/**
 	 * 用户状态 Map对象,存放用户的在线状态。
 	 */
