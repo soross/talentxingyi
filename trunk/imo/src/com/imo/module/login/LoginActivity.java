@@ -74,20 +74,20 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 	/**
 	 * 登录信息保存key
 	 */
-	public static String LOGIN_NAME = "login_name";
-	public static String LOGIN_PWD = "login_pwd";
-	public static String LOGIN_REMBERPWD = "login_remberPwd";
-	public static String LOGIN_AUTOLOGIN = "login_antoLogin";
-	public static String LOGIN_KEEPONLINE = "login_keepOnline";
-	public static String REAL_NAME = "real_name";
-	public static String CORP_SHORT_NAME = "corp_short_name";
-	public static String INNER_GROUP_UC = "innergroupuc";
-	public static String INNER_GROUP_LIST_UC = "innnergrouplistuc";
+	public static final String LOGIN_NAME = "login_name";
+	public static final String LOGIN_PWD = "login_pwd";
+	public static final String LOGIN_REMBERPWD = "login_remberPwd";
+	public static final String LOGIN_AUTOLOGIN = "login_antoLogin";
+	public static final String LOGIN_KEEPONLINE = "login_keepOnline";
+	public static final String REAL_NAME = "real_name";
+	public static final String CORP_SHORT_NAME = "corp_short_name";
+	public static final String INNER_GROUP_UC = "innergroupuc";
+	public static final String INNER_GROUP_LIST_UC = "innnergrouplistuc";
 	private final int requestOk = 2;
 
 	private boolean currentUserIsFirstLogin = false;
 
-	private String TAG = "LoginActivity";
+	private String TAG = LoginActivity.class.getSimpleName();
 	private final int aUntransID = 1;
 
 	private int requestCount = 0;
@@ -112,11 +112,9 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 	private Dialog dialog;
 
 	private DialogInterface.OnKeyListener dialogKeyListener;
-	/**
-	 * 此字段作用是控制界面是否接收数据，并完成跳转
-	 */
+	/** 此字段作用是控制界面是否接收数据，并完成跳转 */
 	private boolean isAcceptData = true;
-	/* 启动mNIOThread的线程对象 */
+	/** 启动mNIOThread的线程对象 */
 	Thread thread = new Thread(mNIOThread);
 
 	private String[] nameAndDomain;
@@ -294,14 +292,12 @@ public class LoginActivity extends AbsBaseActivityNetListener implements OnCheck
 
 		if (null != dialog) {
 			dialog.setOnDismissListener(new OnDismissListener() {
-
 				@Override
 				public void onDismiss(DialogInterface dialog) {
 					updateViewState(btnLogin, true);
 				}
 			});
 		}
-
 	}
 
 	/**
