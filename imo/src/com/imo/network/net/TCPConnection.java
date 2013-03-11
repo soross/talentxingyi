@@ -189,6 +189,7 @@ public class TCPConnection extends ConnectionImp {
 		// 接收数据
 		int oldPos = receiveBuf.position();
 
+		// 以下for循环只是用来填充receivebuffer，填充完就break掉
 		for (int r = readBuffer(); r > 0; r = readBuffer()) {
 			int bufferLength = receiveBuf.position() - oldPos;
 			if (bufferLength < 2) {

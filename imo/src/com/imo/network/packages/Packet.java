@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Random;
 
 import com.imo.network.net.EngineConst;
+import com.imo.util.LogFactory;
 
 public abstract class Packet {
 
@@ -68,6 +69,8 @@ public abstract class Packet {
 		EngineConst.version = buf.get();
 		cid = buf.getInt();
 		uid = buf.getInt();
+
+		LogFactory.d(Packet.class.getSimpleName(), "dataLen = " + dataLen + ", command = " + command + ", header_seq = " + header_seq + ", EngineConst.version = " + EngineConst.version + ", cid = " + cid + ", uid = " + uid);
 	}
 
 	public int get_header_seq() {

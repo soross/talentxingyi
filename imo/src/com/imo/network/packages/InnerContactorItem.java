@@ -3,11 +3,13 @@ package com.imo.network.packages;
 import java.util.ArrayList;
 
 public class InnerContactorItem {
-	
+
+	/** ×éID */
 	private int groupID;
+	/** ×éÃû */
 	private String groupName;
 	private ArrayList<Integer> contactorID = new ArrayList<Integer>();
-	
+
 	public int getGroupID() {
 		return groupID;
 	}
@@ -19,9 +21,8 @@ public class InnerContactorItem {
 	public ArrayList<Integer> getContactorID() {
 		return contactorID;
 	}
-	
-	public InnerContactorItem(int aGroupID,String aGroupName)
-	{
+
+	public InnerContactorItem(int aGroupID, String aGroupName) {
 		this.groupID = aGroupID;
 		this.groupName = aGroupName;
 	}

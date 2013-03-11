@@ -4,7 +4,12 @@ import java.nio.ByteBuffer;
 
 import android.util.Log;
 
-public class GetEmployeeProfileInPacket extends CommonInPacket{
+// unTrandsID int
+// ret short
+// cid int
+// uid int
+// mask int(根据mask再对应解析)
+public class GetEmployeeProfileInPacket extends CommonInPacket {
 
 	public int getUnTrandsID() {
 		return unTrandsID;
@@ -25,7 +30,7 @@ public class GetEmployeeProfileInPacket extends CommonInPacket{
 	public int getMask() {
 		return mask;
 	}
-	
+
 	public EmployeeProfileItem getEmployeeItem() {
 		return employeeItem;
 	}
@@ -40,18 +45,18 @@ public class GetEmployeeProfileInPacket extends CommonInPacket{
 	public GetEmployeeProfileInPacket(ByteBuffer aData, int aBodyLen) {
 		super(aData, aBodyLen);
 		// TODO Auto-generated constructor stub
-		
+
 		unTrandsID = body.getInt();
 		ret = body.getShort();
-		
+
 		if (ret != 0)
 			return;
-		
+
 		cid = body.getInt();
 		uid = body.getInt();
-		
-		Log.e("GetEmployeeProfileInPacket", "cid :"+cid+", uid :"+uid);
-		
+
+		Log.d(GetEmployeeProfileInPacket.class.getSimpleName(), "cid :" + cid + ", uid :" + uid);
+
 		mask = body.getInt();
 		employeeItem = new EmployeeProfileItem(mask, body);
 	}
