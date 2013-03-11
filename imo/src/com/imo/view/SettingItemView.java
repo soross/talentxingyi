@@ -17,15 +17,12 @@ import com.imo.R;
 
 /**
  * SettingItemView
- * 
- * @author CaixiaoLong
- *
  */
 public class SettingItemView extends LinearLayout {
 
-	private ImageView iv_left; 
+	private ImageView iv_left;
 
-	private TextView tv_name , tv_center_name;
+	private TextView tv_name, tv_center_name;
 
 	private ImageView iv_right;
 
@@ -42,15 +39,13 @@ public class SettingItemView extends LinearLayout {
 		init(context, attrs);
 	}
 
-
-
-	public void setData(int leftImgResId,String centerName, int rightImgResId){
+	public void setData(int leftImgResId, String centerName, int rightImgResId) {
 		iv_left.setImageResource(leftImgResId);
 		tv_name.setText(centerName);
 		iv_right.setImageResource(rightImgResId);
 	}
 
-	public void setData(int leftImgResId,String centerName){
+	public void setData(int leftImgResId, String centerName) {
 		iv_left.setImageResource(leftImgResId);
 		tv_name.setText(centerName);
 	}
@@ -60,7 +55,7 @@ public class SettingItemView extends LinearLayout {
 	 * 
 	 * @return
 	 */
-	public boolean  isChecked(){
+	public boolean isChecked() {
 		return checkBox_right.isChecked();
 	}
 
@@ -69,16 +64,17 @@ public class SettingItemView extends LinearLayout {
 	 * 
 	 * @param isChecked
 	 */
-	public void initCheckedState(boolean isChecked){
+	public void initCheckedState(boolean isChecked) {
 		checkBox_right.setChecked(isChecked);
 	}
 
 	/**
 	 * 不显示左边的图片
+	 * 
 	 * @param centerName
 	 * @param rightImgResId
 	 */
-	public void setData(String centerName, int rightImgResId){
+	public void setData(String centerName, int rightImgResId) {
 		iv_left.setVisibility(View.GONE);
 		tv_name.setText(centerName);
 		iv_right.setImageResource(rightImgResId);
@@ -86,44 +82,30 @@ public class SettingItemView extends LinearLayout {
 
 	/**
 	 * 控制设置日期
+	 * 
 	 * @param txt
 	 * @param position
 	 */
-	public void updateText(String txt,int position){
+	public void updateText(String txt, int position) {
 
 		String[] content = null;
-		if(tv_name.getText().toString().indexOf("-")!=-1){
+		if (tv_name.getText().toString().indexOf("-") != -1) {
 			content = tv_name.getText().toString().split("-");
 			if (position == 0) {
 				content[0] = txt;
-			}else if (position ==1) {
+			} else if (position == 1) {
 				content[1] = txt;
 			}
-			tv_name.setText(content[0]+"-"+content[1]);
+			tv_name.setText(content[0] + "-" + content[1]);
 		}
-
 	}
-
-
-	//	public void setOnClickListener(final OnSettingItemClickListener listener){
-	////		iv_right
-	//		this.setOnTouchListener(new View.OnTouchListener() {
-	//			
-	//			@Override
-	//			public boolean onTouch(View v, MotionEvent event) {
-	//				if (event.getAction() == MotionEvent.ACTION_UP) {
-	//					listener.onSettingItemClick(SettingItemView.this);
-	//				}
-	//				return true;
-	//			}
-	//		});
-	//	}
 
 	/**
 	 * 添加控件的点击事件
+	 * 
 	 * @param listener
 	 */
-	public void setOnClickListener(final OnSettingItemClickListener listener){
+	public void setOnClickListener(final OnSettingItemClickListener listener) {
 		this.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -141,16 +123,13 @@ public class SettingItemView extends LinearLayout {
 		});
 	}
 
-
-
-
 	private void init(Context context, AttributeSet attrs) {
 
 		getViewByInflater(context);
 
 		if (attrs != null) {
 
-			TypedArray typeArray = context.obtainStyledAttributes(attrs,R.styleable.SettingItemView);
+			TypedArray typeArray = context.obtainStyledAttributes(attrs, R.styleable.SettingItemView);
 
 			Drawable drawableLeft = typeArray.getDrawable(R.styleable.SettingItemView_leftsrc);
 
@@ -199,16 +178,14 @@ public class SettingItemView extends LinearLayout {
 		this.setFocusableInTouchMode(false);
 	}
 
-
-
 	/**
 	 * 修改ItemView的背景
+	 * 
 	 * @param resid
 	 */
 	public void setBackground(int resid) {
 		mView.setBackgroundResource(resid);
 	}
-
 
 	private void getViewByInflater(Context mContext) {
 
@@ -225,9 +202,7 @@ public class SettingItemView extends LinearLayout {
 		checkBox_right = (CheckBox) findViewById(R.id.checkbox_right);
 	}
 
-
-
-	public interface OnSettingItemClickListener{
+	public interface OnSettingItemClickListener {
 
 		void onSettingItemClick(View v);
 	}

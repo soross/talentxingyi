@@ -56,7 +56,7 @@ import com.imo.view.SearchBar.OnSearchListener;
  */
 public class ContactActivity extends AbsBaseActivityNetListener {
 
-	private String TAG = "xxContactActivity";
+	private String TAG = ContactActivity.class.getSimpleName();
 
 	// 联系人适配器
 	private OrganizeAdapter mContactAdapter;
@@ -77,8 +77,6 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 
 	/** 第一次构建树 */
 	private final int TYPE_FIRST_BUILD_TREE = 0;
-	/** 更新列表的显示 */
-	// private final int TYPE_REFRESH_TREE = 1;
 	/** 更新服务器Pull过来的状态 */
 	public static final int TYPE_UPDATE_STATE = 2;
 
@@ -96,9 +94,7 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 	}
 
 	public Handler mContactHandler = new Handler() {
-
 		public void handleMessage(android.os.Message msg) {
-
 			switch (msg.what) {
 				case TYPE_FIRST_BUILD_TREE:
 					getContactTree();
@@ -109,7 +105,6 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 				default:
 					break;
 			}
-
 		};
 	};
 
@@ -129,7 +124,6 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 		ArrayList<EmployeeInfoItem> employeeInfoItemList = null;
 
 		for (Integer groupId : mGlobal.innerGroupIdMap.keySet()) {
-			// / init group contactInfoList
 			employeeInfoItemList = new ArrayList<EmployeeInfoItem>();
 
 			ArrayList<Integer> contactIdList = mGlobal.innerGroupContactMap.get(groupId);
@@ -138,10 +132,8 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 				for (int i = 0; i < contactIdList.size(); i++) {
 					employeeInfoItemList.add(RecentContactActivity.getActivity().getEmployeeInfoByUid(contactIdList.get(i)));
 				}
-				// / 构建内部联系人组和对应的 联系人列表的映射
+				// 构建内部联系人组和对应的 联系人列表的映射
 				mInnerGroupContactMap.put(groupId, employeeInfoItemList);
-			} else {
-				LogFactory.d(TAG, " groupId = " + groupId + " is empty...");
 			}
 		}
 	}
@@ -168,7 +160,6 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 	private void sortInnerContactByState(ArrayList<Node> nodeList) {
 		if (nodeList != null) {
 			Collections.sort(nodeList, new Comparator<Node>() {
-
 				@Override
 				public int compare(Node item1, Node item2) {
 					// TODO Auto-generated method stub
@@ -185,13 +176,10 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 
 					if (IMOApp.getApp().userStateMap.get(item1.getId()) != null) {
 						state1 = (IMOApp.getApp().userStateMap.get(item1.getId())) & 0x000000FF;
-					} else {
-						LogFactory.d(TAG, "inner contact state is null!   cid = " + item1.getCid() + " uid = " + item1.getId());
 					}
+
 					if (IMOApp.getApp().userStateMap.get(item2.getId()) != null) {
 						state2 = (IMOApp.getApp().userStateMap.get(item2.getId())) & 0x000000FF;
-					} else {
-						LogFactory.d(TAG, "inner contact state is null!   cid = " + item2.getCid() + " uid = " + item2.getId());
 					}
 
 					if (state1 == 0)
@@ -221,7 +209,6 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 				}
 			});
 
-			LogFactory.d(TAG, "......................groupNodeList size = " + groupNodeList.size());
 			Collections.sort(groupNodeList, new Comparator<Node>() {
 
 				@Override
@@ -230,13 +217,9 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 					int state2 = Integer.MAX_VALUE;
 					if (IMOApp.getApp().outerUserStateMap.get(item1.getId()) != null) {
 						state1 = IMOApp.getApp().outerUserStateMap.get(item1.getId()) & 0x000000FF;
-					} else {
-						LogFactory.d(TAG, "outer contact state is null!   cid = " + item1.getCid() + " uid = " + item1.getId());
 					}
 					if (IMOApp.getApp().outerUserStateMap.get(item2.getId()) != null) {
 						state2 = IMOApp.getApp().outerUserStateMap.get(item2.getId()) & 0x000000FF;
-					} else {
-						LogFactory.d(TAG, "inner contact state is null!   cid = " + item2.getCid() + " uid = " + item2.getId());
 					}
 
 					if (state1 == 0)
@@ -275,8 +258,6 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 
 	@Override
 	protected void installViews() {
-		LogFactory.d(TAG, "ContactActivity create");
-
 		setContentView(R.layout.contact_activity);
 
 		mActivity = this;
@@ -284,13 +265,10 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 		contactView = findViewById(R.id.organize);
 
 		mTitleBar.initContactTitlebar();
-
 		mTitleBar.setOrganizeTitleData(Globe.myself == null ? null : Globe.myself.getName(), Globe.myself == null ? null : Globe.myself.getSign());
 
 		pop_view = findViewById(R.id.pop_view);
-
 		pop_view.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				pop_view.setVisibility(View.GONE);
@@ -307,35 +285,26 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 		mContactListView = (ListView) findViewById(R.id.innerListView);
 
 		mSearchRestltListView = (ListView) findViewById(R.id.searchResultListView);
-
 		mSearchResultAdapter = new SearchResultAdapter(mContext);
 
 		mChangeStatePop = new ChangeStatePop(LayoutInflater.from(mContext).inflate(R.layout.changestate_dialog, null, true));
-
 	}
 
 	protected boolean needObserver() {
 		return false;
 	}
 
-	/**
-	 * 更新头像
-	 */
+	/** 更新头像 */
 	private void updateFace(boolean networkIsConnected) {
 		mTitleBar.updateStateIcon(networkIsConnected);
-
 		if (networkIsConnected) {
-
 			if (Globe.bm_head != null) {
-				LogFactory.d(TAG, "bm_head not null");
 				mTitleBar.setFaceBitmap(Globe.bm_head);
 			} else {
-				LogFactory.d("xxx123", "Globe.myself==null ?" + (Globe.myself == null));
 				mTitleBar.setFaceDefault(mThisUidIsBoy(EngineConst.uId));
 			}
-
 		} else {
-			// / 头像跳灰色
+			// 头像跳灰色
 			if (Globe.bm_head != null) {
 				ImageUtil.setFaceImg(mTitleBar.getFaceView(), Globe.bm_head, 0, -1);
 			} else {
@@ -344,13 +313,9 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 		}
 	}
 
-	/**
-	 * titleBar中的头像更新Handler
-	 */
+	/** titleBar中的头像更新Handler */
 	public Handler titleBarHandler = new Handler() {
-
 		public void handleMessage(android.os.Message msg) {
-
 			updateFace(EngineConst.isNetworkValid && EngineConst.isReloginSuccess);
 		}
 	};
@@ -537,9 +502,7 @@ public class ContactActivity extends AbsBaseActivityNetListener {
 	 * 更新显示List的状态
 	 */
 	private void update2State(boolean state) {
-
 		mSearchBar.updateCursorState(state);
-		// state = !state;
 		if (!state) {
 			contactView.setVisibility(View.VISIBLE);
 			mSearchRestltListView.setVisibility(View.GONE);
