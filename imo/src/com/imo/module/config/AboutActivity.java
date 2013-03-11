@@ -41,9 +41,11 @@ public class AboutActivity extends AbsBaseActivityNetListener implements OnClick
 
 	@Override
 	protected void registerEvents() {
+		// (v1.5 Beta)
 		tv_mobile_version_v.setText("(v" + getVersionName() + " Beta)");
 		String versionInfo = getResources().getString(R.string.version_info);
 
+		// °æ±¾ v1.5(Build 2017)
 		versionInfo += (" v" + getVersionName()) + "(Build " + (getVersionCode()) + ")";
 		tv_version_info.setText(versionInfo);
 	}
@@ -59,7 +61,6 @@ public class AboutActivity extends AbsBaseActivityNetListener implements OnClick
 	 * @return
 	 */
 	private String getVersionName() {
-
 		String version = "1.0";
 		PackageManager packageManager = getPackageManager();
 		PackageInfo packInfo;
