@@ -330,23 +330,27 @@ public class DataEngine {
 		// heartbeatInPac.setCommand(IMOCommand.IMO_HEART_BEAT);
 		// return heartbeatInPac;
 		// case IMOCommand.IMO_FORCE_EXIT:
-		// ForceLogoutInPacket forcelogoutInPac = new ForceLogoutInPacket(buf,
+		// ForceLogoutInPacket forcelogoutInPac = new
+		// ForceLogoutInPacket(buf,
 		// length);
 		// forcelogoutInPac.setCommand(IMOCommand.IMO_FORCE_EXIT);
 		// return forcelogoutInPac;
 		// case IMOCommand.IMO_GET_CORP_INFO:
-		// GetCorpInfoInPacket corpinfoInPac = new GetCorpInfoInPacket(buf,
+		// GetCorpInfoInPacket corpinfoInPac = new
+		// GetCorpInfoInPacket(buf,
 		// length);
 		// corpinfoInPac.setCommand(IMOCommand.IMO_GET_CORP_INFO);
 		// removePacketFromTimeoutQueue(corpinfoInPac.get_header_seq());
 		// return corpinfoInPac;
 		// case IMOCommand.IMO_GET_DEPT_UC:
-		// GetDeptUCInPacket deptucInPac = new GetDeptUCInPacket(buf, length);
+		// GetDeptUCInPacket deptucInPac = new GetDeptUCInPacket(buf,
+		// length);
 		// deptucInPac.setCommand(IMOCommand.IMO_GET_DEPT_UC);
 		// removePacketFromTimeoutQueue(deptucInPac.get_header_seq());
 		// return deptucInPac;
 		// case IMOCommand.IMO_GET_DEPT_INFO:
-		// GetDeptInfoInPacket deptinfoInPac = new GetDeptInfoInPacket(buf,
+		// GetDeptInfoInPacket deptinfoInPac = new
+		// GetDeptInfoInPacket(buf,
 		// length);
 		// deptinfoInPac.setCommand(IMOCommand.IMO_GET_DEPT_INFO);
 		// removePacketFromTimeoutQueue(deptinfoInPac.get_header_seq());
@@ -370,18 +374,21 @@ public class DataEngine {
 		// removePacketFromTimeoutQueue(employeesStatusInPac.get_header_seq());
 		// return employeesStatusInPac;
 		// case IMOCommand.IMO_GET_RELOGIN:
-		// ReloginInPacket reloginInPac = new ReloginInPacket(buf, length);
+		// ReloginInPacket reloginInPac = new ReloginInPacket(buf,
+		// length);
 		// reloginInPac.setCommand(IMOCommand.IMO_GET_RELOGIN);
 		//
 		// removePacketFromTimeoutQueue(reloginInPac.get_header_seq());
 		// return reloginInPac;
 		// case IMOCommand.IMO_SEND_MESSAGE:
-		// SendMsgInPacket sendmsgInPac = new SendMsgInPacket(buf, length);
+		// SendMsgInPacket sendmsgInPac = new SendMsgInPacket(buf,
+		// length);
 		// sendmsgInPac.setCommand(IMOCommand.IMO_SEND_MESSAGE);
 		// removePacketFromTimeoutQueue(sendmsgInPac.get_header_seq());
 		// return sendmsgInPac;
 		// case IMOCommand.IMO_UPDATE_STATUS:
-		// CommonInPacket commonmsgInPac = new CommonInPacket(buf, length);
+		// CommonInPacket commonmsgInPac = new CommonInPacket(buf,
+		// length);
 		// commonmsgInPac.setCommand(IMOCommand.IMO_UPDATE_STATUS);
 		// return commonmsgInPac;
 		// case IMOCommand.IMO_GET_OFFLINE_MSG:
@@ -401,8 +408,10 @@ public class DataEngine {
 		// UserStatusChangeInPacket(buf, length);
 		// statusChangeInPac.setCommand(IMOCommand.IMO_UPDATE_USER_STATUS);
 		// LogFactory.e("user_status changed :", "cid:" +
-		// statusChangeInPac.getCid() + ",uid :" + statusChangeInPac.getUid() +
-		// ",status :" + Integer.toHexString(statusChangeInPac.getStatus()));
+		// statusChangeInPac.getCid() + ",uid :" +
+		// statusChangeInPac.getUid() +
+		// ",status :" +
+		// Integer.toHexString(statusChangeInPac.getStatus()));
 		// removePacketFromTimeoutQueue(statusChangeInPac.get_header_seq());
 		// // [接到状态改变后发送ACK包]
 		// if (statusChangeInPac.getServer_msg_id() != 0) {
@@ -415,7 +424,8 @@ public class DataEngine {
 		// }
 		// return statusChangeInPac;
 		// case IMOCommand.IMO_EDIT_PROFILE:
-		// EditProfileInPacket editProfileInPac = new EditProfileInPacket(buf,
+		// EditProfileInPacket editProfileInPac = new
+		// EditProfileInPacket(buf,
 		// length);
 		// editProfileInPac.setCommand(IMOCommand.IMO_EDIT_PROFILE);
 		// removePacketFromTimeoutQueue(editProfileInPac.get_header_seq());
@@ -449,7 +459,8 @@ public class DataEngine {
 		// return groupUCInPac;
 		// case IMOCommand.IMO_INNER_CONTACTOR_GROUP:
 		// case IMOCommand.IMO_OUTER_CONTACTOR_GROUP:
-		// ContactorGroupInPacket groupInPac = new ContactorGroupInPacket(buf,
+		// ContactorGroupInPacket groupInPac = new
+		// ContactorGroupInPacket(buf,
 		// length);
 		// groupInPac.setCommand(commandRet);
 		// removePacketFromTimeoutQueue(groupInPac.get_header_seq());
@@ -473,7 +484,8 @@ public class DataEngine {
 		// removePacketFromTimeoutQueue(outerbasicinfoInPac.get_header_seq());
 		// return outerbasicinfoInPac;
 		// case IMOCommand.IMO_UPDATE_VERSION:
-		// UpdateVersionInPacket updateInPac = new UpdateVersionInPacket(buf,
+		// UpdateVersionInPacket updateInPac = new
+		// UpdateVersionInPacket(buf,
 		// length);
 		// updateInPac.setCommand(IMOCommand.IMO_UPDATE_VERSION);
 		// return updateInPac;
@@ -483,7 +495,8 @@ public class DataEngine {
 		// serverPromptInPac.setCommand(IMOCommand.IMO_SERVER_PROMPT);
 		// return serverPromptInPac;
 		// case IMOCommand.IMO_LOGIN_QGROUP:
-		// LoginQGroupInPacket loginGroupInPacket = new LoginQGroupInPacket(buf,
+		// LoginQGroupInPacket loginGroupInPacket = new
+		// LoginQGroupInPacket(buf,
 		// length);
 		// loginGroupInPacket.setCommand(IMOCommand.IMO_LOGIN_QGROUP);
 		// return loginGroupInPacket;
@@ -503,17 +516,20 @@ public class DataEngine {
 		// getQGroupUserListInPacket.setCommand(IMOCommand.IMO_GET_QGROUP_USER_LIST);
 		// return getQGroupUserListInPacket;
 		// case IMOCommand.IMO_GET_USER_NGROUP_LIST_UC:
-		// GetUserNgGroupListUcInPacket getUserNgGroupListUcInPacket = new
+		// GetUserNgGroupListUcInPacket getUserNgGroupListUcInPacket =
+		// new
 		// GetUserNgGroupListUcInPacket(buf, length);
 		// getUserNgGroupListUcInPacket.setCommand(IMOCommand.IMO_GET_QGROUP_USER_LIST);
 		// return getUserNgGroupListUcInPacket;
 		// case IMOCommand.IMO_GET_USER_NGROUP_LIST_UC_NEW:
-		// GetUserNgGroupListUcNewInPacket getUserNgGroupListUcNewInPacket = new
+		// GetUserNgGroupListUcNewInPacket
+		// getUserNgGroupListUcNewInPacket = new
 		// GetUserNgGroupListUcNewInPacket(buf, length);
 		// getUserNgGroupListUcNewInPacket.setCommand(IMOCommand.IMO_GET_USER_NGROUP_LIST_UC_NEW);
 		// return getUserNgGroupListUcNewInPacket;
 		// case IMOCommand.IMO_CLIENT_LOGIN_NGROUPD:
-		// GetClientLoginNgroupdInPacket getClientLoginNgroupdInPacket = new
+		// GetClientLoginNgroupdInPacket getClientLoginNgroupdInPacket =
+		// new
 		// GetClientLoginNgroupdInPacket(buf, length);
 		// getClientLoginNgroupdInPacket.setCommand(IMOCommand.IMO_CLIENT_LOGIN_NGROUPD);
 		// return getClientLoginNgroupdInPacket;
@@ -523,7 +539,8 @@ public class DataEngine {
 		// getAgreeJoinNgroupInPacket.setCommand(IMOCommand.IMO_AGREE_JOIN_NGROUP);
 		// return getAgreeJoinNgroupInPacket;
 		// case IMOCommand.IMO_NOTICE_USER_JOIN_NGROUP:
-		// GetNoticeUserJoinNgroupInPacket getNoticeUserJoinNgroupInPacket = new
+		// GetNoticeUserJoinNgroupInPacket
+		// getNoticeUserJoinNgroupInPacket = new
 		// GetNoticeUserJoinNgroupInPacket(buf, length);
 		// getNoticeUserJoinNgroupInPacket.setCommand(IMOCommand.IMO_NOTICE_USER_JOIN_NGROUP);
 		// return getNoticeUserJoinNgroupInPacket;
@@ -549,7 +566,8 @@ public class DataEngine {
 		// getNgroupUserListInPacket.setCommand(IMOCommand.IMO_GET_NGROUP_USER_LIST);
 		// return getNgroupUserListInPacket;
 		// case IMOCommand.IMO_GET_NGROUP_USERS_STATUS:
-		// GetNgroupUsersStatusInPacket getNgroupUsersStatusInPacket = new
+		// GetNgroupUsersStatusInPacket getNgroupUsersStatusInPacket =
+		// new
 		// GetNgroupUsersStatusInPacket(buf, length);
 		// getNgroupUsersStatusInPacket.setCommand(IMOCommand.IMO_GET_NGROUP_USERS_STATUS);
 		// return getNgroupUsersStatusInPacket;
@@ -559,7 +577,8 @@ public class DataEngine {
 		// getNgroupChatInPacket.setCommand(IMOCommand.IMO_NGOURP_CHAT);
 		// return getNgroupChatInPacket;
 		// case IMOCommand.IMO_NEW_MSG_NOTICE_NGROUP:
-		// GetNewMsgNoticeNgroupInPacket getNewMsgNoticeNgroupInPacket = new
+		// GetNewMsgNoticeNgroupInPacket getNewMsgNoticeNgroupInPacket =
+		// new
 		// GetNewMsgNoticeNgroupInPacket(buf, length);
 		// getNewMsgNoticeNgroupInPacket.setCommand(IMOCommand.IMO_NEW_MSG_NOTICE_NGROUP);
 		// return getNewMsgNoticeNgroupInPacket;
@@ -575,22 +594,26 @@ public class DataEngine {
 		// getExitNgroupInPacket.setCommand(IMOCommand.IMO_EXIT_NGROUP);
 		// return getExitNgroupInPacket;
 		// case IMOCommand.IMO_EXIT_NGROUP_NOTICE_USERS:
-		// GetExitNgroupNoticeUsersInPacket getExitNgroupNoticeUsersInPacket =
+		// GetExitNgroupNoticeUsersInPacket
+		// getExitNgroupNoticeUsersInPacket =
 		// new GetExitNgroupNoticeUsersInPacket(buf, length);
 		// getExitNgroupNoticeUsersInPacket.setCommand(IMOCommand.IMO_EXIT_NGROUP_NOTICE_USERS);
 		// return getExitNgroupNoticeUsersInPacket;
 		// case IMOCommand.IMO_MODIFY_NGROUP_NAME_NOTICE:
-		// GetModifyNgroupNameNoticeInPacket getModifyNgroupNameNoticeInPacket =
+		// GetModifyNgroupNameNoticeInPacket
+		// getModifyNgroupNameNoticeInPacket =
 		// new GetModifyNgroupNameNoticeInPacket(buf, length);
 		// getModifyNgroupNameNoticeInPacket.setCommand(IMOCommand.IMO_MODIFY_NGROUP_NAME_NOTICE);
 		// return getModifyNgroupNameNoticeInPacket;
 		// case IMOCommand.IMO_NGROUP_KICK_USER_NOTICE:
-		// GetNgroupKickUserNoticeInPacket getNgroupKickUserNoticeInPacket = new
+		// GetNgroupKickUserNoticeInPacket
+		// getNgroupKickUserNoticeInPacket = new
 		// GetNgroupKickUserNoticeInPacket(buf, length);
 		// getNgroupKickUserNoticeInPacket.setCommand(IMOCommand.IMO_NGROUP_KICK_USER_NOTICE);
 		// return getNgroupKickUserNoticeInPacket;
 		// case IMOCommand.IMO_GET_OFFLINE_NGROUP_CHAT_MSG:
-		// GetOffLineNgroupChatMsgInPacket getOffLineNgroupChatMsgInPacket = new
+		// GetOffLineNgroupChatMsgInPacket
+		// getOffLineNgroupChatMsgInPacket = new
 		// GetOffLineNgroupChatMsgInPacket(buf, length);
 		// getOffLineNgroupChatMsgInPacket.setCommand(IMOCommand.IMO_GET_OFFLINE_NGROUP_CHAT_MSG);
 		// return getOffLineNgroupChatMsgInPacket;
@@ -600,7 +623,8 @@ public class DataEngine {
 		// getNgroupNoticeInPacket.setCommand(IMOCommand.IMO_NGROUP_NOTICE);
 		// return getNgroupNoticeInPacket;
 		// case IMOCommand.IMO_QGOURP_CHAT:
-		// QGroupChatInPacket qGroupChatInPacket = new QGroupChatInPacket(buf,
+		// QGroupChatInPacket qGroupChatInPacket = new
+		// QGroupChatInPacket(buf,
 		// length);
 		// qGroupChatInPacket.setCommand(IMOCommand.IMO_QGOURP_CHAT);
 		// return qGroupChatInPacket;
@@ -616,17 +640,20 @@ public class DataEngine {
 		// qGroupUserChangeStatusNoticeInPacket.setCommand(IMOCommand.IMO_QGROUP_USER_CHANGE_STATUS_NOTICE);
 		// return qGroupUserChangeStatusNoticeInPacket;
 		// case IMOCommand.IMO_EXIT_QGROUP:
-		// ExitQgroupInPacket exitQgroupInPacket = new ExitQgroupInPacket(buf,
+		// ExitQgroupInPacket exitQgroupInPacket = new
+		// ExitQgroupInPacket(buf,
 		// length);
 		// exitQgroupInPacket.setCommand(IMOCommand.IMO_EXIT_QGROUP);
 		// return exitQgroupInPacket;
 		// case IMOCommand.IMO_EXIT_QGROUP_NOTICE_USERS:
-		// ExitQgroupNoticeUsersInPacket exitQgroupNoticeUsersInPacket = new
+		// ExitQgroupNoticeUsersInPacket exitQgroupNoticeUsersInPacket =
+		// new
 		// ExitQgroupNoticeUsersInPacket(buf, length);
 		// exitQgroupNoticeUsersInPacket.setCommand(IMOCommand.IMO_EXIT_QGROUP_NOTICE_USERS);
 		// return exitQgroupNoticeUsersInPacket;
 		// case IMOCommand.IMO_MODIFY_QGROUP_NAME_NOTICE:
-		// ModifyQgroupNameNoticeInPacket modifyQgroupNameNoticeInPacket = new
+		// ModifyQgroupNameNoticeInPacket modifyQgroupNameNoticeInPacket
+		// = new
 		// ModifyQgroupNameNoticeInPacket(buf, length);
 		// modifyQgroupNameNoticeInPacket.setCommand(IMOCommand.IMO_MODIFY_QGROUP_NAME_NOTICE);
 		// return modifyQgroupNameNoticeInPacket;
@@ -636,7 +663,8 @@ public class DataEngine {
 		// destoryTheQgroupInPacket.setCommand(IMOCommand.IMO_DESTORY_THE_QGROUP);
 		// return destoryTheQgroupInPacket;
 		// case IMOCommand.IMO_QGROUP_KICK_USER_NOTICE:
-		// QGroupKickUserNoticeInPacket qcGroupKickUserNoticeInPacket = new
+		// QGroupKickUserNoticeInPacket qcGroupKickUserNoticeInPacket =
+		// new
 		// QGroupKickUserNoticeInPacket(buf, length);
 		// qcGroupKickUserNoticeInPacket.setCommand(IMOCommand.IMO_QGROUP_KICK_USER_NOTICE);
 		// return qcGroupKickUserNoticeInPacket;
@@ -646,7 +674,8 @@ public class DataEngine {
 		// getQGroupOfflineInPacket.setCommand(IMOCommand.IMO_GET_QGROUP_OFFLINE);
 		// return getQGroupOfflineInPacket;
 		// case IMOCommand.IMO_GET_OFFLINE_QGROUP_CHAT_MSG:
-		// GetOfflineQGroupChatMsgInPacket getOfflineQGroupChatMsgInPacket = new
+		// GetOfflineQGroupChatMsgInPacket
+		// getOfflineQGroupChatMsgInPacket = new
 		// GetOfflineQGroupChatMsgInPacket(buf, length);
 		// getOfflineQGroupChatMsgInPacket.setCommand(IMOCommand.IMO_GET_OFFLINE_QGROUP_CHAT_MSG);
 		// return getOfflineQGroupChatMsgInPacket;
@@ -656,14 +685,15 @@ public class DataEngine {
 		// deleteQGroupOfflineInPacket.setCommand(IMOCommand.IMO_DELETE_QGROUPD_OFFLINE);
 		// return deleteQGroupOfflineInPacket;
 		// case IMOCommand.IMO_QGROUP_DESTROY_NOTICE_USER:
-		// QgroupDestroyNoticeUserInPacket qgroupDestroyNoticeUserInPacket = new
+		// QgroupDestroyNoticeUserInPacket
+		// qgroupDestroyNoticeUserInPacket = new
 		// QgroupDestroyNoticeUserInPacket(buf, length);
 		// qgroupDestroyNoticeUserInPacket.setCommand(IMOCommand.IMO_QGROUP_DESTROY_NOTICE_USER);
 		// return qgroupDestroyNoticeUserInPacket;
 		// default:
 		// ErrorPacket error = new ErrorPacket();
 		// error.setCommand(IMOCommand.IMO_ERROR_PACKET);
-		// return error;
+		// return null;
 		// }
 	}
 }
