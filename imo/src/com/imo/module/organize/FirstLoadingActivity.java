@@ -32,8 +32,6 @@ import com.imo.module.MainActivityGroup;
 import com.imo.module.contact.OuterContactBasicInfo;
 import com.imo.module.contact.OuterContactItem;
 import com.imo.module.organize.struct.Node;
-import com.imo.module.organize.struct.NodeData;
-import com.imo.module.organize.struct.NodeManager;
 import com.imo.network.Log.ConnectionLog;
 import com.imo.network.net.EngineConst;
 import com.imo.network.packages.CommonOutPacket;
@@ -141,15 +139,10 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 
 	@Override
 	protected void registerEvents() {
-
 		loadingHandler.sendEmptyMessage(0);
-
 		// 初始化内部联系人和外部联系人 map
 		resetGroupMap();
-
 		beginLoading();
-
-		// beginLoadingContact();
 	}
 
 	@Override
@@ -174,17 +167,17 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 		public void handleMessage(Message msg) {
 			short command = (short) msg.arg1;
 			switch (command) {
-			// 1-获得部门UC
+				// 1-获得部门UC
 				case IMOCommand.IMO_GET_DEPT_UC: {
 					responseDeptUC(command);
 					break;
 				}
-				// 2-获得部门Info
+					// 2-获得部门Info
 				case IMOCommand.IMO_GET_DEPT_INFO: {
 					responseDeptInfo(command);
 					break;
 				}
-				// 3-获取所有的员工UID
+					// 3-获取所有的员工UID
 				case IMOCommand.IMO_GET_ALL_EMPLOYEE_UID:
 					responseAllEmployeeUid(command);
 					break;
@@ -268,7 +261,7 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 
 	@Override
 	public void refresh(Object param) {
-		// //加载联系人数据
+		// 加载联系人数据
 		beginLoadingContact();
 	}
 
@@ -321,20 +314,11 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 		}
 
 		if (mStateRequestCount - 1 > hasRequestCount) {
-
 			requestCIds = new int[MAX_STATE_REQUEST_COUNT];
 			requestUIds = new int[MAX_STATE_REQUEST_COUNT];
-
-			// LogFactory.d(TAG+"State--HasRequestCount","hasRequestCount = " +
-			// hasRequestCount );
-
 			System.arraycopy(mAllCIds, hasRequestCount * MAX_STATE_REQUEST_COUNT, requestCIds, 0, MAX_STATE_REQUEST_COUNT);
 			System.arraycopy(mAllUserIds, hasRequestCount * MAX_STATE_REQUEST_COUNT, requestUIds, 0, MAX_STATE_REQUEST_COUNT);
-
 			this.hasRequestCount++;
-
-			LogFactory.d(TAG + "State--HasRequestCount", "hasRequestCount = " + hasRequestCount);
-
 		} else {
 			LogFactory.d(TAG + "StateHasRequestCount", " State has Request Completed !! hasRequestCount = " + hasRequestCount);
 
@@ -345,7 +329,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 			System.arraycopy(mAllUserIds, hasRequestCount * MAX_STATE_REQUEST_COUNT, requestUIds, 0, requestUIds.length);
 
 			this.hasRequestCount++;
-
 		}
 
 		return new Object[] {
@@ -353,7 +336,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 		};
 	}
 
-	// ====================================================
 	/**
 	 * 1-发送DeptUC请求包
 	 */
@@ -374,10 +356,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 	 * 2-发送DeptInfo请求包
 	 */
 	private void doRequestDeptInfo(int deptid, int dept_uc) {
-		// 请求DeptInfo
-		// LogFactory.d(TAG, "doRequestDeptInfo :[ deptid = "+ deptid
-		// +"\t dept_uc = " + dept_uc +"]");
-
 		int mask = 1;
 		mask |= (mask << 1);
 		mask |= (mask << 2);
@@ -403,7 +381,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 
 	}
 
-	// ====================================================
 	/**
 	 * 3-发送AllEmployeeUid请求包： 获得部门下的所有员工的UId
 	 * 
@@ -411,8 +388,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 	 *        部门
 	 */
 	private void doRequestAllEmployeeUid(int aDeptID) {
-
-		// LogFactory.d(TAG, "doRequestAllEmployeeUid  deptId = " + aDeptID);
 		ByteBuffer bufferBody = GetAllEmployeesUIDOutPacket.GenerateEmplyeesUIDBody(aDeptID);
 		GetAllEmployeesUIDOutPacket outPacket = new GetAllEmployeesUIDOutPacket(bufferBody, IMOCommand.IMO_GET_ALL_EMPLOYEE_UID, EngineConst.cId, EngineConst.uId);
 
@@ -422,8 +397,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 	}
-
-	// ====================================================
 
 	private int hasRequestCount = 0; // 需要请求的次数
 
@@ -442,9 +415,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 	 *        联系人的Uid数组
 	 */
 	private void doRequestAllEmployeeInfo(int aContactorsNum, int[] aContactorUidArray) {
-
-		LogFactory.d(TAG + "2", "doRequestAllEmployeeInfo : uids = " + Arrays.toString(aContactorUidArray));
-
 		ByteBuffer bufferBody = GetAllEmployeesInfoOutPacket.GenerateEmployeesBasicInfoBody(aContactorsNum, aContactorUidArray);
 
 		LogFactory.d(TAG + "2", "bufferBody = " + bufferBody.toString());
@@ -457,7 +427,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 		mNIOThread.send(EngineConst.IMO_CONNECTION_ID, outPacket, false);
 	}
 
-	// ====================================================
 	private boolean forOrganize = true;
 
 	/**
@@ -1069,7 +1038,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 			int[] temp_UserId = deptUserIdsMap.get(this.deptid[i]);
 			if (temp_UserId == null)
 				continue;
-			// LogFactory.d("UID", Arrays.toString(temp_UserId));
 
 			if (mAllUserIds == null) {
 
@@ -1078,7 +1046,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 
 				mAllUserIds = mergeIntArray(mAllUserIds, temp_UserId);
 			}
-			// LogFactory.d("UID-mAllUserIds", Arrays.toString(mAllUserIds));
 		}
 
 		// ==============外部联系人的时候特殊对待======================
@@ -1118,7 +1085,7 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 		// 当前请求的数据
 		LogFactory.d(TAG, "responseEmployeeState single Response count =" + uid.length);
 
-		// /收到包后计数器加1
+		// 收到包后计数器加1
 		stateResponseCount++;
 		stateResponseCountEx++;
 
@@ -1167,49 +1134,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 	HashMap<Integer, HashMap<Integer, Node>> userNodeMap = new HashMap<Integer, HashMap<Integer, Node>>();// ////
 
 	HashMap<Integer, Node> userNodeMapItem = null;// ////
-
-	/**
-	 * @param parentNode
-	 *        部门节点
-	 * @param curEmployeeInfo
-	 *        当前的用户信息
-	 * @param deptUserInfoMap
-	 *        部门UserInfoMap
-	 */
-	private EmployeeInfoItem addUserNode(Node parentNode, EmployeeInfoItem curEmployeeInfo, HashMap<Integer, EmployeeInfoItem> deptUserInfoMap, HashMap<Integer, Integer> deptUserSiblingMapItem) {
-
-		curEmployeeInfo.getUid();
-
-		int siblingId = deptUserSiblingMapItem.get(curEmployeeInfo.getUid());
-
-		EmployeeInfoItem employeeInfoItem = null;
-
-		if (siblingId != -1) {
-
-			// LogFactory.d("siblingId", "siblingId= " + siblingId);
-
-			employeeInfoItem = deptUserInfoMap.get(siblingId);// /nullpoint
-																// employeeInfoItem
-																// = null
-
-			boolean isBoy = isBoy(employeeInfoItem.getGender());
-
-			String nodeName = employeeInfoItem.getName();
-
-			Node leafNode = new Node(new NodeData(isBoy, nodeName));
-
-			leafNode.setOnLineState(userStateMap.get(employeeInfoItem.getUid()));
-			leafNode.setId(employeeInfoItem.getUid());
-
-			NodeManager.addChildNode(parentNode, leafNode);
-
-			// userNodeMapItem.put(curEmployeeInfo.getUid(), leafNode);//////
-
-			this.curNode = leafNode;
-
-		}
-		return employeeInfoItem;
-	}
 
 	/**
 	 * 数组的合并
@@ -1666,7 +1590,7 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 	private ArrayList<OuterContactItem> outerContactItemList = new ArrayList<OuterContactItem>();
 	private Integer curPos_OuterContactState = 0;// / outer contact state
 
-	// // outer contact request total count for state
+	// outer contact request total count for state
 	private int outerStateRequestTotalCount = 0;
 
 	private int MAX_REQUEST_CONCURRENT_OUTER_CORP_NUMBER = 100;
@@ -1812,7 +1736,6 @@ public class FirstLoadingActivity extends AbsBaseActivityNetListener {
 		}
 	}
 
-	// private int MAX_STATE_REQUEST_COUNT = 100;
 	/**
 	 * 状态请求外部联系人数组ID
 	 * 
