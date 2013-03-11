@@ -146,22 +146,14 @@ public class ChatRecordActivity extends AbsBaseActivityNetListener {
 			} catch (Exception e) {
 			}
 			if (b_about_head != null && b_about_head.length > 0) {
-				// Bitmap bitmap = BitmapFactory.decodeByteArray(b_about_head,
-				// 0,
-				// b_about_head.length);
-				// about_head = new BitmapDrawable(bitmap);
 				about_head = BitmapFactory.decodeByteArray(b_about_head, 0,
 						b_about_head.length);
 				return;
 			}
 			if (aboutSex) {
-				// about_head = getResources().getDrawable(
-				// R.drawable.imo_default_face_boy);
 				about_head = BitmapFactory.decodeResource(getResources(),
 						R.drawable.imo_default_face_boy);
 			} else {
-				// about_head = getResources().getDrawable(
-				// R.drawable.imo_default_face_girl);
 				about_head = BitmapFactory.decodeResource(getResources(),
 						R.drawable.imo_default_face_girl);
 			}

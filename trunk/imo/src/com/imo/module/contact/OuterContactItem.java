@@ -1,7 +1,5 @@
 package com.imo.module.contact;
 
-import com.imo.util.LogFactory;
-
 /**
  * Outer Contact Item msg
  */
@@ -20,8 +18,6 @@ public class OuterContactItem {
 		this.uid = uid;
 		this.groupId = groupId;
 		this.flag = flag;
-
-		LogFactory.d("Outer", toString());// // outer contact item info
 	}
 
 	public int getCid() {
