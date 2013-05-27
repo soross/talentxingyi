@@ -1,12 +1,14 @@
 package com.koushikdutta.async.future;
 
 public class SimpleCancelable implements DependentCancellable {
+
     boolean complete;
+
     @Override
     public boolean isDone() {
         return complete;
     }
-    
+
     public boolean setComplete() {
         synchronized (this) {
             if (canceled)
@@ -29,14 +31,16 @@ public class SimpleCancelable implements DependentCancellable {
             parent.cancel();
         return true;
     }
+
     boolean canceled;
 
     Cancellable parent;
+
     @Override
     public Cancellable getParent() {
         return parent;
     }
-    
+
     @Override
     public void setParent(Cancellable parent) {
         this.parent = parent;
