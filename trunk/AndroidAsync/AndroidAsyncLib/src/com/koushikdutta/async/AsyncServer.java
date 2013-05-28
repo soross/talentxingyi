@@ -25,10 +25,10 @@ import java.util.concurrent.TimeUnit;
 
 public class AsyncServer {
     public static final String LOGTAG = "NIO";
-    
+
     public static class AsyncSemaphore {
         Semaphore semaphore = new Semaphore(0);
-        
+
         public void acquire() throws InterruptedException {
             ThreadQueue threadQueue = getOrCreateThreadQueue(Thread.currentThread());
             AsyncSemaphore last = threadQueue.waiter;
@@ -37,7 +37,7 @@ public class AsyncServer {
             try {
                 if (semaphore.tryAcquire())
                     return;
-                
+
                 while (true) {
                     // run the queue
                     while (true) {
@@ -53,12 +53,11 @@ public class AsyncServer {
                     if (semaphore.tryAcquire())
                         break;
                 }
-            }
-            finally {
+            } finally {
                 threadQueue.waiter = last;
             }
         }
-        
+
         public boolean tryAcquire(long timeout, TimeUnit timeunit) throws InterruptedException {
             long timeoutMs = TimeUnit.MILLISECONDS.convert(timeout, timeunit);
             ThreadQueue threadQueue = getOrCreateThreadQueue(Thread.currentThread());
@@ -89,23 +88,22 @@ public class AsyncServer {
                 }
                 while (System.currentTimeMillis() - start < timeoutMs);
                 return false;
-            }
-            finally {
+            } finally {
                 threadQueue.waiter = last;
             }
         }
-        
+
         public void release() {
             semaphore.release();
             synchronized (mThreadQueues) {
-                for (ThreadQueue threadQueue: mThreadQueues.values()) {
+                for (ThreadQueue threadQueue : mThreadQueues.values()) {
                     if (threadQueue.waiter == this)
                         threadQueue.queueSemaphore.release();
                 }
             }
         }
     }
-    
+
     static ThreadQueue getOrCreateThreadQueue(Thread thread) {
         ThreadQueue queue;
         synchronized (mThreadQueues) {
@@ -115,10 +113,10 @@ public class AsyncServer {
                 mThreadQueues.put(thread, queue);
             }
         }
-        
+
         return queue;
     }
-    
+
     public static class ThreadQueue extends LinkedList<Runnable> {
         AsyncSemaphore waiter;
         Semaphore queueSemaphore = new Semaphore(0);
@@ -129,7 +127,7 @@ public class AsyncServer {
                 return super.add(object);
             }
         }
-        
+
         @Override
         public boolean remove(Object object) {
             synchronized (this) {
@@ -146,13 +144,16 @@ public class AsyncServer {
             }
         }
     }
+
     private static WeakHashMap<Thread, ThreadQueue> mThreadQueues = new WeakHashMap<Thread, ThreadQueue>();
+
     public static void post(final Handler handler, final Runnable runnable) {
         ThreadQueue queue = getOrCreateThreadQueue(handler.getLooper().getThread());
 
         final ThreadQueue threadQueue = queue;
         Runnable wrapper = new Runnable() {
             boolean hasRun;
+
             @Override
             public void run() {
                 synchronized (this) {
@@ -162,14 +163,13 @@ public class AsyncServer {
                 }
                 try {
                     runnable.run();
-                }
-                finally {
+                } finally {
                     threadQueue.remove(this);
                     handler.removeCallbacks(this);
                 }
             }
         };
-        
+
         threadQueue.add(wrapper);
         handler.post(wrapper);
 
@@ -183,25 +183,26 @@ public class AsyncServer {
                 java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
                 java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
             }
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
         }
     }
-    
+
     static AsyncServer mInstance = new AsyncServer() {
         {
             setAutostart(true);
         }
     };
+
     public static AsyncServer getDefault() {
         return mInstance;
     }
-    
+
     private boolean mAutoStart = false;
+
     public void setAutostart(boolean autoStart) {
         mAutoStart = autoStart;
     }
-    
+
     public boolean getAutoStart() {
         return mAutoStart;
     }
@@ -217,13 +218,13 @@ public class AsyncServer {
         ckey.attach(handler);
         handler.setup(this, ckey);
     }
-    
+
     public void removeAllCallbacks(Object scheduled) {
         synchronized (this) {
             mQueue.remove(scheduled);
         }
     }
-    
+
     public Object postDelayed(Runnable runnable, long delay) {
         Scheduled s;
         synchronized (this) {
@@ -240,11 +241,11 @@ public class AsyncServer {
         }
         return s;
     }
-    
+
     public Object post(Runnable runnable) {
         return postDelayed(runnable, 0);
     }
-    
+
     public Object post(final CompletedCallback callback, final Exception e) {
         return post(new Runnable() {
             @Override
@@ -253,7 +254,7 @@ public class AsyncServer {
             }
         });
     }
-    
+
     public void run(final Runnable runnable) {
         if (Thread.currentThread() == mAffinity) {
             post(runnable);
@@ -271,8 +272,7 @@ public class AsyncServer {
         });
         try {
             semaphore.acquire();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -282,9 +282,11 @@ public class AsyncServer {
             this.runnable = runnable;
             this.time = time;
         }
+
         public Runnable runnable;
         public long time;
     }
+
     LinkedList<Scheduled> mQueue = new LinkedList<Scheduled>();
 
     public void stop() {
@@ -320,10 +322,10 @@ public class AsyncServer {
 //            }
 //        });
     }
-    
+
     protected void onDataTransmitted(int transmitted) {
     }
-    
+
     public void listen(final InetAddress host, final int port, final ListenCallback handler) {
         run(new Runnable() {
             @Override
@@ -344,25 +346,22 @@ public class AsyncServer {
                         public void stop() {
                             try {
                                 server.close();
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                             }
                             try {
                                 key.cancel();
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                             }
                         }
                     });
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     handler.onCompleted(e);
                 }
             }
         });
     }
-    
+
     private void connectSocketInternal(final SocketChannel socket, final SocketAddress remote, ConnectFuture cancel) {
         if (cancel.isCancelled())
             return;
@@ -372,15 +371,14 @@ public class AsyncServer {
             ckey = socket.register(mSelector, SelectionKey.OP_CONNECT);
             ckey.attach(cancel);
             socket.connect(remote);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (ckey != null)
                 ckey.cancel();
             if (cancel.setComplete(e))
                 cancel.callback.onConnectCompleted(e, null);
         }
     }
-    
+
     private class ConnectFuture extends SimpleFuture<AsyncNetworkSocket> {
         @Override
         public boolean cancel() {
@@ -392,8 +390,7 @@ public class AsyncServer {
                 public void run() {
                     try {
                         socket.close();
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                     }
                 }
             });
@@ -403,14 +400,14 @@ public class AsyncServer {
         SocketChannel socket;
         ConnectCallback callback;
     }
-    
+
     private ConnectFuture prepareConnectSocketCancelable(final SocketChannel socket, ConnectCallback handler) {
         ConnectFuture cancelable = new ConnectFuture();
         cancelable.socket = socket;
         cancelable.callback = handler;
         return cancelable;
     }
-    
+
     public Cancellable connectSocket(final InetSocketAddress remote, final ConnectCallback handler) {
         try {
             final SocketChannel socket = SocketChannel.open();
@@ -422,8 +419,7 @@ public class AsyncServer {
                 }
             });
             return cancel;
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             post(new Runnable() {
                 @Override
                 public void run() {
@@ -433,7 +429,7 @@ public class AsyncServer {
             return SimpleCancelable.COMPLETED;
         }
     }
-    
+
     public Cancellable connectSocket(final String host, final int port, final ConnectCallback handler) {
         try {
             final SocketChannel socket = SocketChannel.open();
@@ -445,8 +441,7 @@ public class AsyncServer {
                     SocketAddress remote;
                     try {
                         remote = new InetSocketAddress(host, port);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         if (cancel.setComplete(e))
                             handler.onConnectCompleted(e, null);
                         return;
@@ -455,10 +450,9 @@ public class AsyncServer {
                     connectSocketInternal(socket, remote, cancel);
                 }
             });
-            
+
             return cancel;
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             post(new Runnable() {
                 @Override
                 public void run() {
@@ -483,8 +477,7 @@ public class AsyncServer {
                     final SocketAddress remote = new InetSocketAddress(host, port);
                     handleSocket(handler);
                     socket.connect(remote);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -505,15 +498,14 @@ public class AsyncServer {
                 try {
                     socket.socket().bind(null);
                     handleSocket(handler);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
         return handler;
     }
-    
+
     public AsyncDatagramSocket connectDatagram(final SocketAddress remote) throws IOException {
         final DatagramChannel socket = DatagramChannel.open();
         final AsyncDatagramSocket handler = new AsyncDatagramSocket();
@@ -527,14 +519,13 @@ public class AsyncServer {
                 try {
                     handleSocket(handler);
                     socket.connect(remote);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                 }
             }
         });
         return handler;
     }
-    
+
     static Hashtable<Thread, AsyncServer> mServers = new Hashtable<Thread, AsyncServer>();
 
     private boolean addMe() {
@@ -548,15 +539,17 @@ public class AsyncServer {
         }
         return true;
     }
-    
+
     public static AsyncServer getCurrentThreadServer() {
         return mServers.get(Thread.currentThread());
     }
-    
+
     Thread mAffinity;
+
     public void run() {
         run(false, false);
     }
+
     public void run(final boolean keepRunning, boolean newThread) {
         final Selector selector;
         final LinkedList<Scheduled> queue;
@@ -569,30 +562,28 @@ public class AsyncServer {
                 reentrant = true;
                 selector = mSelector;
                 queue = mQueue;
-            }
-            else {
+            } else {
                 try {
                     selector = mSelector = SelectorProvider.provider().openSelector();
                     queue = mQueue;
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     return;
                 }
                 if (newThread) {
                     mAffinity = new Thread("AsyncServer") {
                         public void run() {
                             AsyncServer.run(AsyncServer.this, selector, queue, keepRunning);
-                        };
+                        }
+
+                        ;
                     };
-                }
-                else {
+                } else {
                     mAffinity = Thread.currentThread();
                 }
                 if (!addMe()) {
                     try {
                         mSelector.close();
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                     }
                     mSelector = null;
                     mAffinity = null;
@@ -612,17 +603,16 @@ public class AsyncServer {
         if (reentrant) {
             try {
                 runLoop(this, selector, queue, false);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.i(LOGTAG, "exception?");
                 e.printStackTrace();
             }
             return;
         }
-        
+
         run(this, selector, queue, keepRunning);
     }
-    
+
     private static void run(AsyncServer server, Selector selector, LinkedList<Scheduled> queue, boolean keepRunning) {
         Log.i(LOGTAG, "****AsyncServer is starting.****");
         // at this point, this local queue and selector are owned
@@ -632,13 +622,11 @@ public class AsyncServer {
         // this will allow the old queue and selector to shut down
         // gracefully, while also allowing a new selector thread
         // to start up while the old one is still shutting down.
-        while(true) {
+        while (true) {
             try {
                 runLoop(server, selector, queue, keepRunning);
-            }
-            catch (ClosedSelectorException e) {
-            }
-            catch (Exception e) {
+            } catch (ClosedSelectorException e) {
+            } catch (Exception e) {
                 Log.i(LOGTAG, "exception?");
                 e.printStackTrace();
             }
@@ -661,37 +649,34 @@ public class AsyncServer {
         }
         Log.i(LOGTAG, "****AsyncServer has shut down.****");
     }
-    
+
     private static void shutdownEverything(Selector selector) {
         try {
-            for (SelectionKey key: selector.keys()) {
+            for (SelectionKey key : selector.keys()) {
                 try {
                     key.channel().close();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                 }
                 try {
                     key.cancel();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                 }
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
         }
 
         // SHUT. DOWN. EVERYTHING.
         try {
             selector.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
     }
-    
+
     private static final long DEFAULT_WAIT = 100;
+
     private static long lockAndRunQueue(AsyncServer server, LinkedList<Scheduled> queue) {
         long wait = DEFAULT_WAIT;
-        
+
         // find the first item we can actually run
         while (true) {
             Scheduled run = null;
@@ -705,8 +690,7 @@ public class AsyncServer {
                     if (s.time <= now) {
                         run = s;
                         break;
-                    }
-                    else {
+                    } else {
                         wait = Math.min(wait, s.time - now);
                         if (later == null)
                             later = new LinkedList<AsyncServer.Scheduled>();
@@ -716,10 +700,10 @@ public class AsyncServer {
                 if (later != null)
                     queue.addAll(later);
             }
-            
+
             if (run == null)
                 break;
-            
+
             run.runnable.run();
         }
 
@@ -743,11 +727,10 @@ public class AsyncServer {
 //                    Log.i(LOGTAG, "Shutting down. keys: " + selector.keys().size() + " keepRunning: " + keepRunning);
                     return;
                 }
-            }
-            else {
+            } else {
                 needsSelect = false;
             }
-        }        
+        }
 
         if (needsSelect) {
             // nothing to select immediately but there so let's block and wait.
@@ -767,21 +750,18 @@ public class AsyncServer {
                     SelectionKey ckey = sc.register(selector, SelectionKey.OP_READ);
                     ListenCallback serverHandler = (ListenCallback) key.attachment();
                     AsyncNetworkSocket handler = new AsyncNetworkSocket();
-                    handler.attach(sc, (InetSocketAddress)sc.socket().getRemoteSocketAddress());
+                    handler.attach(sc, (InetSocketAddress) sc.socket().getRemoteSocketAddress());
                     handler.setup(server, ckey);
                     ckey.attach(handler);
                     serverHandler.onAccepted(handler);
-                }
-                else if (key.isReadable()) {
+                } else if (key.isReadable()) {
                     AsyncNetworkSocket handler = (AsyncNetworkSocket) key.attachment();
                     int transmitted = handler.onReadable();
                     server.onDataTransmitted(transmitted);
-                }
-                else if (key.isWritable()) {
+                } else if (key.isWritable()) {
                     AsyncNetworkSocket handler = (AsyncNetworkSocket) key.attachment();
                     handler.onDataWritable();
-                }
-                else if (key.isConnectable()) {
+                } else if (key.isConnectable()) {
                     ConnectFuture cancel = (ConnectFuture) key.attachment();
                     SocketChannel sc = (SocketChannel) key.channel();
                     key.interestOps(SelectionKey.OP_READ);
@@ -789,35 +769,32 @@ public class AsyncServer {
                         sc.finishConnect();
                         AsyncNetworkSocket newHandler = new AsyncNetworkSocket();
                         newHandler.setup(server, key);
-                        newHandler.attach(sc, (InetSocketAddress)sc.socket().getRemoteSocketAddress());
+                        newHandler.attach(sc, (InetSocketAddress) sc.socket().getRemoteSocketAddress());
                         key.attach(newHandler);
                         if (cancel.setComplete(newHandler))
                             cancel.callback.onConnectCompleted(null, newHandler);
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
                         key.cancel();
                         sc.close();
                         if (cancel.setComplete())
                             cancel.callback.onConnectCompleted(ex, null);
                     }
-                }
-                else {
+                } else {
                     Log.i(LOGTAG, "wtf");
                     assert false;
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Log.i(LOGTAG, "inner loop exception");
                 ex.printStackTrace();
             }
         }
         readyKeys.clear();
     }
-    
+
     public Thread getAffinity() {
         return mAffinity;
     }
-    
+
     public boolean isAffinityThread() {
         return mAffinity == Thread.currentThread();
     }

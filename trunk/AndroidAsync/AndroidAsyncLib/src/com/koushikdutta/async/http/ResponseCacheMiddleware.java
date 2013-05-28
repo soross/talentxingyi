@@ -118,7 +118,6 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
             return null;
 
         String key = uriToKey(data.request.getUri());
-        Log.d(TAG, "uriToKey = " + key);
         DiskLruCache.Snapshot snapshot;
         Entry entry;
         try {

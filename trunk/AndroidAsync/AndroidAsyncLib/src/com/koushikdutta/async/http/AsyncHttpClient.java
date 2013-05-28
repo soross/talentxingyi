@@ -72,6 +72,7 @@ public class AsyncHttpClient {
     }
 
     private void execute(final AsyncHttpRequest request, final HttpConnectCallback callback, final int redirectCount, final CancelableImpl cancel) {
+        Log.d(TAG, "execute");
         if (redirectCount > 5) {
             reportConnectedCompleted(cancel, new Exception("too many redirects"), null, callback);
             return;
@@ -85,6 +86,7 @@ public class AsyncHttpClient {
 
             {
                 if (request.getTimeout() > 0) {
+                    Log.d(TAG, "request.getTimeout = " + request.getTimeout());
                     scheduled = mServer.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -98,6 +100,7 @@ public class AsyncHttpClient {
             @Override
             public void onConnectCompleted(Exception ex, AsyncSocket socket) {
                 if (cancel.isCancelled()) {
+                    Log.d(TAG, "cancel.isCancelled!!!!");
                     if (socket != null)
                         socket.close();
                     return;
@@ -210,6 +213,8 @@ public class AsyncHttpClient {
         };
 
         for (AsyncHttpClientMiddleware middleware : mMiddleware) {
+            Log.d(TAG, "class type = " + middleware.getClass().getSimpleName());
+            Log.d(TAG, "null != middleware.getSocket(data) = " + (null != (cancel.socketCancelable = middleware.getSocket(data))));
             if (null != (cancel.socketCancelable = middleware.getSocket(data)))
                 return;
         }
