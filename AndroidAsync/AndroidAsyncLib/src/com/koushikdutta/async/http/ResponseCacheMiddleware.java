@@ -1,15 +1,19 @@
 package com.koushikdutta.async.http;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FilterInputStream;
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Base64;
+import android.util.Log;
+import com.koushikdutta.async.*;
+import com.koushikdutta.async.callback.CompletedCallback;
+import com.koushikdutta.async.callback.DataCallback;
+import com.koushikdutta.async.callback.WritableCallback;
+import com.koushikdutta.async.future.Cancellable;
+import com.koushikdutta.async.future.SimpleCancelable;
+import com.koushikdutta.async.http.libcore.*;
+
+import javax.net.ssl.SSLPeerUnverifiedException;
+import java.io.*;
 import java.math.BigInteger;
 import java.net.CacheRequest;
 import java.net.CacheResponse;
@@ -19,56 +23,42 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
+import java.security.cert.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.SSLPeerUnverifiedException;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.Base64;
-
-import com.koushikdutta.async.AsyncSSLSocket;
-import com.koushikdutta.async.AsyncServer;
-import com.koushikdutta.async.AsyncSocket;
-import com.koushikdutta.async.ByteBufferList;
-import com.koushikdutta.async.DataEmitter;
-import com.koushikdutta.async.FilteredDataEmitter;
-import com.koushikdutta.async.callback.CompletedCallback;
-import com.koushikdutta.async.callback.DataCallback;
-import com.koushikdutta.async.callback.WritableCallback;
-import com.koushikdutta.async.future.Cancellable;
-import com.koushikdutta.async.future.SimpleCancelable;
-import com.koushikdutta.async.http.libcore.Charsets;
-import com.koushikdutta.async.http.libcore.DiskLruCache;
-import com.koushikdutta.async.http.libcore.RawHeaders;
-import com.koushikdutta.async.http.libcore.ResponseHeaders;
-import com.koushikdutta.async.http.libcore.ResponseSource;
-import com.koushikdutta.async.http.libcore.StrictLineReader;
-
 public class ResponseCacheMiddleware extends SimpleMiddleware {
-    private DiskLruCache cache;
+
+    private static final String TAG = ResponseCacheMiddleware.class.getSimpleName();
     private static final int VERSION = 201105;
     private static final int ENTRY_METADATA = 0;
     private static final int ENTRY_BODY = 1;
     private static final int ENTRY_COUNT = 2;
+    private static final String LOGTAG = "AsyncHttpCache";
+    long size;
+    File cacheDir;
+    boolean caching = true;
+    int conditionalCacheHitCount;
+    int cacheHitCount;
+    int networkCount;
+    int cacheStoreCount;
+    int writeSuccessCount;
+    int writeAbortCount;
+    private DiskLruCache cache;
     private AsyncHttpClient client;
+
 
     private ResponseCacheMiddleware() {
     }
-    
-    long size;
-    File cacheDir;
+
     public static ResponseCacheMiddleware addCache(AsyncHttpClient client, File cacheDir, long size) throws IOException {
-        for (AsyncHttpClientMiddleware middleware: client.getMiddleware()) {
-            if (middleware instanceof ResponseCacheMiddleware)
+        Log.d(TAG, "AsyncHttpClient instance size = " + (client == null ? 0 : client.getMiddleware().size()));
+
+        for (AsyncHttpClientMiddleware middleware : client.getMiddleware()) {
+            if (middleware instanceof ResponseCacheMiddleware) {
                 throw new IOException("Response cache already added to http client");
+            }
         }
         ResponseCacheMiddleware ret = new ResponseCacheMiddleware();
         ret.size = size;
@@ -77,19 +67,6 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
         ret.open();
         client.insertMiddleware(ret);
         return ret;
-    }
-    
-    private void open() throws IOException {
-        cache = DiskLruCache.open(cacheDir, VERSION, ENTRY_COUNT, size);
-    }
-    
-    boolean caching = true;
-    public void setCaching(boolean caching) {
-        this.caching = caching;
-    }
-    
-    public boolean getCaching() {
-        return caching;
     }
 
     private static String uriToKey(URI uri) {
@@ -101,199 +78,53 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
             throw new RuntimeException(e);
         }
     }
-    
-    private class CachedSSLSocket extends CachedSocket implements AsyncSSLSocket {
-        public CachedSSLSocket(CacheResponse cacheResponse) {
-            super(cacheResponse);
-        }
 
-        @Override
-        public X509Certificate[] getPeerCertificates() {
-            return null;
-        }
+    /**
+     * Returns an input stream that reads the body of a snapshot, closing the
+     * snapshot when the stream is closed.
+     */
+    private static InputStream newBodyInputStream(final DiskLruCache.Snapshot snapshot) {
+        return new FilterInputStream(snapshot.getInputStream(ENTRY_BODY)) {
+            @Override
+            public void close() throws IOException {
+                snapshot.close();
+                super.close();
+            }
+        };
     }
 
-    
-    private class CachedSocket implements AsyncSocket {
-        CacheResponse cacheResponse;
-        public CachedSocket(CacheResponse cacheResponse) {
-            this.cacheResponse = cacheResponse;
-        }
-
-        @Override
-        public void setDataCallback(DataCallback callback) {
-            dataCallback = callback;            
-        }
-
-        DataCallback dataCallback;
-        @Override
-        public DataCallback getDataCallback() {
-            return dataCallback;
-        }
-
-        @Override
-        public boolean isChunked() {
-            return false;
-        }
-
-        boolean paused;
-        @Override
-        public void pause() {
-            paused = true;
-        }
-        
-        void report(Exception e) {
-            open = false;
-            if (endCallback != null)
-                endCallback.onCompleted(e);
-            if (closedCallback != null)
-                closedCallback.onCompleted(e);
-        }
-        
-        void spewInternal() {
-            if (pending.remaining() > 0) {
-                com.koushikdutta.async.Util.emitAllData(CachedSocket.this, pending);
-                if (pending.remaining() > 0)
-                    return;
-            }
-
-            // fill pending
-            try {
-                while (pending.remaining() == 0) {
-                    ByteBuffer buffer = ByteBuffer.allocate(8192);
-                    int read = cacheResponse.getBody().read(buffer.array());
-                    if (read == -1) {
-                        report(null);
-                        return;
-                    }
-                    buffer.limit(read);
-                    pending.add(buffer);
-                    com.koushikdutta.async.Util.emitAllData(CachedSocket.this, pending);
-                }
-            }
-            catch (IOException e) {
-                report(e);
-            }
-        }
-
-        ByteBufferList pending = new ByteBufferList();
-        void spew() {
-            getServer().post(new Runnable() {
-                @Override
-                public void run() {
-                    spewInternal();
-                }
-            });
-        }
-        
-        @Override
-        public void resume() {
-            paused = false;
-            spew();
-        }
-
-        @Override
-        public boolean isPaused() {
-            return paused;
-        }
-
-        @Override
-        public void setEndCallback(CompletedCallback callback) {
-            endCallback = callback;
-        }
-
-        CompletedCallback endCallback;
-        @Override
-        public CompletedCallback getEndCallback() {
-            return endCallback;
-        }
-
-        @Override
-        public void write(ByteBuffer bb) {
-            // it's gonna write headers and stuff... whatever
-            bb.limit(bb.position());
-        }
-
-        @Override
-        public void write(ByteBufferList bb) {
-            // it's gonna write headers and stuff... whatever
-            bb.clear();
-        }
-
-        @Override
-        public void setWriteableCallback(WritableCallback handler) {
-        }
-
-        @Override
-        public WritableCallback getWriteableCallback() {
-            return null;
-        }
-
-        boolean open;
-        @Override
-        public boolean isOpen() {
-            return open;
-        }
-
-        @Override
-        public void close() {
-            open = false;
-        }
-
-        @Override
-        public void setClosedCallback(CompletedCallback handler) {
-            closedCallback = handler;            
-        }
-
-        CompletedCallback closedCallback;
-        @Override
-        public CompletedCallback getClosedCallback() {
-            return closedCallback;
-        }
-
-        @Override
-        public AsyncServer getServer() {
-            return client.getServer();
-        }
+    private void open() throws IOException {
+        cache = DiskLruCache.open(cacheDir, VERSION, ENTRY_COUNT, size);
     }
-    
-    public static class CacheData implements Parcelable {
-        CacheResponse candidate;
-        ResponseHeaders cachedResponseHeaders;
 
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-        }
-        
+    public boolean getCaching() {
+        return caching;
     }
-    
-    private static final String LOGTAG = "AsyncHttpCache";
-    
+
+    public void setCaching(boolean caching) {
+        this.caching = caching;
+    }
+
     // step 1) see if we can serve request from the cache directly.
     // also see if this can be turned into a conditional cache request.
     @Override
     public Cancellable getSocket(final GetSocketData data) {
         if (cache == null)
             return null;
-        
+
         if (!caching)
             return null;
         if (data.request.getHeaders().isNoCache())
             return null;
-//        Log.i(LOGTAG, "getting cache socket: " + request.getUri().toString());
 
         String key = uriToKey(data.request.getUri());
+        Log.d(TAG, "uriToKey = " + key);
         DiskLruCache.Snapshot snapshot;
         Entry entry;
         try {
             snapshot = cache.get(key);
+            Log.d(TAG, "snapshot is null = " + (snapshot == null));
             if (snapshot == null) {
-//                Log.i(LOGTAG, "snapshot fail");
                 return null;
             }
             entry = new Entry(snapshot.getInputStream(ENTRY_METADATA));
@@ -306,7 +137,7 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
             snapshot.close();
             return null;
         }
-        
+
         ResponseSource responseSource = ResponseSource.NETWORK;
 
         CacheResponse candidate = entry.isHttps() ? new EntrySecureCacheResponse(entry, snapshot) : new EntryCacheResponse(entry, snapshot);
@@ -316,15 +147,13 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
         try {
             responseHeadersMap = candidate.getHeaders();
             cachedResponseBody = candidate.getBody();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
         if (responseHeadersMap == null || cachedResponseBody == null) {
             try {
                 cachedResponseBody.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
             }
             return null;
         }
@@ -334,10 +163,10 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
 
         long now = System.currentTimeMillis();
         responseSource = cachedResponseHeaders.chooseResponseSource(now, data.request.getHeaders());
-        
+
         if (responseSource == ResponseSource.CACHE) {
             cacheStoreCount++;
-            final CachedSocket socket = entry.isHttps() ? new CachedSSLSocket((EntrySecureCacheResponse)candidate) : new CachedSocket((EntryCacheResponse)candidate);
+            final CachedSocket socket = entry.isHttps() ? new CachedSSLSocket((EntrySecureCacheResponse) candidate) : new CachedSocket((EntryCacheResponse) candidate);
 
             client.getServer().post(new Runnable() {
                 @Override
@@ -346,179 +175,40 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
                     socket.spewInternal();
                 }
             });
-        }
-        else if (responseSource == ResponseSource.CONDITIONAL_CACHE) {
+        } else if (responseSource == ResponseSource.CONDITIONAL_CACHE) {
             CacheData cacheData = new CacheData();
             cacheData.cachedResponseHeaders = cachedResponseHeaders;
             cacheData.candidate = candidate;
             data.state.putParcelable("cache-data", cacheData);
 
             return null;
-        }
-        else {
+        } else {
             // NETWORK or other
             try {
                 cachedResponseBody.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
             }
             return null;
         }
-        
+
         return new SimpleCancelable();
     }
 
-    private static class BodyCacher extends FilteredDataEmitter implements Parcelable {
-        CacheRequestImpl cacheRequest;
-        ByteBufferList cached;
-
-        @Override
-        public void onDataAvailable(DataEmitter emitter, ByteBufferList bb) {
-            if (cached != null) {
-                com.koushikdutta.async.Util.emitAllData(this, cached);
-                // couldn't emit it all, so just wait for another day...
-                if (cached.remaining() > 0)
-                    return;
-                cached = null;
-            }
-
-            // write to cache... any data not consumed needs to be retained for the next callback
-            try {
-                if (cacheRequest != null) {
-                    OutputStream outputStream = cacheRequest.getBody();
-                    if (outputStream != null) {
-                        int count = bb.size();
-                        for (int i = 0; i < count; i++) {
-                            ByteBuffer b = bb.remove();
-                            outputStream.write(b.array(), b.arrayOffset() + b.position(), b.remaining());
-                            bb.add(b);
-                        }
-                    }
-                    else {
-                        abort();
-                    }
-                }
-            }
-            catch (Exception e) {
-                abort();
-            }
-            
-            super.onDataAvailable(emitter, bb);
-            
-            if (cacheRequest != null && bb.remaining() > 0) {
-                cached = new ByteBufferList();
-                cached.add(bb);
-                bb.clear();
-            }
-        }
-        
-        public void abort() {
-            if (cacheRequest != null) {
-                cacheRequest.abort();
-                cacheRequest = null;
-            }
-        }
-        
-        public void commit() {
-            if (cacheRequest != null) {
-                try {
-                    cacheRequest.getBody().close();
-                }
-                catch (Exception e) {
-                }
-            }
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-        }
-    }
-    
-    private static class BodySpewer extends FilteredDataEmitter {
-        CacheResponse cacheResponse;
-
-        void spewInternal() {
-            if (pending.remaining() > 0) {
-                com.koushikdutta.async.Util.emitAllData(BodySpewer.this, pending);
-                if (pending.remaining() > 0)
-                    return;
-            }
-
-            // fill pending
-            try {
-                while (pending.remaining() == 0) {
-                    ByteBuffer buffer = ByteBuffer.allocate(8192);
-                    int read = cacheResponse.getBody().read(buffer.array());
-                    if (read == -1) {
-                        allowEnd = true;
-                        report(null);
-                        return;
-                    }
-                    buffer.limit(read);
-                    pending.add(buffer);
-                    com.koushikdutta.async.Util.emitAllData(BodySpewer.this, pending);
-                }
-            }
-            catch (IOException e) {
-                allowEnd = true;
-                report(e);
-            }
-        }
-
-        ByteBufferList pending = new ByteBufferList();
-        void spew() {
-            getServer().post(new Runnable() {
-                @Override
-                public void run() {
-                    spewInternal();
-                }
-            });
-        }
-        
-        boolean paused;
-        @Override
-        public void resume() {
-            paused = false;
-            spew();
-        }
-
-        @Override
-        public boolean isPaused() {
-            return paused;
-        }
-
-        boolean allowEnd;
-        @Override
-        protected void report(Exception e) {
-            if (!allowEnd)
-                return;
-            super.report(e);
-        }
-    }
-    
-    int conditionalCacheHitCount;
-    int cacheHitCount;
-    int networkCount;
-    int cacheStoreCount;
-    
     public int getConditionalCacheHitCount() {
         return conditionalCacheHitCount;
     }
+
     public int getCacheHitCount() {
         return cacheHitCount;
     }
+
     public int getNetworkCount() {
         return networkCount;
     }
+
     public int getCacheStoreCount() {
         return cacheStoreCount;
     }
-    
 
     // step 3) if this is a conditional cache request, serve it from the cache if necessary
     // otherwise, see if it is cacheable
@@ -533,9 +223,9 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
             if (cacheData.cachedResponseHeaders.validate(data.headers)) {
                 data.headers = cacheData.cachedResponseHeaders.combine(data.headers);
                 data.headers.getHeaders().setStatusLine(cacheData.cachedResponseHeaders.getHeaders().getStatusLine());
-                
+
                 conditionalCacheHitCount++;
-                
+
                 BodySpewer bodySpewer = new BodySpewer();
                 bodySpewer.cacheResponse = cacheData.candidate;
                 bodySpewer.setDataEmitter(data.bodyEmitter);
@@ -543,11 +233,11 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
                 bodySpewer.spew();
                 return;
             }
-            
+
             // did not validate, so fall through and cache the response
             data.state.remove("cache-data");
         }
-        
+
         if (!caching)
             return;
 
@@ -578,14 +268,13 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
             cacher.cacheRequest = new CacheRequestImpl(editor);
             if (cacher.cacheRequest.getBody() == null)
                 return;
-//            cacher.cacheData = 
+//            cacher.cacheData =
             cacher.setDataEmitter(data.bodyEmitter);
             data.bodyEmitter = cacher;
-            
+
             data.state.putParcelable("body-cacher", cacher);
             cacheStoreCount++;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // Log.e(LOGTAG, "error", e);
             if (cacher.cacheRequest != null)
                 cacher.cacheRequest.abort();
@@ -594,7 +283,6 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
         }
     }
 
-    
     @Override
     public void onRequestComplete(OnRequestCompleteData data) {
         BodyCacher cacher = data.state.getParcelable("body-cacher");
@@ -606,67 +294,158 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
                 cacher.abort();
             else
                 cacher.commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
     }
-    
-    
-    int writeSuccessCount;
-    int writeAbortCount;
-    
-    private final class CacheRequestImpl extends CacheRequest {
-        private final DiskLruCache.Editor editor;
-        private OutputStream cacheOut;
-        private boolean done;
-        private OutputStream body;
 
-        public CacheRequestImpl(final DiskLruCache.Editor editor) throws IOException {
-            this.editor = editor;
-            this.cacheOut = editor.newOutputStream(ENTRY_BODY);
-            this.body = new FilterOutputStream(cacheOut) {
-                @Override public void close() throws IOException {
-                    synchronized (ResponseCacheMiddleware.this) {
-                        if (done) {
-                            return;
-                        }
-                        done = true;
-                        writeSuccessCount++;
-                    }
-                    super.close();
-                    editor.commit();
-                }
+    public void clear() throws IOException {
+        if (cache != null) {
+            cache.delete();
+            open();
+        }
+    }
 
-                @Override
-                public void write(byte[] buffer, int offset, int length) throws IOException {
-                    // Since we don't override "write(int oneByte)", we can write directly to "out"
-                    // and avoid the inefficient implementation from the FilterOutputStream.
-                    out.write(buffer, offset, length);
-                }
-            };
+    public static class CacheData implements Parcelable {
+        CacheResponse candidate;
+        ResponseHeaders cachedResponseHeaders;
+
+        @Override
+        public int describeContents() {
+            return 0;
         }
 
-        @Override public void abort() {
-            synchronized (ResponseCacheMiddleware.this) {
-                if (done) {
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+        }
+
+    }
+
+    private static class BodyCacher extends FilteredDataEmitter implements Parcelable {
+        CacheRequestImpl cacheRequest;
+        ByteBufferList cached;
+
+        @Override
+        public void onDataAvailable(DataEmitter emitter, ByteBufferList bb) {
+            if (cached != null) {
+                com.koushikdutta.async.Util.emitAllData(this, cached);
+                // couldn't emit it all, so just wait for another day...
+                if (cached.remaining() > 0)
                     return;
+                cached = null;
+            }
+
+            // write to cache... any data not consumed needs to be retained for the next callback
+            try {
+                if (cacheRequest != null) {
+                    OutputStream outputStream = cacheRequest.getBody();
+                    if (outputStream != null) {
+                        int count = bb.size();
+                        for (int i = 0; i < count; i++) {
+                            ByteBuffer b = bb.remove();
+                            outputStream.write(b.array(), b.arrayOffset() + b.position(), b.remaining());
+                            bb.add(b);
+                        }
+                    } else {
+                        abort();
+                    }
                 }
-                done = true;
-                writeAbortCount++;
+            } catch (Exception e) {
+                abort();
             }
-            try {
-                cacheOut.close();
-            }
-            catch (IOException e) {
-            }
-            try {
-                editor.abort();
-            } catch (IOException ignored) {
+
+            super.onDataAvailable(emitter, bb);
+
+            if (cacheRequest != null && bb.remaining() > 0) {
+                cached = new ByteBufferList();
+                cached.add(bb);
+                bb.clear();
             }
         }
 
-        @Override public OutputStream getBody() throws IOException {
-            return body;
+        public void abort() {
+            if (cacheRequest != null) {
+                cacheRequest.abort();
+                cacheRequest = null;
+            }
+        }
+
+        public void commit() {
+            if (cacheRequest != null) {
+                try {
+                    cacheRequest.getBody().close();
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+        }
+    }
+
+    private static class BodySpewer extends FilteredDataEmitter {
+        CacheResponse cacheResponse;
+        ByteBufferList pending = new ByteBufferList();
+        boolean paused;
+        boolean allowEnd;
+
+        void spewInternal() {
+            if (pending.remaining() > 0) {
+                com.koushikdutta.async.Util.emitAllData(BodySpewer.this, pending);
+                if (pending.remaining() > 0)
+                    return;
+            }
+
+            // fill pending
+            try {
+                while (pending.remaining() == 0) {
+                    ByteBuffer buffer = ByteBuffer.allocate(8192);
+                    int read = cacheResponse.getBody().read(buffer.array());
+                    if (read == -1) {
+                        allowEnd = true;
+                        report(null);
+                        return;
+                    }
+                    buffer.limit(read);
+                    pending.add(buffer);
+                    com.koushikdutta.async.Util.emitAllData(BodySpewer.this, pending);
+                }
+            } catch (IOException e) {
+                allowEnd = true;
+                report(e);
+            }
+        }
+
+        void spew() {
+            getServer().post(new Runnable() {
+                @Override
+                public void run() {
+                    spewInternal();
+                }
+            });
+        }
+
+        @Override
+        public void resume() {
+            paused = false;
+            spew();
+        }
+
+        @Override
+        public boolean isPaused() {
+            return paused;
+        }
+
+        @Override
+        protected void report(Exception e) {
+            if (!allowEnd)
+                return;
+            super.report(e);
         }
     }
 
@@ -752,9 +531,9 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
 //                    peerCertificates = readCertArray(reader);
 //                    localCertificates = readCertArray(reader);
 //                } else {
-                    cipherSuite = null;
-                    peerCertificates = null;
-                    localCertificates = null;
+                cipherSuite = null;
+                peerCertificates = null;
+                localCertificates = null;
 //                }
             } finally {
                 in.close();
@@ -778,9 +557,9 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
 //                peerCertificates = peerCertificatesNonFinal;
 //                localCertificates = httpsConnection.getLocalCertificates();
 //            } else {
-                cipherSuite = null;
-                peerCertificates = null;
-                localCertificates = null;
+            cipherSuite = null;
+            peerCertificates = null;
+            localCertificates = null;
 //            }
         }
 
@@ -854,25 +633,12 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
         }
 
         public boolean matches(URI uri, String requestMethod,
-                Map<String, List<String>> requestHeaders) {
+                               Map<String, List<String>> requestHeaders) {
             return this.uri.equals(uri.toString())
                     && this.requestMethod.equals(requestMethod)
                     && new ResponseHeaders(uri, responseHeaders)
-                            .varyMatches(varyHeaders.toMultimap(), requestHeaders);
+                    .varyMatches(varyHeaders.toMultimap(), requestHeaders);
         }
-    }
-
-    /**
-     * Returns an input stream that reads the body of a snapshot, closing the
-     * snapshot when the stream is closed.
-     */
-    private static InputStream newBodyInputStream(final DiskLruCache.Snapshot snapshot) {
-        return new FilterInputStream(snapshot.getInputStream(ENTRY_BODY)) {
-            @Override public void close() throws IOException {
-                snapshot.close();
-                super.close();
-            }
-        };
     }
 
     static class EntryCacheResponse extends CacheResponse {
@@ -886,11 +652,13 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
             this.in = newBodyInputStream(snapshot);
         }
 
-        @Override public Map<String, List<String>> getHeaders() {
+        @Override
+        public Map<String, List<String>> getHeaders() {
             return entry.responseHeaders.toMultimap();
         }
 
-        @Override public InputStream getBody() {
+        @Override
+        public InputStream getBody() {
             return in;
         }
     }
@@ -906,19 +674,23 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
             this.in = newBodyInputStream(snapshot);
         }
 
-        @Override public Map<String, List<String>> getHeaders() {
+        @Override
+        public Map<String, List<String>> getHeaders() {
             return entry.responseHeaders.toMultimap();
         }
 
-        @Override public InputStream getBody() {
+        @Override
+        public InputStream getBody() {
             return in;
         }
 
-        @Override public String getCipherSuite() {
+        @Override
+        public String getCipherSuite() {
             return entry.cipherSuite;
         }
 
-        @Override public List<Certificate> getServerCertificateChain()
+        @Override
+        public List<Certificate> getServerCertificateChain()
                 throws SSLPeerUnverifiedException {
             if (entry.peerCertificates == null || entry.peerCertificates.length == 0) {
                 throw new SSLPeerUnverifiedException(null);
@@ -926,32 +698,239 @@ public class ResponseCacheMiddleware extends SimpleMiddleware {
             return Arrays.asList(entry.peerCertificates.clone());
         }
 
-        @Override public Principal getPeerPrincipal() throws SSLPeerUnverifiedException {
+        @Override
+        public Principal getPeerPrincipal() throws SSLPeerUnverifiedException {
             if (entry.peerCertificates == null || entry.peerCertificates.length == 0) {
                 throw new SSLPeerUnverifiedException(null);
             }
             return ((X509Certificate) entry.peerCertificates[0]).getSubjectX500Principal();
         }
 
-        @Override public List<Certificate> getLocalCertificateChain() {
+        @Override
+        public List<Certificate> getLocalCertificateChain() {
             if (entry.localCertificates == null || entry.localCertificates.length == 0) {
                 return null;
             }
             return Arrays.asList(entry.localCertificates.clone());
         }
 
-        @Override public Principal getLocalPrincipal() {
+        @Override
+        public Principal getLocalPrincipal() {
             if (entry.localCertificates == null || entry.localCertificates.length == 0) {
                 return null;
             }
             return ((X509Certificate) entry.localCertificates[0]).getSubjectX500Principal();
         }
     }
-    
-    public void clear() throws IOException {
-        if (cache != null) {
-            cache.delete();
-            open();
+
+    private class CachedSSLSocket extends CachedSocket implements AsyncSSLSocket {
+        public CachedSSLSocket(CacheResponse cacheResponse) {
+            super(cacheResponse);
+        }
+
+        @Override
+        public X509Certificate[] getPeerCertificates() {
+            return null;
+        }
+    }
+
+    private class CachedSocket implements AsyncSocket {
+        CacheResponse cacheResponse;
+        DataCallback dataCallback;
+        boolean paused;
+        ByteBufferList pending = new ByteBufferList();
+        CompletedCallback endCallback;
+        boolean open;
+        CompletedCallback closedCallback;
+
+        public CachedSocket(CacheResponse cacheResponse) {
+            this.cacheResponse = cacheResponse;
+        }
+
+        @Override
+        public DataCallback getDataCallback() {
+            return dataCallback;
+        }
+
+        @Override
+        public void setDataCallback(DataCallback callback) {
+            dataCallback = callback;
+        }
+
+        @Override
+        public boolean isChunked() {
+            return false;
+        }
+
+        @Override
+        public void pause() {
+            paused = true;
+        }
+
+        void report(Exception e) {
+            open = false;
+            if (endCallback != null)
+                endCallback.onCompleted(e);
+            if (closedCallback != null)
+                closedCallback.onCompleted(e);
+        }
+
+        void spewInternal() {
+            if (pending.remaining() > 0) {
+                com.koushikdutta.async.Util.emitAllData(CachedSocket.this, pending);
+                if (pending.remaining() > 0)
+                    return;
+            }
+
+            // fill pending
+            try {
+                while (pending.remaining() == 0) {
+                    ByteBuffer buffer = ByteBuffer.allocate(8192);
+                    int read = cacheResponse.getBody().read(buffer.array());
+                    if (read == -1) {
+                        report(null);
+                        return;
+                    }
+                    buffer.limit(read);
+                    pending.add(buffer);
+                    com.koushikdutta.async.Util.emitAllData(CachedSocket.this, pending);
+                }
+            } catch (IOException e) {
+                report(e);
+            }
+        }
+
+        void spew() {
+            getServer().post(new Runnable() {
+                @Override
+                public void run() {
+                    spewInternal();
+                }
+            });
+        }
+
+        @Override
+        public void resume() {
+            paused = false;
+            spew();
+        }
+
+        @Override
+        public boolean isPaused() {
+            return paused;
+        }
+
+        @Override
+        public CompletedCallback getEndCallback() {
+            return endCallback;
+        }
+
+        @Override
+        public void setEndCallback(CompletedCallback callback) {
+            endCallback = callback;
+        }
+
+        @Override
+        public void write(ByteBuffer bb) {
+            // it's gonna write headers and stuff... whatever
+            bb.limit(bb.position());
+        }
+
+        @Override
+        public void write(ByteBufferList bb) {
+            // it's gonna write headers and stuff... whatever
+            bb.clear();
+        }
+
+        @Override
+        public WritableCallback getWriteableCallback() {
+            return null;
+        }
+
+        @Override
+        public void setWriteableCallback(WritableCallback handler) {
+        }
+
+        @Override
+        public boolean isOpen() {
+            return open;
+        }
+
+        @Override
+        public void close() {
+            open = false;
+        }
+
+        @Override
+        public CompletedCallback getClosedCallback() {
+            return closedCallback;
+        }
+
+        @Override
+        public void setClosedCallback(CompletedCallback handler) {
+            closedCallback = handler;
+        }
+
+        @Override
+        public AsyncServer getServer() {
+            return client.getServer();
+        }
+    }
+
+    private final class CacheRequestImpl extends CacheRequest {
+        private final DiskLruCache.Editor editor;
+        private OutputStream cacheOut;
+        private boolean done;
+        private OutputStream body;
+
+        public CacheRequestImpl(final DiskLruCache.Editor editor) throws IOException {
+            this.editor = editor;
+            this.cacheOut = editor.newOutputStream(ENTRY_BODY);
+            this.body = new FilterOutputStream(cacheOut) {
+                @Override
+                public void close() throws IOException {
+                    synchronized (ResponseCacheMiddleware.this) {
+                        if (done) {
+                            return;
+                        }
+                        done = true;
+                        writeSuccessCount++;
+                    }
+                    super.close();
+                    editor.commit();
+                }
+
+                @Override
+                public void write(byte[] buffer, int offset, int length) throws IOException {
+                    // Since we don't override "write(int oneByte)", we can write directly to "out"
+                    // and avoid the inefficient implementation from the FilterOutputStream.
+                    out.write(buffer, offset, length);
+                }
+            };
+        }
+
+        @Override
+        public void abort() {
+            synchronized (ResponseCacheMiddleware.this) {
+                if (done) {
+                    return;
+                }
+                done = true;
+                writeAbortCount++;
+            }
+            try {
+                cacheOut.close();
+            } catch (IOException e) {
+            }
+            try {
+                editor.abort();
+            } catch (IOException ignored) {
+            }
+        }
+
+        @Override
+        public OutputStream getBody() throws IOException {
+            return body;
         }
     }
 }

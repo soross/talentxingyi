@@ -1,6 +1,7 @@
 package com.koushikdutta.async.http;
 
 import android.os.Handler;
+import android.util.Log;
 import com.koushikdutta.async.*;
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.callback.ConnectCallback;
@@ -23,7 +24,19 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
 public class AsyncHttpClient {
+
+    private static final String TAG = AsyncHttpClient.class.getSimpleName();
+    private static final String LOGTAG = "AsyncHttp";
     private static AsyncHttpClient mDefaultInstance;
+    ArrayList<AsyncHttpClientMiddleware> mMiddleware = new ArrayList<AsyncHttpClientMiddleware>();
+    AsyncServer mServer;
+
+    public AsyncHttpClient(AsyncServer server) {
+        mServer = server;
+        insertMiddleware(new AsyncSocketMiddleware(this));
+        insertMiddleware(new AsyncSSLSocketMiddleware(this));
+    }
+
     public static AsyncHttpClient getDefaultInstance() {
         if (mDefaultInstance == null)
             mDefaultInstance = new AsyncHttpClient(AsyncServer.getDefault());
@@ -31,48 +44,20 @@ public class AsyncHttpClient {
         return mDefaultInstance;
     }
 
-    ArrayList<AsyncHttpClientMiddleware> mMiddleware = new ArrayList<AsyncHttpClientMiddleware>();
     public ArrayList<AsyncHttpClientMiddleware> getMiddleware() {
         return mMiddleware;
     }
+
     public void insertMiddleware(AsyncHttpClientMiddleware middleware) {
         synchronized (mMiddleware) {
             mMiddleware.add(0, middleware);
         }
     }
 
-    AsyncServer mServer;
-    public AsyncHttpClient(AsyncServer server) {
-        mServer = server;
-        insertMiddleware(new AsyncSocketMiddleware(this));
-        insertMiddleware(new AsyncSSLSocketMiddleware(this));
-    }
-
     public Cancellable execute(final AsyncHttpRequest request, final HttpConnectCallback callback) {
         CancelableImpl ret;
         execute(request, callback, 0, ret = new CancelableImpl());
         return ret;
-    }
-
-    private static final String LOGTAG = "AsyncHttp";
-    private static class CancelableImpl extends SimpleCancelable {
-        public Cancellable socketCancelable;
-        public AsyncSocket socket;
-
-        @Override
-        public boolean cancel() {
-            if (!super.cancel())
-                return false;
-
-            if (socketCancelable != null) {
-                socketCancelable.cancel();
-            }
-
-            if (socket != null)
-                socket.close();
-
-            return true;
-        }
     }
 
     private void reportConnectedCompleted(CancelableImpl cancel, Exception ex, AsyncHttpResponseImpl response, final HttpConnectCallback callback) {
@@ -97,6 +82,7 @@ public class AsyncHttpClient {
 
         data.connectCallback = new ConnectCallback() {
             Object scheduled = null;
+
             {
                 if (request.getTimeout() > 0) {
                     scheduled = mServer.postDelayed(new Runnable() {
@@ -118,7 +104,7 @@ public class AsyncHttpClient {
                 }
 
                 data.socket = socket;
-                for (AsyncHttpClientMiddleware middleware: mMiddleware) {
+                for (AsyncHttpClientMiddleware middleware : mMiddleware) {
                     middleware.onSocket(data);
                 }
 
@@ -133,7 +119,7 @@ public class AsyncHttpClient {
                     @Override
                     public void setDataEmitter(DataEmitter emitter) {
                         data.bodyEmitter = emitter;
-                        for (AsyncHttpClientMiddleware middleware: mMiddleware) {
+                        for (AsyncHttpClientMiddleware middleware : mMiddleware) {
                             middleware.onBodyDecoder(data);
                         }
                         mHeaders = data.headers;
@@ -168,15 +154,14 @@ public class AsyncHttpClient {
                             // allow the middleware to massage the headers before the body is decoded
 
                             data.headers = mHeaders;
-                            for (AsyncHttpClientMiddleware middleware: mMiddleware) {
+                            for (AsyncHttpClientMiddleware middleware : mMiddleware) {
                                 middleware.onHeadersReceived(data);
                             }
                             mHeaders = data.headers;
 
                             // drop through, and setDataEmitter will be called for the body decoder.
                             // headers will be further massaged in there.
-                        }
-                        catch (Exception ex) {
+                        } catch (Exception ex) {
                             reportConnectedCompleted(cancel, ex, null, callback);
                         }
                     }
@@ -186,7 +171,7 @@ public class AsyncHttpClient {
                         if (cancel.isCancelled())
                             return;
                         if (ex instanceof AsyncSSLException) {
-                            AsyncSSLException ase = (AsyncSSLException)ex;
+                            AsyncSSLException ase = (AsyncSSLException) ex;
                             request.onHandshakeException(ase);
                             if (ase.getIgnore())
                                 return;
@@ -201,11 +186,10 @@ public class AsyncHttpClient {
                         }
 
                         data.exception = ex;
-                        for (AsyncHttpClientMiddleware middleware: mMiddleware) {
+                        for (AsyncHttpClientMiddleware middleware : mMiddleware) {
                             middleware.onRequestComplete(data);
                         }
                     }
-
 
                     @Override
                     public AsyncSocket detachSocket() {
@@ -225,7 +209,7 @@ public class AsyncHttpClient {
             }
         };
 
-        for (AsyncHttpClientMiddleware middleware: mMiddleware) {
+        for (AsyncHttpClientMiddleware middleware : mMiddleware) {
             if (null != (cancel.socketCancelable = middleware.getSocket(data)))
                 return;
         }
@@ -238,31 +222,6 @@ public class AsyncHttpClient {
 
     public Cancellable execute(String uri, final HttpConnectCallback callback) {
         return execute(new AsyncHttpGet(URI.create(uri)), callback);
-    }
-
-    public static abstract class RequestCallbackBase<T> implements RequestCallback<T> {
-        @Override
-        public void onProgress(AsyncHttpResponse response, int downloaded, int total) {
-        }
-        @Override
-        public void onConnect(AsyncHttpResponse response) {
-        }
-    }
-
-    public static abstract class DownloadCallback extends RequestCallbackBase<ByteBufferList> {
-    }
-
-    public static abstract class StringCallback extends RequestCallbackBase<String> {
-    }
-
-    public static abstract class JSONObjectCallback extends RequestCallbackBase<JSONObject> {
-    }
-
-    public static abstract class FileCallback extends RequestCallbackBase<File> {
-    }
-
-    private interface ResultConvert<T> {
-        public T convert(ByteBufferList bb) throws Exception;
     }
 
     public Future<ByteBufferList> get(String uri, final DownloadCallback callback) {
@@ -381,21 +340,20 @@ public class AsyncHttpClient {
         final OutputStream fout;
         try {
             fout = new BufferedOutputStream(new FileOutputStream(file), 8192);
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             if (ret.setComplete(e))
                 invoke(handler, callback, ret, null, e, null);
             return ret;
         }
         execute(req, new HttpConnectCallback() {
             int mDownloaded = 0;
+
             @Override
             public void onConnectCompleted(Exception ex, final AsyncHttpResponse response) {
                 if (ex != null) {
                     try {
                         fout.close();
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                     }
                     file.delete();
                     if (ret.setComplete(ex))
@@ -419,16 +377,14 @@ public class AsyncHttpClient {
                     public void onCompleted(Exception ex) {
                         try {
                             fout.close();
-                        }
-                        catch (IOException e) {
+                        } catch (IOException e) {
                             ex = e;
                         }
                         if (ex != null) {
                             file.delete();
                             if (ret.setComplete(ex))
                                 invoke(handler, callback, ret, response, ex, null);
-                        }
-                        else if (ret.setComplete(file)) {
+                        } else if (ret.setComplete(file)) {
                             invoke(handler, callback, ret, response, null, file);
                         }
                     }
@@ -445,6 +401,7 @@ public class AsyncHttpClient {
         execute(req, new HttpConnectCallback() {
             int mDownloaded = 0;
             ByteBufferList buffer = new ByteBufferList();
+
             @Override
             public void onConnectCompleted(Exception ex, final AsyncHttpResponse response) {
                 if (ex != null) {
@@ -474,8 +431,7 @@ public class AsyncHttpClient {
                                 if (ret.setComplete(value))
                                     invoke(handler, callback, ret, response, null, value);
                                 return;
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                                 ex = e;
                             }
                         }
@@ -493,11 +449,6 @@ public class AsyncHttpClient {
         return execute(new AsyncHttpGet(URI.create(uri)), callback, convert);
     }
 
-
-    public static interface WebSocketConnectCallback {
-        public void onCompleted(Exception ex, WebSocket webSocket);
-    }
-
     public Future<WebSocket> websocket(final AsyncHttpRequest req, String protocol, final WebSocketConnectCallback callback) {
         WebSocketImpl.addWebSocketUpgradeHeaders(req, protocol);
         final SimpleFuture<WebSocket> ret = new SimpleFuture<WebSocket>();
@@ -513,8 +464,7 @@ public class AsyncHttpClient {
                 if (ws == null) {
                     if (!ret.setComplete(new Exception("Unable to complete websocket handshake")))
                         return;
-                }
-                else {
+                } else {
                     if (!ret.setComplete(ws))
                         return;
                 }
@@ -534,5 +484,55 @@ public class AsyncHttpClient {
 
     public AsyncServer getServer() {
         return mServer;
+    }
+
+    private interface ResultConvert<T> {
+        public T convert(ByteBufferList bb) throws Exception;
+    }
+
+    public static interface WebSocketConnectCallback {
+        public void onCompleted(Exception ex, WebSocket webSocket);
+    }
+
+    private static class CancelableImpl extends SimpleCancelable {
+        public Cancellable socketCancelable;
+        public AsyncSocket socket;
+
+        @Override
+        public boolean cancel() {
+            if (!super.cancel())
+                return false;
+
+            if (socketCancelable != null) {
+                socketCancelable.cancel();
+            }
+
+            if (socket != null)
+                socket.close();
+
+            return true;
+        }
+    }
+
+    public static abstract class RequestCallbackBase<T> implements RequestCallback<T> {
+        @Override
+        public void onProgress(AsyncHttpResponse response, int downloaded, int total) {
+        }
+
+        @Override
+        public void onConnect(AsyncHttpResponse response) {
+        }
+    }
+
+    public static abstract class DownloadCallback extends RequestCallbackBase<ByteBufferList> {
+    }
+
+    public static abstract class StringCallback extends RequestCallbackBase<String> {
+    }
+
+    public static abstract class JSONObjectCallback extends RequestCallbackBase<JSONObject> {
+    }
+
+    public static abstract class FileCallback extends RequestCallbackBase<File> {
     }
 }
