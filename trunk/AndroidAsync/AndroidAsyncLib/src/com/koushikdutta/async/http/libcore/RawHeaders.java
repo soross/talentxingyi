@@ -17,34 +17,29 @@ package com.koushikdutta.async.http.libcore;
  *  limitations under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 
 /**
  * The HTTP status and unparsed header fields of a single HTTP message. Values
  * are represented as uninterpreted strings; use {@link RequestHeaders} and
  * {@link ResponseHeaders} for interpreted headers. This class maintains the
  * order of the header fields within the HTTP message.
- *
+ * <p/>
  * <p>This class tracks fields line-by-line. A field with multiple comma-
  * separated values on the same line will be treated as a field with a single
  * value by this class. It is the caller's responsibility to detect and split
  * on commas if their field permits multiple values. This simplifies use of
  * single-valued fields whose values routinely contain commas, such as cookies
  * or dates.
- *
+ * <p/>
  * <p>This class trims whitespace from values. It never returns values with
  * leading or trailing whitespace.
  */
 public final class RawHeaders {
     private static final Comparator<String> FIELD_NAME_COMPARATOR = new Comparator<String>() {
-        @Override public int compare(String a, String b) {
+        @Override
+        public int compare(String a, String b) {
             if (a == b) {
                 return 0;
             } else if (a == null) {
@@ -56,14 +51,14 @@ public final class RawHeaders {
             }
         }
     };
-
     private final List<String> namesAndValues = new ArrayList<String>(20);
     private String statusLine;
     private int httpMinorVersion = 1;
     private int responseCode = -1;
     private String responseMessage;
 
-    public RawHeaders() {}
+    public RawHeaders() {
+    }
 
     public RawHeaders(RawHeaders copyFrom) {
         namesAndValues.addAll(copyFrom.namesAndValues);
@@ -71,6 +66,29 @@ public final class RawHeaders {
         httpMinorVersion = copyFrom.httpMinorVersion;
         responseCode = copyFrom.responseCode;
         responseMessage = copyFrom.responseMessage;
+    }
+
+    /**
+     * Creates a new instance from the given map of fields to values. If
+     * present, the null field's last element will be used to set the status
+     * line.
+     */
+    public static RawHeaders fromMultimap(Map<String, List<String>> map) {
+        RawHeaders result = new RawHeaders();
+        for (Entry<String, List<String>> entry : map.entrySet()) {
+            String fieldName = entry.getKey();
+            List<String> values = entry.getValue();
+            if (fieldName != null) {
+                result.addAll(fieldName, values);
+            } else if (!values.isEmpty()) {
+                result.setStatusLine(values.get(values.size() - 1));
+            }
+        }
+        return result;
+    }
+
+    public String getStatusLine() {
+        return statusLine;
     }
 
     /**
@@ -100,10 +118,6 @@ public final class RawHeaders {
         if (last + 1 <= statusLine.length()) {
             this.responseMessage = statusLine.substring(last + 1);
         }
-    }
-
-    public String getStatusLine() {
-        return statusLine;
     }
 
     /**
@@ -273,24 +287,5 @@ public final class RawHeaders {
             result.put(null, Collections.unmodifiableList(Collections.singletonList(statusLine)));
         }
         return Collections.unmodifiableMap(result);
-    }
-
-    /**
-     * Creates a new instance from the given map of fields to values. If
-     * present, the null field's last element will be used to set the status
-     * line.
-     */
-    public static RawHeaders fromMultimap(Map<String, List<String>> map) {
-        RawHeaders result = new RawHeaders();
-        for (Entry<String, List<String>> entry : map.entrySet()) {
-            String fieldName = entry.getKey();
-            List<String> values = entry.getValue();
-            if (fieldName != null) {
-                result.addAll(fieldName, values);
-            } else if (!values.isEmpty()) {
-                result.setStatusLine(values.get(values.size() - 1));
-            }
-        }
-        return result;
     }
 }

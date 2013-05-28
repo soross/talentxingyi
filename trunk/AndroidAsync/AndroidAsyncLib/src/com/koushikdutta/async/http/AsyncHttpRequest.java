@@ -14,24 +14,55 @@ import java.util.List;
 import java.util.Map;
 
 public class AsyncHttpRequest implements HttpRequest {
+
+    private static final String TAG = AsyncHttpRequest.class.getSimpleName();
+    HttpParams params;
+    int mTimeout;
+    private String mMethod;
+    private RawHeaders mRawHeaders = new RawHeaders();
+    private RequestHeaders mHeaders;
+    private Handler mHandler = Looper.myLooper() == null ? null : new Handler();
+    private boolean mFollowRedirect = true;
+    private AsyncHttpRequestBody mBody;
+
+    public AsyncHttpRequest(URI uri, String method) {
+        assert uri != null;
+        mMethod = method;
+        mHeaders = new RequestHeaders(uri, mRawHeaders);
+        mRawHeaders.setStatusLine(getRequestLine().toString());// POST /chart HTTP/1.1
+        mHeaders.setHost(uri.getHost());// chart.googleapis.com
+        mHeaders.setUserAgent(getDefaultUserAgent());// Dalvik/1.4.0 (Linux; U; Android 2.3.5; HTC Desire HD A9191 Build/GRJ90)
+        mHeaders.setAcceptEncoding("gzip, deflate");
+        mHeaders.getHeaders().set("Connection", "keep-alive");
+        mHeaders.getHeaders().set("Accept", "*/*");
+    }
+
+    public static AsyncHttpRequest create(HttpRequest request) {
+        AsyncHttpRequest ret = new AsyncHttpRequest(URI.create(request.getRequestLine().getUri()), request.getRequestLine().getMethod());
+        for (Header header : request.getAllHeaders()) {
+            ret.addHeader(header);
+        }
+        return ret;
+    }
+
     public RequestLine getRequestLine() {
         return new RequestLine() {
-            
+
             @Override
             public String getUri() {
                 return getUri().toString();
             }
-            
+
             @Override
             public ProtocolVersion getProtocolVersion() {
                 return new ProtocolVersion("HTTP", 1, 1);
             }
-            
+
             @Override
             public String getMethod() {
                 return mMethod;
             }
-            
+
             @Override
             public String toString() {
                 String path = AsyncHttpRequest.this.getUri().getPath();
@@ -50,35 +81,19 @@ public class AsyncHttpRequest implements HttpRequest {
         String agent = System.getProperty("http.agent");
         return agent != null ? agent : ("Java" + System.getProperty("java.version"));
     }
-    
-    private String mMethod;
-    public String getMethod() {
-       return mMethod; 
-    }
 
-    public AsyncHttpRequest(URI uri, String method) {
-        assert uri != null;
-        mMethod = method;
-        mHeaders = new RequestHeaders(uri, mRawHeaders);
-        mRawHeaders.setStatusLine(getRequestLine().toString());
-        mHeaders.setHost(uri.getHost());
-        mHeaders.setUserAgent(getDefaultUserAgent());
-        mHeaders.setAcceptEncoding("gzip, deflate");
-        mHeaders.getHeaders().set("Connection", "keep-alive");
-        mHeaders.getHeaders().set("Accept", "*/*");
+    public String getMethod() {
+        return mMethod;
     }
 
     public URI getUri() {
         return mHeaders.getUri();
     }
-    
-    private RawHeaders mRawHeaders = new RawHeaders();
-    private RequestHeaders mHeaders;
-    private Handler mHandler = Looper.myLooper() == null ? null : new Handler();
-    
+
     public Handler getHandler() {
         return mHandler;
     }
+
     public void setHandler(Handler handler) {
         mHandler = handler;
     }
@@ -87,30 +102,35 @@ public class AsyncHttpRequest implements HttpRequest {
         return mHeaders;
     }
 
+    @Override
+    public void setHeaders(Header[] headers) {
+        for (Header header : headers)
+            setHeader(header);
+    }
+
     public String getRequestString() {
         return mRawHeaders.toHeaderString();
     }
-    
-    private boolean mFollowRedirect = true;
+
     public boolean getFollowRedirect() {
         return mFollowRedirect;
     }
+
     public void setFollowRedirect(boolean follow) {
         mFollowRedirect = follow;
     }
-    
-    private AsyncHttpRequestBody mBody;
-    public void setBody(AsyncHttpRequestBody body) {
-        mBody = body;
-    }
-    
+
     public AsyncHttpRequestBody getBody() {
         return mBody;
     }
-    
+
+    public void setBody(AsyncHttpRequestBody body) {
+        mBody = body;
+    }
+
     public void onHandshakeException(AsyncSSLException e) {
     }
-    
+
     @Override
     public void addHeader(Header header) {
         getHeaders().getHeaders().add(header.getName(), header.getValue());
@@ -165,10 +185,14 @@ public class AsyncHttpRequest implements HttpRequest {
         return vals[vals.length - 1];
     }
 
-    HttpParams params;
     @Override
     public HttpParams getParams() {
         return params;
+    }
+
+    @Override
+    public void setParams(HttpParams params) {
+        this.params = params;
     }
 
     @Override
@@ -208,31 +232,11 @@ public class AsyncHttpRequest implements HttpRequest {
         getHeaders().getHeaders().set(name, value);
     }
 
-    @Override
-    public void setHeaders(Header[] headers) {
-        for (Header header: headers)
-            setHeader(header);
-    }
-
-    @Override
-    public void setParams(HttpParams params) {
-        this.params = params;
-    }
-    
-    int mTimeout;
     public int getTimeout() {
         return mTimeout;
     }
-    
+
     public void setTimeout(int timeout) {
         mTimeout = timeout;
-    }
-    
-    public static AsyncHttpRequest create(HttpRequest request) {
-        AsyncHttpRequest ret = new AsyncHttpRequest(URI.create(request.getRequestLine().getUri()), request.getRequestLine().getMethod());
-        for (Header header: request.getAllHeaders()) {
-            ret.addHeader(header);
-        }
-        return ret;
     }
 }
