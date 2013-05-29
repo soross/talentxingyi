@@ -355,6 +355,9 @@ public class AsyncHttpClient {
 
             @Override
             public void onConnectCompleted(Exception ex, final AsyncHttpResponse response) {
+
+                Log.d(TAG, "HttpConnectCallback onConnectCompleted , ex == null ?" + (ex == null));
+
                 if (ex != null) {
                     try {
                         fout.close();
@@ -372,6 +375,7 @@ public class AsyncHttpClient {
                 response.setDataCallback(new OutputStreamDataCallback(fout) {
                     @Override
                     public void onDataAvailable(DataEmitter emitter, ByteBufferList bb) {
+                        Log.d(TAG, "OutputStreamDataCallback onDataAvailable");
                         mDownloaded += bb.remaining();
                         super.onDataAvailable(emitter, bb);
                         invokeProgress(callback, response, mDownloaded, contentLength);
@@ -380,6 +384,7 @@ public class AsyncHttpClient {
                 response.setEndCallback(new CompletedCallback() {
                     @Override
                     public void onCompleted(Exception ex) {
+                        Log.d(TAG, "CompletedCallback onCompleted , ex == null ?" + (ex == null));
                         try {
                             fout.close();
                         } catch (IOException e) {
