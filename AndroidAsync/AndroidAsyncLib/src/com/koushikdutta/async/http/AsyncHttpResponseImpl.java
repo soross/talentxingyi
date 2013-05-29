@@ -11,15 +11,59 @@ import com.koushikdutta.async.http.libcore.ResponseHeaders;
 import java.nio.ByteBuffer;
 
 abstract class AsyncHttpResponseImpl extends FilteredDataEmitter implements AsyncHttpResponse {
+    StringCallback mHeaderCallback = new StringCallback() {
+        private RawHeaders mRawHeaders = new RawHeaders();
+
+        @Override
+        public void onStringAvailable(String s) {
+            try {
+                if (mRawHeaders.getStatusLine() == null) {
+                    mRawHeaders.setStatusLine(s);
+                } else if (!"\r".equals(s)) {
+                    mRawHeaders.addLine(s);
+                } else {
+                    mHeaders = new ResponseHeaders(mRequest.getUri(), mRawHeaders);
+                    onHeadersReceived();
+                    // socket may get detached after headers (websocket)
+                    if (mSocket == null)
+                        return;
+                    DataEmitter emitter = Util.getBodyDecoder(mSocket, mRawHeaders, false, mReporter);
+                    setDataEmitter(emitter);
+                }
+            } catch (Exception ex) {
+                report(ex);
+            }
+        }
+    };
+    ResponseHeaders mHeaders;
+    boolean mCompleted = false;
+    DataSink mSink;
     private AsyncHttpRequestBody mWriter;
-    
+    private CompletedCallback mReporter = new CompletedCallback() {
+        @Override
+        public void onCompleted(Exception error) {
+            if (error != null && !mCompleted) {
+                report(new Exception("connection closed before response completed."));
+            } else {
+                report(error);
+            }
+        }
+    };
+    private AsyncHttpRequest mRequest;
+    private AsyncSocket mSocket;
+    private boolean mFirstWrite = true;
+
+    public AsyncHttpResponseImpl(AsyncHttpRequest request) {
+        mRequest = request;
+    }
+
     public AsyncSocket getSocket() {
         return mSocket;
     }
-    
+
     void setSocket(AsyncSocket exchange) {
         mSocket = exchange;
-        
+
         if (mSocket == null)
             return;
 
@@ -29,16 +73,14 @@ abstract class AsyncHttpResponseImpl extends FilteredDataEmitter implements Asyn
             if (mWriter.length() != -1) {
                 mRequest.getHeaders().setContentLength(mWriter.length());
                 mSink = mSocket;
-            }
-            else {
+            } else {
                 mRequest.getHeaders().getHeaders().set("Transfer-Encoding", "Chunked");
                 mSink = new ChunkedOutputFilter(mSocket);
             }
-        }
-        else {
+        } else {
             mSink = mSocket;
         }
-        
+
         String rs = mRequest.getRequestString();
         com.koushikdutta.async.Util.writeAll(exchange, rs.getBytes(), new CompletedCallback() {
             @Override
@@ -47,11 +89,11 @@ abstract class AsyncHttpResponseImpl extends FilteredDataEmitter implements Asyn
                     mWriter.write(mRequest, AsyncHttpResponseImpl.this);
             }
         });
-        
+
         LineEmitter liner = new LineEmitter();
         exchange.setDataCallback(liner);
         liner.setLineCallback(mHeaderCallback);
-        
+
         mSocket.setEndCallback(mReporter);
         mSocket.setClosedCallback(new CompletedCallback() {
             @Override
@@ -60,47 +102,8 @@ abstract class AsyncHttpResponseImpl extends FilteredDataEmitter implements Asyn
             }
         });
     }
-    
-    private CompletedCallback mReporter = new CompletedCallback() {
-        @Override
-        public void onCompleted(Exception error) {
-            if (error != null && !mCompleted) {
-                report(new Exception("connection closed before response completed."));
-            }
-            else {
-                report(error);
-            }
-        }
-    };
-    
+
     protected abstract void onHeadersReceived();
-    
-    StringCallback mHeaderCallback = new StringCallback() {
-        private RawHeaders mRawHeaders = new RawHeaders();
-        @Override
-        public void onStringAvailable(String s) {
-            try {
-                if (mRawHeaders.getStatusLine() == null) {
-                    mRawHeaders.setStatusLine(s);
-                }
-                else if (!"\r".equals(s)) {
-                    mRawHeaders.addLine(s);
-                }
-                else {
-                    mHeaders = new ResponseHeaders(mRequest.getUri(), mRawHeaders);
-                    onHeadersReceived();
-                    // socket may get detached after headers (websocket)
-                    if (mSocket == null)
-                        return;
-                    DataEmitter emitter = Util.getBodyDecoder(mSocket, mRawHeaders, false, mReporter);
-                    setDataEmitter(emitter);
-                }
-            }
-            catch (Exception ex) {
-                report(ex);
-            }
-        }
-    };
 
     @Override
     protected void report(Exception e) {
@@ -121,22 +124,12 @@ abstract class AsyncHttpResponseImpl extends FilteredDataEmitter implements Asyn
         mSocket.setEndCallback(null);
         mCompleted = true;
     }
-    
-    private AsyncHttpRequest mRequest;
-    private AsyncSocket mSocket;
-    ResponseHeaders mHeaders;
-    public AsyncHttpResponseImpl(AsyncHttpRequest request) {
-        mRequest = request;
-    }
-
-    boolean mCompleted = false;
 
     @Override
     public ResponseHeaders getHeaders() {
         return mHeaders;
     }
 
-    private boolean mFirstWrite = true;
     private void assertContent() {
         if (!mFirstWrite)
             return;
@@ -144,8 +137,6 @@ abstract class AsyncHttpResponseImpl extends FilteredDataEmitter implements Asyn
         assert null != mRequest.getHeaders().getHeaders().get("Content-Type");
         assert mRequest.getHeaders().getHeaders().get("Transfer-Encoding") != null || mRequest.getHeaders().getContentLength() != -1;
     }
-
-    DataSink mSink;
 
     @Override
     public void write(ByteBuffer bb) {
@@ -164,17 +155,15 @@ abstract class AsyncHttpResponseImpl extends FilteredDataEmitter implements Asyn
         write(ByteBuffer.wrap(new byte[0]));
     }
 
-
-    @Override
-    public void setWriteableCallback(WritableCallback handler) {
-        mSink.setWriteableCallback(handler);
-    }
-
     @Override
     public WritableCallback getWriteableCallback() {
         return mSink.getWriteableCallback();
     }
 
+    @Override
+    public void setWriteableCallback(WritableCallback handler) {
+        mSink.setWriteableCallback(handler);
+    }
 
     @Override
     public boolean isOpen() {
@@ -187,15 +176,15 @@ abstract class AsyncHttpResponseImpl extends FilteredDataEmitter implements Asyn
     }
 
     @Override
+    public CompletedCallback getClosedCallback() {
+        return mSink.getClosedCallback();
+    }
+
+    @Override
     public void setClosedCallback(CompletedCallback handler) {
         mSink.setClosedCallback(handler);
     }
 
-    @Override
-    public CompletedCallback getClosedCallback() {
-        return mSink.getClosedCallback();
-    }
-    
     @Override
     public AsyncServer getServer() {
         return mSocket.getServer();
