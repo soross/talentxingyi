@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- SearchTitle -->
+    <color name="title_bg">#ff000000</color>
+    <color name="title_city_textcolor">#ffffffff</color>
+    <color name="title_search_textcolor">#ff000000</color>
+</resources> 
