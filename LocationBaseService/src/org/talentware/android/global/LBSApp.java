@@ -14,7 +14,7 @@ public class LBSApp extends Application {
 
     public static User mUser = new User();
 
-    private LBSApp aInstance = this;
+    private static LBSApp aInstance = new LBSApp();
 
     public void onCreate() {
 
@@ -22,6 +22,10 @@ public class LBSApp extends Application {
 
     public void onTerminate() {
 
+    }
+
+    public static Application getAppContext() {
+        return aInstance;
     }
 
 }
