@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LocationBasedService</string>
+
+    <!--SearchTitle-->
+    <string name="default_title_name">未知</string>
+    <string name="search_hint">请输入您感兴趣的事物</string>
 </resources>
