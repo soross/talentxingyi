@@ -13,15 +13,15 @@
               android:gravity="center" android:text="@string/default_title_name"
               android:textColor="@color/title_city_textcolor"></TextView>
 
-    <EditText android:id="@+id/et_search" android:layout_height="wrap_content" android:singleLine="true"
+    <EditText android:id="@+id/et_search" android:layout_height="@dimen/searchbar_height" android:singleLine="true"
               android:layout_weight="1"
               android:paddingLeft="@dimen/title_search_text_paddingleft"
               android:paddingRight="@dimen/title_search_btn_paddingright"
-              android:drawableRight="@drawable/ic_search"
+              android:drawableRight="@drawable/ic_search_btn"
               android:cursorVisible="false"
               android:textSize="@dimen/title_searchhint_text_size" android:textColor="@color/title_search_textcolor"
               android:layout_width="match_parent" android:hint="@string/search_hint"
-              android:background="@drawable/ic_search_bg"
+              android:background="@drawable/search_bg"
               android:gravity="center_vertical"></EditText>
 
 </LinearLayout>
