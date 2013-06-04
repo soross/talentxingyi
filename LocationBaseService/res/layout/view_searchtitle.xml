@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/title_height"
+              android:weightSum="5"
+              android:gravity="center"
+              android:background="@color/title_bg">
+
+    <TextView android:id="@+id/tv_city" android:layout_weight="4" android:layout_height="match_parent"
+              android:layout_width="match_parent"
+              android:gravity="center" android:text="@string/default_title_name"
+              android:textColor="@color/title_city_textcolor"></TextView>
+
+    <EditText android:id="@+id/et_search" android:layout_height="wrap_content" android:singleLine="true"
+              android:layout_weight="1"
+              android:textSize="13sp" android:textColor="@color/title_search_textcolor"
+              android:layout_width="match_parent" android:hint="@string/search_hint"
+              android:background="@drawable/search_bar_button_background_normal"
+              android:gravity="center_vertical"></EditText>
+
+</LinearLayout>
