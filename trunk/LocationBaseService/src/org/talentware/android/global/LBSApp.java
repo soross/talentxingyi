@@ -1,6 +1,7 @@
 package org.talentware.android.global;
 
 import android.app.Application;
+import org.talentware.android.bean.User;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,6 +11,8 @@ import android.app.Application;
  * To change this template use File | Settings | File Templates.
  */
 public class LBSApp extends Application {
+
+    public static User mUser = new User();
 
     private LBSApp aInstance = this;
 
