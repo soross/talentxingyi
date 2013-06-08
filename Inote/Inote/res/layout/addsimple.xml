@@ -13,7 +13,6 @@
             android:gravity="top|left"
             android:hint="@string/note_add_body"
             android:cursorVisible="true"
-            android:background="@drawable/selectornone"
             android:layout_margin="5dip"/>
      <TableLayout
             android:layout_width="fill_parent"

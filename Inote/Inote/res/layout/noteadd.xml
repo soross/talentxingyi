@@ -23,13 +23,11 @@
                     android:id="@+id/iptNoteTitle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selectornone"
                     android:hint="@string/note_add_title"/>
             <EditText
                     android:id="@+id/iptNoteBody"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selectornone"
                     android:minLines="8"
                     android:gravity="top|left"
                     android:hint="@string/note_add_body"/>
@@ -42,7 +40,6 @@
                     android:id="@+id/iptNoteTag"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selectornone"
                     android:hint="@string/note_add_tag"/>
             <RelativeLayout android:id="@+id/attachlayout" android:background="#ddd"
                             android:layout_margin="10dip"
