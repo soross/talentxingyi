@@ -61,24 +61,7 @@ public class WelcomeActivity extends Activity {
             MainActivity.show(WelcomeActivity.this);
             finish();
         }
-
-//        SDOAnalyzeAgentInterface.onCreate(context);
-//        SDOAnalyzeAgentInterface.onError(context);
-//        SDOAnalyzeAgentInterface.setReportPolicy(ReportPolicy.REALTIME);
     }
-
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        SDOAnalyzeAgentInterface.onPause(context);
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        SDOAnalyzeAgentInterface.onDestroy(context);
-//    }
-
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -96,16 +79,6 @@ public class WelcomeActivity extends Activity {
         }
         return super.onCreateDialog(id);
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (Inote.needUpdateApp) {
-            //showDialog(UPDATE_DIALOG);
-        }
-//        SDOAnalyzeAgentInterface.onResume(context);
-    }
-
 
     public static void show(Context context) {
         Intent intent = new Intent();

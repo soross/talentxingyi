@@ -49,26 +49,7 @@ public class ActivateUserActivity extends Activity {
                 }
             }
         });
-//        SDOAnalyzeAgentInterface.onCreate(context);
     }
-
-    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        SDOAnalyzeAgentInterface.onPause(context);
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        SDOAnalyzeAgentInterface.onDestroy(context);
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        SDOAnalyzeAgentInterface.onResume(context);
-//    }
 
     protected Dialog onCreateDialog(int id) {
         switch (id) {
