@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/welcome">
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imgLogo"
+            android:layout_marginTop="20dip"
+            android:layout_centerVertical="true"
+            android:paddingLeft="40dip"
+            android:src="@drawable/welcome_logo"/>
+
+    <Button android:id="@+id/btnLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/imgLogo"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="80dip"
+            android:background="@drawable/welcome_botton"/>
+
+    <Button  android:id="@+id/btnSignUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="66dip"
+            android:textSize="14dip"
+            android:text="@string/sign_up"
+            android:textColor="#ffffffff"
+            android:layout_toRightOf="@id/imgLogo"
+            android:layout_below="@id/btnLogin"
+            android:layout_marginTop="10dip"
+            android:background="@null"/>
+    <TextView  android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="5dip"
+            android:layout_marginLeft="70dip"
+            android:textSize="12dip"
+            android:text="@string/welcome_tip"
+            android:textColor="#8bc084"
+            android:layout_toRightOf="@id/imgLogo"
+            android:layout_marginTop="180dip"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#8bc084"
+            android:text="@string/copyright"/>
+</RelativeLayout>

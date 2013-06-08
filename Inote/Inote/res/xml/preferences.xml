@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+        
+	<PreferenceCategory android:title="@string/pref_show">
+    	<CheckBoxPreference
+                android:key="preference_showNoteImage"
+	            android:defaultValue="true"
+                android:title="@string/pref_show_image"
+                android:summary="@string/pref_show_image_sum" />
+    </PreferenceCategory>
+        
+</PreferenceScreen>

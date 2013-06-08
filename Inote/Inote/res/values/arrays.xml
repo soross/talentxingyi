@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string-array name="categoryType">
+		<item>私有</item>
+		<item>公开</item>
+	</string-array>
+</resources>

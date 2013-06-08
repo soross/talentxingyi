@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.snda.inote"
+          android:versionCode="11"
+          android:versionName="1.3.8">
+    <application android:icon="@drawable/icon" android:label="@string/app_name" android:name="Inote"
+                 android:theme="@style/Theme">
+        <meta-data android:name="android.app.default_searchable"
+                   android:value=".activity.SearchListActivity"/>
+        <meta-data android:name="TYPE_ID"
+                   android:value="con.sdo.note.typev137"/>
+        <meta-data android:name="CHANNEL_ID"
+                   android:value="con.sdo.note.channelv137"/>
+        <meta-data android:name="ProductId"
+                   android:value="con.sdo.note.channelv137"/>
+        <activity android:name=".activity.WelcomeActivity" android:label="@string/app_name"
+                  android:launchMode="singleInstance"
+                  android:windowSoftInputMode="adjustUnspecified|stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".Login" android:configChanges="orientation|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.LoginOAActivity"/>
+        <activity android:name=".activity.MainActivity" android:configChanges="orientation|keyboardHidden"/>
+
+        <activity android:name=".activity.AddSimpleActivity" android:configChanges="orientation|keyboardHidden"
+                  android:windowSoftInputMode="stateVisible"/>
+
+        <activity android:name=".activity.AddFullActivity" android:configChanges="orientation|keyboardHidden"
+                  android:windowSoftInputMode="adjustUnspecified|stateHidden">
+            <intent-filter android:icon="@drawable/icon" android:label="Add mkNote">
+                <action android:name="android.intent.action.SEND"/>
+                <data android:mimeType="text/plain"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.EditFullActivity" android:configChanges="orientation|keyboardHidden"
+                  android:windowSoftInputMode="adjustUnspecified|stateHidden">
+        </activity>
+
+        <activity android:name=".activity.NoteListActivity" android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activity.NoteActivity" android:configChanges="orientation|keyboardHidden"
+                  android:launchMode="singleTop"/>
+        <activity android:name=".activity.SearchListActivity" android:configChanges="orientation|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                       android:resource="@xml/searchable"/>
+        </activity>
+        <activity android:name=".activity.PreferencesActivity"/>
+        <activity android:name=".fileselector.FileSelector" android:configChanges="orientation|keyboardHidden"/>
+
+        <activity android:name=".activity.SignUpActivity" android:configChanges="orientation|keyboardHidden"
+                  android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity android:name=".activity.ActivateUserActivity"/>
+
+
+        <service android:name=".service.MKSyncService" android:exported="true"/>
+        <provider android:name=".provider.SearchSuggestionProvider"
+                  android:authorities="com.snda.inote.SuggestionProvider"/>
+
+        <receiver android:name=".provider.WidgetComponent"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="com.sdo.note.sync"/>
+                <action android:name="com.sdo.note.opennote_item1"/>
+                <action android:name="com.sdo.note.opennote_item2"/>
+                <action android:name="com.sdo.note.opennote_item3"/>
+                <action android:name="com.sdo.note.loginout"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                       android:resource="@xml/widget_provider"/>
+        </receiver>
+    </application>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_APN_SETTINGS"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.PERMISSION_NAME"/>
+
+    <supports-screens
+            largeScreens="true"
+            normalScreens="true"
+            smallScreens="true"/>
+    <uses-sdk
+            android:minSdkVersion="3"
+            android:targetSdkVersion="8"/>
+</manifest>

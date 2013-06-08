@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <style name="Theme" parent="@android:style/Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="header_bar">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">49dip</item>
+    </style>
+
+    <style name="header_title">
+        <item name="android:shadowColor">@drawable/drakgray</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLargeInverse</item>
+    </style>
+
+    <style name="header_btn" parent="@android:style/Widget.ImageButton">
+        <item name="android:layout_width">38dip</item>
+        <item name="android:layout_height">34dip</item>
+        <item name="android:background">@drawable/header_btn</item>
+    </style>
+
+    <style name="header_btn_add" parent="header_btn">
+        <item name="android:src">@drawable/header_add</item>
+    </style>
+
+    <style name="header_btn_setting" parent="header_btn">
+        <item name="android:src">@drawable/header_setting</item>
+    </style>
+
+    <style name="header_btn_refresh" parent="header_btn">
+        <item name="android:src">@drawable/header_refresh</item>
+    </style>
+
+    <style name="header_btn_back" parent="header_btn">
+        <item name="android:src">@drawable/header_back</item>
+    </style>
+
+    <style name="bottom_btn" parent="@android:style/Widget.ImageButton">
+        <item name="android:layout_width">70dip</item>
+        <item name="android:layout_height">44dip</item>
+        <item name="android:background">@null</item>
+        <!--<item name="android:paddingTop">3dip</item>-->
+    </style>
+
+    <style name="bottom_btn_refresh" parent="bottom_btn">
+        <item name="android:src">@drawable/bottom_btn_refresh</item>
+    </style>
+
+    <style name="bottom_btn_share" parent="bottom_btn">
+        <item name="android:src">@drawable/bottom_btn_share</item>
+    </style>
+
+    <style name="bottom_btn_edit" parent="bottom_btn">
+        <item name="android:src">@drawable/bottom_btn_edit</item>
+    </style>
+
+    <style name="bottom_btn_del" parent="bottom_btn">
+        <item name="android:src">@drawable/bottom_btn_del</item>
+    </style>
+
+    <style name="bottom_btn_lock" parent="bottom_btn">
+        <item name="android:src">@drawable/bottom_btn_lock</item>
+    </style>
+
+
+    <style name="emptyTxt">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+
+    <style name="loadTxt">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+
+    <style name="noteListTitle">
+        <item name="android:textSize">16dip</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="noteListAbstract">
+        <item name="android:textSize">16dip</item>
+        <item name="android:textColor">#999999</item>
+    </style>
+
+    <style name="noteListTime">
+        <item name="android:textSize">14px</item>
+        <item name="android:textColor">#C6C4C4</item>
+    </style>
+
+    <style name="customDialog" parent="@android:style/Theme.Dialog">
+        <!--<item name="android:windowIsFloating">false</item>-->
+        <!--<item name="android:windowAnimationStyle">@null</item>-->
+        <!--<item name="android:windowExitAnimation">@anim/popup_exit</item>-->
+        <!--<item name="android:windowEnterAnimation">@anim/popup_enter</item>-->
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>
