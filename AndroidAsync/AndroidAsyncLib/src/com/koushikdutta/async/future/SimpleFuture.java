@@ -1,21 +1,41 @@
 package com.koushikdutta.async.future;
 
+import com.koushikdutta.async.AsyncServer.AsyncSemaphore;
+
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.koushikdutta.async.AsyncServer.AsyncSemaphore;
-import com.koushikdutta.async.callback.ResultCallback;
-
 public class SimpleFuture<T> extends SimpleCancelable implements DependentFuture<T> {
+
+    FutureCallback<T> callback;
+
+    @Override
+    public FutureCallback<T> getResultCallback() {
+        return callback;
+    }
+
+    @Override
+    public Future<T> setResultCallback(FutureCallback<T> callback) {
+        // callback can only be changed or read/used inside a sync block
+        boolean runCallback;
+        synchronized (this) {
+            this.callback = callback;
+            runCallback = isDone();
+        }
+        if (runCallback)
+            callback.onCompleted(exception, result);
+        return this;
+    }
+
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
         return cancel();
     }
     
     @Override
-    public boolean cancel() {
+    public boolean cancel() {//此处是Future的cancel
         if (super.cancel()) {
             synchronized (this) {
                 exception = new CancellationException();
@@ -105,24 +125,5 @@ public class SimpleFuture<T> extends SimpleCancelable implements DependentFuture
         if (callback != null)
             callback.onCompleted(exception, result);
         return true;
-    }
-
-    FutureCallback<T> callback;
-    @Override
-    public FutureCallback<T> getResultCallback() {
-        return callback;
-    }
-
-    @Override
-    public Future<T> setResultCallback(FutureCallback<T> callback) {
-        // callback can only be changed or read/used inside a sync block
-        boolean runCallback;
-        synchronized (this) {
-            this.callback = callback;
-            runCallback = isDone();
-        }
-        if (runCallback)
-            callback.onCompleted(exception, result);
-        return this;
     }
 }

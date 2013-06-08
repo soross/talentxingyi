@@ -1,5 +1,8 @@
 package com.koushikdutta.async.future;
 
+/**
+ * 依赖的Cancellable
+ */
 public interface DependentCancellable extends Cancellable {
 
     /**
