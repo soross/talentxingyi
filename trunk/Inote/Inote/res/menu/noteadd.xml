@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_append_attach"
+		android:title="@string/menu_add_attach"
+		android:icon="@drawable/ic_menu_add">
+	</item>
+	<item android:id="@+id/menu_save" 
+		android:title="@string/menu_save"
+		android:icon="@drawable/common_menu_save">
+	</item>
+	<item android:id="@+id/menu_cancel" 
+		android:title="@string/menu_cancel" 
+		android:icon="@drawable/common_menu_cancel">
+	</item>
+</menu>

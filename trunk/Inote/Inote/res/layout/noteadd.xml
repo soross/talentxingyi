@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1">
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dip">
+            <TextView android:id="@+id/alertTextView"
+                      android:layout_width="fill_parent"
+                      android:paddingLeft="5dip"
+                      android:textSize="20dip"
+                      android:layout_height="wrap_content"
+                      android:textColor="@color/red"/>
+            <EditText
+                    android:id="@+id/iptNoteTitle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selectornone"
+                    android:hint="@string/note_add_title"/>
+            <EditText
+                    android:id="@+id/iptNoteBody"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selectornone"
+                    android:minLines="8"
+                    android:gravity="top|left"
+                    android:hint="@string/note_add_body"/>
+            <Spinner android:id="@+id/spnNoteCategory"
+                     android:layout_width="fill_parent"
+                     android:layout_height="wrap_content"
+                     android:drawSelectorOnTop="true"
+                     android:prompt="@string/note_add_cate"/>
+            <EditText
+                    android:id="@+id/iptNoteTag"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selectornone"
+                    android:hint="@string/note_add_tag"/>
+            <RelativeLayout android:id="@+id/attachlayout" android:background="#ddd"
+                            android:layout_margin="10dip"
+                            android:layout_width="fill_parent" android:visibility="gone"
+                            android:layout_height="56dip">
+                <Gallery android:id="@+id/attachview"
+                         android:layout_width="fill_parent"
+                         android:layout_height="wrap_content"
+                         android:spacing="10dip"/>
+                <TextView android:id="@+id/attachname"
+                          android:layout_below="@id/attachview"
+                          android:layout_alignParentBottom="true"
+                          android:layout_width="wrap_content"
+                          android:layout_centerHorizontal="true"
+                          android:layout_height="wrap_content"/>
+            </RelativeLayout>
+            <TableLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dip"
+                    android:layout_marginTop="10dip"
+                    android:layout_gravity="bottom"
+                    android:stretchColumns="0,1">
+                <TableRow>
+                    <Button
+                            android:id="@+id/btnNoteSubmit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="保存"/>
+                    <Button
+                            android:id="@+id/btnNoteCancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="取消"/>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

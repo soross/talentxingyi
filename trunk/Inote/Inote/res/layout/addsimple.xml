@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:keepScreenOn="true">
+    <EditText
+            android:id="@+id/iptNoteContent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dip"
+            android:minLines="8"
+            android:gravity="top|left"
+            android:hint="@string/note_add_body"
+            android:cursorVisible="true"
+            android:background="@drawable/selectornone"
+            android:layout_margin="5dip"/>
+     <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dip"
+            android:layout_gravity="bottom"
+            android:layout_below="@id/iptNoteContent"
+            android:layout_margin="5dip"
+            android:stretchColumns="0,1">
+        <TableRow>
+            <Button
+                    android:id="@+id/btnNoteSubmit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="保存"/>
+            <Button
+                    android:id="@+id/btnNoteCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="取消"/>
+        </TableRow>
+    </TableLayout>
+</RelativeLayout>

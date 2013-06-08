@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<drawable name="white">#FDFDFD</drawable>
+	<drawable name="drakgray">#333333</drawable>
+	<color name="white">#FFFFFF</color>
+	<color name="welcome">#3d8c33</color>
+	<color name="green">#00FF00</color>
+	<color name="red">#ffff0000</color>
+</resources>

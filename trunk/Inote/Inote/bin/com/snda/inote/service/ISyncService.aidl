@@ -1,0 +1,1 @@
+package com.snda.inote.service;interface ISyncService {	void sync();}

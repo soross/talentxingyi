@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rotate xmlns:android="http://schemas.android.com/apk/res/android"
+        android:pivotX="76%"
+        android:pivotY="52%"
+        android:fromDegrees="360"
+        android:toDegrees="0"
+        android:interpolator="@anim/progress_load"
+        android:repeatCount="infinite"
+        android:duration="1200"/>

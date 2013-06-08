@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/header"
+            android:layout_width="fill_parent"
+            android:layout_height="48dip"
+            android:background="@drawable/header_background"
+            android:gravity="center_vertical"
+            android:layout_alignParentTop="true">
+        <TextView
+                android:id="@+id/header_title"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                style="@style/header_title"
+                android:textColor="@drawable/white"
+                android:gravity="center"
+                android:textSize="24dip"
+                android:text="@string/title_note_add"/>
+
+    </RelativeLayout>
+    <ListView
+            android:id="@+id/menulist"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dip"
+            android:padding="0px"
+            android:dividerHeight="1px"
+            android:divider="#cacaca"
+            android:background="@drawable/add_cornet">
+    </ListView>
+</LinearLayout>
+
