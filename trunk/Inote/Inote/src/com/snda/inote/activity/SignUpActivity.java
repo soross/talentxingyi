@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,6 +32,9 @@ import org.json.JSONObject;
  * Time: 上午6:53
  */
 public class SignUpActivity extends Activity {
+
+    private static final String TAG = SignUpActivity.class.getSimpleName();
+
     private final static int DIALOG_LOADING = 0;
     private EditText loginNameEditView;
     private EditText pwdEditView;
@@ -46,13 +50,10 @@ public class SignUpActivity extends Activity {
         loginNameEditView = (EditText) findViewById(R.id.login_name);
         pwdEditView = (EditText) findViewById(R.id.login_pass);
 
-
         pwdEditView.addTextChangedListener(textWatcher);
         loginNameEditView.addTextChangedListener(textWatcher);
 
-
         initOA();
-
 
         findViewById(R.id.signup_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,50 +62,52 @@ public class SignUpActivity extends Activity {
                 final String pwd = pwdEditView.getText().toString();
 
 
-                if (loginName.length() == 0) {
+                if (loginName.length() == 0) {//用户名长度为零
                     showToast(getString(R.string.snda_account_null_error));
                     loginNameEditView.requestFocus();
-                }
-                else if (loginName.length() < 4 || loginName.length() > 16) {
+                } else if (loginName.length() < 4 || loginName.length() > 16) {//用户名长度不满足条件
                     showToast(getString(R.string.snda_account_length_error));
                     loginNameEditView.requestFocus();
-                } else if (pwd.length() == 0) {
+                } else if (pwd.length() == 0) {//密码长度为零
                     showToast(getString(R.string.password_null_error));
                     pwdEditView.requestFocus();
-                } else if (pwd.length() < 6 || pwd.length() > 10) {
+                } else if (pwd.length() < 6 || pwd.length() > 10) {//密码长度不满足条件
                     showToast(getString(R.string.password_length_error));
                     pwdEditView.requestFocus();
-                }
-                else {
+                } else {
                     String one = loginName.substring(0, 1);
+                    //首字母必须以字符打头
                     try {
                         Integer.parseInt(one);
                         showToast(getString(R.string.snda_account_start_not_with_letter_error));
                         return;
                     } catch (Exception e) {
-//                        e.printStackTrace();
-                        //do nothing
                     }
 
                     OpenAPI.registerForPTAccount(loginName, pwd, context, new RegisterCallBack() {
                         @Override
                         public void onSuccess(String s) {
+                            Log.d(TAG, "registerForPTAccount Success,callback string = " + s);
                             OpenAPI.login(loginName, pwd, false, context, loginCallBack);
                         }
 
                         @Override
-                        public void onAccountExist(String jsonMessage) {
+                        public void onAccountExist(String jsonMessage) {// 帐号已经存在
+                            Log.d(TAG, "registerForPTAccount onAccountExist,callback string = " + jsonMessage);
                             showToast(getString(R.string.snda_account_already_use_error));
                         }
 
                         @Override
                         public void onFailure(String jsonMessage) {
+                            Log.d(TAG, "registerForPTAccount onFailure,callback string = " + jsonMessage);
                             try {
                                 Json json = new Json(new JSONObject(jsonMessage));
                                 String errorInfo = json.getString("Message");
-                                if(errorInfo==null || "null".equalsIgnoreCase(errorInfo)){
-                                    errorInfo=getString(R.string.register_network_error);
+                                // 网络错误
+                                if (errorInfo == null || "null".equalsIgnoreCase(errorInfo)) {
+                                    errorInfo = getString(R.string.register_network_error);
                                 }
+                                // 具体错误原因
                                 showToast(getString(R.string.register_error) + errorInfo);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -115,26 +118,7 @@ public class SignUpActivity extends Activity {
                 }
             }
         });
-      // SDOAnalyzeAgentInterface.onCreate(context);
     }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        SDOAnalyzeAgentInterface.onPause(context);
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        SDOAnalyzeAgentInterface.onDestroy(context);
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        SDOAnalyzeAgentInterface.onResume(context);
-//    }
 
     private void initOA() {
         if (!Inote.instance.isConnected()) {
@@ -146,6 +130,7 @@ public class SignUpActivity extends Activity {
             OpenAPI.startOA("", this, new CallBack() {
                 @Override
                 public void onSuccess(String s) {
+                    // s = {"UpdateType":"3","DownloadUrl":""}
                     isStartOASucess = true;
                 }
 
@@ -160,14 +145,11 @@ public class SignUpActivity extends Activity {
             });
         } catch (Exception e) {
             e.printStackTrace();
-//            showToast("切换登陆模式");
-//            Login.show(context);
-//            finish();
         }
     }
 
 
-     protected Dialog onCreateDialog(int id) {
+    protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DIALOG_LOADING:
                 ProgressDialog dialog2 = new ProgressDialog(context);
@@ -179,6 +161,7 @@ public class SignUpActivity extends Activity {
                 return null;
         }
     }
+
     private void showToast(String str) {
         if (mToast != null) {
             mToast.cancel();
@@ -205,23 +188,18 @@ public class SignUpActivity extends Activity {
                 return;
             }
             String str = editable.toString();
-            if (!checkNumberAlphabet(str)) {
+            if (!checkNumberAlphabet(str)) {// 非字母数字
                 editable.clear();
                 editable.append(getFilterNumberAlphabet(str));
             }
         }
     };
 
-
     private boolean checkNumberAlphabet(String str) {
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
             if ((c < '0' || c > '9') && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z')) {
-//                if (c == '@' || c == '.' || c == '_') {
-//
-//                } else {
                 return false;
-                //}
             }
         }
         return true;
@@ -231,11 +209,7 @@ public class SignUpActivity extends Activity {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-//            if (c == '@' || c == '.' || c == '_') {
-//                builder.append(c);
-//            } else
             if ((c < '0' || c > '9') && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z')) {
-                //discard this
             } else {
                 builder.append(c);
             }
@@ -247,12 +221,12 @@ public class SignUpActivity extends Activity {
         Intent intent = new Intent(content, SignUpActivity.class);
         content.startActivity(intent);
     }
-     @Override
+
+    @Override
     public void onBackPressed() {
         WelcomeActivity.show(context);
         super.onBackPressed();
     }
-
 
     private class LoginMaiku extends UserTask<String, Void, Integer> {
         @Override
@@ -267,7 +241,7 @@ public class SignUpActivity extends Activity {
                     User user = new User();
                     user.setToken(ticket);
                     user.setSndaID(sndaID);
-                    Inote.notActivatedUser =user;
+                    Inote.notActivatedUser = user;
                     statusCode = 2;
                 } else if ("Success".equalsIgnoreCase(result)) {
                     statusCode = 0;
@@ -287,7 +261,7 @@ public class SignUpActivity extends Activity {
 
         public void onPostExecute(Integer statusCode) {
             removeDialog(DIALOG_LOADING);
-            switch (statusCode){
+            switch (statusCode) {
                 case 1:
                     showToast("登录失败,用户名或密码错误");
                     break;
@@ -304,7 +278,7 @@ public class SignUpActivity extends Activity {
 
     }
 
-     LoginCallBack loginCallBack = new LoginCallBack() {
+    LoginCallBack loginCallBack = new LoginCallBack() {
         @Override
         public void onSuccess(String s) {
             try {
@@ -317,6 +291,7 @@ public class SignUpActivity extends Activity {
                 e.printStackTrace();
             }
         }
+
         @Override
         public void onFailure(String jsonMessage) {
             showToast(getString(R.string.openapi_login_error));

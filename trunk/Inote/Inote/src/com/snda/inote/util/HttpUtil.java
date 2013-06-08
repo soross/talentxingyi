@@ -90,7 +90,6 @@ public class HttpUtil {
             throw new IOException("302");
         } else {
             String result = EntityUtils.toString(httpResponse.getEntity(), HTTP.UTF_8);
-//            JSONObject jsonObject = new JSONObject(result);
             throw new ApiRequestErrorException(result);
         }
     }
