@@ -14,10 +14,10 @@ public class LBSApp extends Application {
 
     public static User mUser = new User();
 
-    private static LBSApp aInstance = new LBSApp();
+    private static LBSApp aInstance;
 
     public void onCreate() {
-
+        aInstance = this;
     }
 
     public void onTerminate() {
